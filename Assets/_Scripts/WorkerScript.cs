@@ -7,30 +7,67 @@ public class WorkerScript : MonoBehaviour
 {
     private NavMeshAgent navAgent;
     private GameObject currentBuild;
-    private int buildRange = 4;
+    private int buildRange;
+    private bool constructingBuild;
+    private BuildingControls buildControls;
+    private float buildProgress;
+    private float cooldownTime;
+    private float nextBuildTime;
 
     void Start()
     {
+        buildRange = 4;
+        constructingBuild = false;
         navAgent = GetComponent<NavMeshAgent>();
-        navAgent.SetDestination(new Vector3(-5, 0, 0));
+        cooldownTime = 1.0f;
+        nextBuildTime = 0;
     }
     void Update()
     {
         if (currentBuild != null)
         {
-            if (Vector3.Distance(gameObject.transform.position, currentBuild.transform.position) <= buildRange)
+            if (constructingBuild == false && Vector3.Distance(gameObject.transform.position, currentBuild.transform.position) <= buildRange)
             {
-                navAgent.isStopped = true;
-                // Do something here to build the actual building.
-                // Call currentBuild.StartBuilding
-                //  This func will move along a progress bar.
-                //  At certain % it will spawn the next prog prefab and delete the old one. Transfer over the build % and continue until complete.
+                navAgent.SetDestination(transform.position);
+                constructingBuild = true;
+                nextBuildTime = Time.time + cooldownTime;
+                Debug.Log("Worker started construction");
+            }
+            if (Time.time > nextBuildTime && constructingBuild)
+            {
+                nextBuildTime = Time.time + cooldownTime;
+                
+                buildControls.IncreaseProgressBar(0.1f);
+                if (buildProgress >= 1.0f)
+                {
+                    // Build complete
+                    StopBuilding();
+                }
             }
         }
     }
     public void ConstructBuild(GameObject build)
     {
-        navAgent.SetDestination(build.transform.position);
-        currentBuild = build;
+        if (build != null)
+        {
+            navAgent.SetDestination(build.transform.position);
+            currentBuild = build;
+            buildControls = currentBuild.GetComponent<BuildingControls>();
+            if (buildControls == null)
+            {
+                Debug.Log("Build controls is null!");
+            }
+            Debug.Log("Setting worker destination to " + build.transform.position.ToString());
+        }
+        else
+        {
+            Debug.Log("Build was null");
+        }
+    }
+    public void StopBuilding()
+    {
+        buildControls = null;
+        constructingBuild = false;
+        currentBuild = null;
     }
 }

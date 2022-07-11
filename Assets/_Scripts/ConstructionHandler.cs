@@ -40,9 +40,11 @@ public class ConstructionHandler : MonoBehaviour
             //pos.y = go.transform.position.y; // Keep the y component of the GameObject
             //go.transform.position = pos;
 
+            currentBuild.GetComponent<BuildingControls>().ResetProgressBar();
             currentBuild.GetComponent<BuildingControls>().SetNextPrefabState();
             buildingInProgress = false;
             //Destroy(currentBuild);
+            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().StopBuilding();
             InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(currentBuild);
             currentBuild = null;
             //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);

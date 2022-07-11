@@ -79,7 +79,7 @@ public class InputHandler : MonoBehaviour
             mousePos = Input.mousePosition;
             for (int i = 0; i < selectedUnits.Count; i++)
             {
-                selectedUnits[i].GetComponent<UnitControls>().DoAction(mousePos);
+                selectedUnits[i].GetComponent<UnitControls>().DoAction();
             }
         }
     }
