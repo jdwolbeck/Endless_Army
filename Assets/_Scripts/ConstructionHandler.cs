@@ -33,18 +33,19 @@ public class ConstructionHandler : MonoBehaviour
 
         if (buildingInProgress && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterProg0") as GameObject;
-            GameObject go = Instantiate(prefab);
+            //GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterProg0") as GameObject;
+            //GameObject go = Instantiate(prefab);
 
-            Vector3 pos = currentBuild.transform.position;
-            pos.y = go.transform.position.y; // Keep the y component of the GameObject
-            go.transform.position = pos;
+            //Vector3 pos = currentBuild.transform.position;
+            //pos.y = go.transform.position.y; // Keep the y component of the GameObject
+            //go.transform.position = pos;
 
-
-            buildingInProgress = false; 
-            Destroy(currentBuild);
+            currentBuild.GetComponent<BuildingControls>().SetNextPrefabState();
+            buildingInProgress = false;
+            //Destroy(currentBuild);
+            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(currentBuild);
             currentBuild = null;
-            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
+            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
         }
         if (buildingInProgress && Input.GetMouseButtonDown(1))
         {
@@ -58,7 +59,7 @@ public class ConstructionHandler : MonoBehaviour
     {
         if (!buildingInProgress)
         {
-            GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterBP") as GameObject;
+            GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
