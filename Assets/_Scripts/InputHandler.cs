@@ -7,6 +7,8 @@ public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
     public List<Transform> selectedUnits = new List<Transform>();
+    public List<Transform> selectedBuildings = new List<Transform>();
+    public Transform selectedResource;
     private bool isDragging = false;
     private RaycastHit hit;
     private Vector3 mousePos;
@@ -35,24 +37,62 @@ public class InputHandler : MonoBehaviour
             mousePos = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
 
-            if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerLayer")))
+            if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerUnitLayer")))
             {
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
                 UnitControls unitControls = hit.transform.GetComponent<UnitControls>();
                 if (unitControls != null)
                 {
+                    DeselectResource();
                     if (!Input.GetKey(KeyCode.LeftShift))
                     {
                         DeselectUnits();
+                    }
+                    if (selectedBuildings.Count > 0)
+                    {
+                        DeselectBuildings();
                     }
                     unitControls.SelectUnit();
                     selectedUnits.Add(hit.transform);
                 }
             }
+            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
+            {
+                Debug.Log("Selecting player buliding object...");
+                // Grab the script that is responsible for handling all of a units actions and prefab objects.
+                BuildingControls buildingControls = hit.transform.parent.GetComponent<BuildingControls>();
+                if (buildingControls != null)
+                {
+                    DeselectResource();
+                    if (!Input.GetKey(KeyCode.LeftShift))
+                    {
+                        DeselectBuildings();
+                    }
+                    if (selectedUnits.Count > 0)
+                    {
+                        DeselectUnits();
+                    }
+                    buildingControls.SelectBuilding();
+                    selectedBuildings.Add(hit.transform.parent);
+                }
+            }
+            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
+            {
+                // Grab the script that is responsible for handling all of a units actions and prefab objects.
+                ResourceHandler resourceHandler = hit.transform.parent.GetComponent<ResourceHandler>();
+                if (resourceHandler != null)
+                {
+                    DeselectResource();
+                    resourceHandler.SelectResource();
+                    selectedResource = hit.transform.parent;
+                }
+            }
             else
             {
                 isDragging = true;
+                DeselectResource();
                 DeselectUnits();
+                DeselectBuildings();
             }
         }
 
@@ -74,12 +114,22 @@ public class InputHandler : MonoBehaviour
         }
 
         // When we right click with units selected, do something.
-        if (Input.GetMouseButtonDown(1) && selectedUnits.Count > 0)
+        if (Input.GetMouseButtonDown(1) && (selectedUnits.Count > 0 || selectedBuildings.Count > 0))
         {
             mousePos = Input.mousePosition;
-            for (int i = 0; i < selectedUnits.Count; i++)
+            if (selectedUnits.Count > 0)
             {
-                selectedUnits[i].GetComponent<UnitControls>().DoAction();
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    selectedUnits[i].GetComponent<UnitControls>().DoAction();
+                }
+            }
+            else // selectedBuildings.Count > 0
+            {
+                for (int i = 0; i < selectedBuildings.Count; i++)
+                {
+                    selectedBuildings[i].GetComponent<BuildingControls>().DoAction();
+                }
             }
         }
     }
@@ -94,6 +144,25 @@ public class InputHandler : MonoBehaviour
         }
         selectedUnits.Clear();
         //GameHandler.instance.GetComponent<UIHandler>().DisableWorkerMenu();
+    }
+    private void DeselectBuildings()
+    {
+        if (selectedBuildings != null)
+        {
+            for (int i = 0; i < selectedBuildings.Count; i++)
+            {
+                selectedBuildings[i].GetComponent<BuildingControls>().DeselectBuilding();
+            }
+        }
+        selectedBuildings.Clear();
+    }
+    private void DeselectResource()
+    {
+        if (selectedResource != null)
+        {
+            selectedResource.GetComponent<ResourceHandler>().DeselectResource();
+            selectedResource = null;
+        }
     }
     private bool IsWithinSelectionBounds(GameObject obj)
     {

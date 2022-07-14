@@ -35,10 +35,13 @@ public class UnitControls : MonoBehaviour
             {
                 navAgent.SetDestination(hit.point);
             }
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ConstructionLayer"))
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ConstructionLayer"))
             {
-                Debug.Log("hit gameObject = " + hit.transform.parent.gameObject.ToString());
                 GetComponent<WorkerScript>().ConstructBuild(hit.transform.parent.gameObject);
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ResourceLayer"))
+            {
+
             }
         }
         Debug.Log("hit: " + hit.ToString() + " layer " + hit.transform.gameObject.layer + " transform/position " + hit.transform + "/" + hit.transform.position + " point " + hit.point);

@@ -7,11 +7,13 @@ public class ConstructionHandler : MonoBehaviour
 {
     private static GameObject currentBuild;
     private static bool buildingInProgress = false;
+    private GameObject townCenterPrefab;
 
     private void Start()
     {
         buildingInProgress = false;
         currentBuild = null;
+        townCenterPrefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
     }
     void Update()
     {
@@ -61,13 +63,21 @@ public class ConstructionHandler : MonoBehaviour
     {
         if (!buildingInProgress)
         {
-            GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
+            buildingInProgress = true;
+            currentBuild = Instantiate(townCenterPrefab);
+            if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
             {
-                buildingInProgress = true;
-                currentBuild = Instantiate(prefab);
+                GameHandler.instance.playerBuildings.Add(currentBuild);
+                currentBuild.layer = LayerMask.NameToLayer("PlayerBuildingLayer");
+            }
+            else
+            {
+                GameHandler.instance.enemyBuildings.Add(currentBuild);
+                currentBuild.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
+            }
+            if (currentBuild == null)
+            {
+                buildingInProgress = false;
             }
         }
     }

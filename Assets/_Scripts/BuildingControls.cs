@@ -7,6 +7,7 @@ public class BuildingControls : MonoBehaviour
 {
     public List<GameObject> progressPrefabs = new List<GameObject>();
     public GameObject progressBar;
+    public GameObject highlight;
     private Slider progressSlider;
     private float currentProgress;
     private int currentPrefabState;
@@ -16,6 +17,20 @@ public class BuildingControls : MonoBehaviour
         currentProgress = 0;
         currentPrefabState = 0;
         progressSlider = progressBar.GetComponent<Slider>();
+    }
+    public void SelectBuilding()
+    {
+        highlight.SetActive(true);
+        GetComponent<ProductionHandler>().BuildingSelectionEvent(true);
+    }
+    public void DeselectBuilding()
+    {
+        highlight.SetActive(false);
+        GetComponent<ProductionHandler>().BuildingSelectionEvent(false);
+    }
+    public void DoAction()
+    {
+        Debug.Log("Building: " + gameObject.ToString() + " Doing action...");
     }
     public bool SetPrefabState(int nextPrefabState)
     {
@@ -37,6 +52,12 @@ public class BuildingControls : MonoBehaviour
             }
             currentPrefabState = nextPrefabState;
             stateChanged = true;
+
+            // When we are on the final stage, set the layer properly
+            if (currentPrefabState == 3)
+            {
+                progressPrefabs[currentPrefabState].layer = progressPrefabs[currentPrefabState].transform.parent.gameObject.layer;
+            }
         }
 
         return stateChanged;
