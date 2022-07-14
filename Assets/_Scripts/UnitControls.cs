@@ -30,7 +30,7 @@ public class UnitControls : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 100))
         {
             // If we were in the middle of building, stop
-            GetComponent<WorkerScript>().StopBuilding();
+            GetComponent<WorkerScript>().StopAction();
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
             {
                 navAgent.SetDestination(hit.point);
@@ -41,7 +41,7 @@ public class UnitControls : MonoBehaviour
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ResourceLayer"))
             {
-
+                GetComponent<WorkerScript>().HarvestResource(hit.transform.parent.gameObject);
             }
         }
         Debug.Log("hit: " + hit.ToString() + " layer " + hit.transform.gameObject.layer + " transform/position " + hit.transform + "/" + hit.transform.position + " point " + hit.point);

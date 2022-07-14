@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
-    public List<Transform> selectedUnits = new List<Transform>();
-    public List<Transform> selectedBuildings = new List<Transform>();
-    public Transform selectedResource;
+    public List<GameObject> selectedUnits = new List<GameObject>();
+    public List<GameObject> selectedBuildings = new List<GameObject>();
+    public GameObject selectedResource;
     private bool isDragging = false;
     private RaycastHit hit;
     private Vector3 mousePos;
@@ -53,7 +53,7 @@ public class InputHandler : MonoBehaviour
                         DeselectBuildings();
                     }
                     unitControls.SelectUnit();
-                    selectedUnits.Add(hit.transform);
+                    selectedUnits.Add(hit.transform.gameObject);
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
@@ -73,7 +73,7 @@ public class InputHandler : MonoBehaviour
                         DeselectUnits();
                     }
                     buildingControls.SelectBuilding();
-                    selectedBuildings.Add(hit.transform.parent);
+                    selectedBuildings.Add(hit.transform.parent.gameObject);
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
@@ -84,7 +84,7 @@ public class InputHandler : MonoBehaviour
                 {
                     DeselectResource();
                     resourceHandler.SelectResource();
-                    selectedResource = hit.transform.parent;
+                    selectedResource = hit.transform.parent.gameObject;
                 }
             }
             else
@@ -106,7 +106,7 @@ public class InputHandler : MonoBehaviour
                     if (IsWithinSelectionBounds(unit))
                     {
                         unit.GetComponent<UnitControls>().SelectUnit();
-                        selectedUnits.Add(unit.transform);
+                        selectedUnits.Add(unit.transform.gameObject);
                     }
                 }
             }

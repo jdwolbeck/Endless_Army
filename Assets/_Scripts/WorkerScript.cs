@@ -11,16 +11,28 @@ public class WorkerScript : MonoBehaviour
     private bool constructingBuild;
     private BuildingControls buildControls;
     private float buildProgress;
-    private float cooldownTime;
+    private float buildCooldownTime;
     private float nextBuildTime;
+    private GameObject currentResource;
+    private ResourceHandler resourceHandler;
+    private bool isHarvesting;
+    private int harvestRange;
+    private float harvestCooldownTime;
+    private float nextHarvestTime;
+    private int harvestAmount;
 
     void Start()
     {
         buildRange = 4;
         constructingBuild = false;
         navAgent = GetComponent<NavMeshAgent>();
-        cooldownTime = 1.0f;
+        buildCooldownTime = 1.0f;
         nextBuildTime = 0;
+        isHarvesting = false;
+        harvestRange = 3;
+        harvestCooldownTime = 1.5f;
+        nextHarvestTime = 0;
+        harvestAmount = 10;
     }
     void Update()
     {
@@ -30,18 +42,42 @@ public class WorkerScript : MonoBehaviour
             {
                 navAgent.SetDestination(transform.position);
                 constructingBuild = true;
-                nextBuildTime = Time.time + cooldownTime;
+                nextBuildTime = Time.time + buildCooldownTime;
                 Debug.Log("Worker started construction");
             }
             if (Time.time > nextBuildTime && constructingBuild)
             {
-                nextBuildTime = Time.time + cooldownTime;
+                nextBuildTime = Time.time + buildCooldownTime;
                 
                 buildControls.IncreaseProgressBar(0.1f);
                 if (buildProgress >= 1.0f)
                 {
                     // Build complete
                     StopBuilding();
+                }
+            }
+        }
+        if (currentResource != null)
+        {
+            if (isHarvesting == false && Vector3.Distance(gameObject.transform.position, currentResource.transform.position) <= harvestRange)
+            {
+                navAgent.SetDestination(transform.position);
+                isHarvesting = true;
+                nextHarvestTime = Time.time + harvestCooldownTime;
+                Debug.Log("Worker started harvesting " + currentResource.ToString());
+            }
+            if (Time.time > nextHarvestTime && isHarvesting)
+            {
+                nextHarvestTime = Time.time + harvestCooldownTime;
+
+                int resourcesObtained;
+                int resourcesRemaining = resourceHandler.HarvestResource(harvestAmount, out resourcesObtained);
+                Debug.Log("Collected " + resourcesObtained + " Wood from " + currentResource.ToString() + " resources remaining at top level " + resourcesRemaining);
+                if (resourcesRemaining <= 0)
+                {
+                    // Resource depleted
+                    StopHarvesting();
+                    Debug.Log("Resource is finished, stop");
                 }
             }
         }
@@ -55,7 +91,7 @@ public class WorkerScript : MonoBehaviour
             buildControls = currentBuild.GetComponent<BuildingControls>();
             if (buildControls == null)
             {
-                Debug.Log("Build controls is null!");
+                Debug.Log("Build controls was null for build " + build.ToString());
             }
             Debug.Log("Setting worker destination to " + build.transform.position.ToString());
         }
@@ -69,5 +105,42 @@ public class WorkerScript : MonoBehaviour
         buildControls = null;
         constructingBuild = false;
         currentBuild = null;
+    }
+    public void HarvestResource(GameObject resource)
+    {
+        if (resource != null)
+        {
+            navAgent.SetDestination(resource.transform.position);
+            currentResource = resource;
+            resourceHandler = currentResource.GetComponent<ResourceHandler>();
+            if (resourceHandler == null)
+            {
+                Debug.Log("Resource handler was null for resource " + resource.ToString());
+            }
+            Debug.Log("Setting worker destination to " + resource.transform.position.ToString());
+        }
+        else
+        {
+            Debug.Log("Resource was null");
+        }
+    }
+    public void StopHarvesting()
+    {
+        resourceHandler = null;
+        isHarvesting = false;
+        currentResource = null;
+        Debug.Log("Stopping harvesting...");
+    }
+    public void StopAction()
+    {
+        if (currentBuild != null)
+        {
+            StopBuilding();
+        }
+        if (currentResource != null)
+        {
+            Debug.Log("Stop action!");
+            StopHarvesting();
+        }
     }
 }
