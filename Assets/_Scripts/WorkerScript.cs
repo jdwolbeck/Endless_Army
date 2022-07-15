@@ -73,6 +73,10 @@ public class WorkerScript : MonoBehaviour
                 int resourcesObtained;
                 int resourcesRemaining = resourceHandler.HarvestResource(harvestAmount, out resourcesObtained);
                 Debug.Log("Collected " + resourcesObtained + " Wood from " + currentResource.ToString() + " resources remaining at top level " + resourcesRemaining);
+                if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
+                {
+                    PlayerResourceManger.instance.UpdatePlayerWood(resourcesObtained);
+                }
                 if (resourcesRemaining <= 0)
                 {
                     // Resource depleted

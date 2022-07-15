@@ -6,33 +6,34 @@ public class ResourceHandler : MonoBehaviour
 {
     public enum Resources
     {
-        WOOD = 0,
+
+        FOOD = 0,
+        WOOD,
         STONE,
-        FOOD
     }
 
+    public int maxStartingFoodAmount;
+    public int minStartingFoodAmount;
     public int maxStartingWoodAmount;
     public int minStartingWoodAmount;
     public int maxStartingStoneAmount;
     public int minStartingStoneAmount;
-    public int maxStartingFoodAmount;
-    public int minStartingFoodAmount;
+    public int startingFoodAmount;
     public int startingWoodAmount;
     public int startingStoneAmount;
-    public int startingFoodAmount;
+    public int currentFoodAmount;
     public int currentWoodAmount;
     public int currentStoneAmount;
-    public int currentFoodAmount;
     private Outline outline;
 
     void Start()
     {
+        startingFoodAmount = Random.Range(minStartingFoodAmount, maxStartingFoodAmount);
+        currentFoodAmount = startingFoodAmount;
         startingWoodAmount = Random.Range(minStartingWoodAmount, maxStartingWoodAmount);
         currentWoodAmount = startingWoodAmount;
         startingStoneAmount = Random.Range(minStartingStoneAmount, maxStartingStoneAmount);
         currentStoneAmount = startingStoneAmount;
-        startingFoodAmount = Random.Range(minStartingFoodAmount, maxStartingFoodAmount);
-        currentFoodAmount = startingFoodAmount;
         outline = GetComponent<Outline>();
         outline.enabled = false;
     }
@@ -47,7 +48,11 @@ public class ResourceHandler : MonoBehaviour
     public int HarvestResource(int harvestAmount, out int resourcesCollected)
     {
         resourcesCollected = 0;
-        if (startingWoodAmount > 0)
+        if (startingFoodAmount > 0)
+        {
+            return HarvestFood(harvestAmount, out resourcesCollected);
+        }
+        else if (startingWoodAmount > 0)
         {
             return HarvestWood(harvestAmount, out resourcesCollected);
         }
@@ -55,11 +60,21 @@ public class ResourceHandler : MonoBehaviour
         {
             return HarvestStone(harvestAmount, out resourcesCollected);
         }
-        else if (startingFoodAmount > 0)
-        {
-            return HarvestFood(harvestAmount, out resourcesCollected);
-        }
         return 0;
+    }
+    public int HarvestFood(int harvestAmount, out int resourcesCollected)
+    {
+        resourcesCollected = harvestAmount;
+        currentFoodAmount -= harvestAmount;
+        if (currentFoodAmount < 0)
+        { // If we collected more resources than the animal/crop can give, minus off what ever excess there was.
+            resourcesCollected += currentFoodAmount;
+        }
+        if (currentFoodAmount < 0)
+        {
+            currentFoodAmount = 0;
+        }
+        return currentFoodAmount;
     }
     public int HarvestWood(int harvestAmount, out int resourcesCollected)
     {
@@ -88,19 +103,5 @@ public class ResourceHandler : MonoBehaviour
             currentStoneAmount = 0;
         }
         return currentStoneAmount;
-    }
-    public int HarvestFood(int harvestAmount, out int resourcesCollected)
-    {
-        resourcesCollected = harvestAmount;
-        currentFoodAmount -= harvestAmount;
-        if (currentFoodAmount < 0)
-        { // If we collected more resources than the animal/crop can give, minus off what ever excess there was.
-            resourcesCollected += currentFoodAmount;
-        }
-        if (currentFoodAmount < 0)
-        {
-            currentFoodAmount = 0;
-        }
-        return currentFoodAmount;
     }
 }
