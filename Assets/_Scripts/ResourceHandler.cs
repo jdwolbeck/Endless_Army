@@ -4,29 +4,32 @@ using UnityEngine;
 
 public class ResourceHandler : MonoBehaviour
 {
-    public enum Resources
-    {
+    [SerializeField]
+    protected int maxStartingFoodAmount;
+    [SerializeField]
+    protected int minStartingFoodAmount;
+    [SerializeField]
+    protected int maxStartingWoodAmount;
+    [SerializeField]
+    protected int minStartingWoodAmount;
+    [SerializeField]
+    protected int maxStartingStoneAmount;
+    [SerializeField]
+    protected int minStartingStoneAmount;
 
-        FOOD = 0,
-        WOOD,
-        STONE,
-    }
+    protected int startingFoodAmount;
+    protected int startingWoodAmount;
+    protected int startingStoneAmount;
+    protected int currentFoodAmount;
+    protected int currentWoodAmount;
+    protected int currentStoneAmount;
 
-    public int maxStartingFoodAmount;
-    public int minStartingFoodAmount;
-    public int maxStartingWoodAmount;
-    public int minStartingWoodAmount;
-    public int maxStartingStoneAmount;
-    public int minStartingStoneAmount;
-    public int startingFoodAmount;
-    public int startingWoodAmount;
-    public int startingStoneAmount;
-    public int currentFoodAmount;
-    public int currentWoodAmount;
-    public int currentStoneAmount;
-    private Outline outline;
+    [SerializeField]
+    protected List<GameObject> progressPrefabs = new List<GameObject>();
+    protected int currentPrefabProgress;
+    protected Outline currentOutline;
 
-    void Start()
+    void Awake()
     {
         startingFoodAmount = Random.Range(minStartingFoodAmount, maxStartingFoodAmount);
         currentFoodAmount = startingFoodAmount;
@@ -34,74 +37,31 @@ public class ResourceHandler : MonoBehaviour
         currentWoodAmount = startingWoodAmount;
         startingStoneAmount = Random.Range(minStartingStoneAmount, maxStartingStoneAmount);
         currentStoneAmount = startingStoneAmount;
-        outline = GetComponent<Outline>();
-        outline.enabled = false;
+
+        if (progressPrefabs.Count == 0)
+        {
+            throw new UnassignedReferenceException("No prefabs were added to the Progress Prefabs List...");
+        }
+        currentPrefabProgress = progressPrefabs.Count - 1;
+        currentOutline = progressPrefabs[currentPrefabProgress].GetComponent<Outline>();
     }
     public void SelectResource()
     {
-        outline.enabled = true;
+        currentOutline.enabled = true;
     }
     public void DeselectResource()
     {
-        outline.enabled = false;
+        currentOutline.enabled = false;
     }
-    public int HarvestResource(int harvestAmount, out int resourcesCollected)
+    public virtual int HarvestResource(int harvestAmount, out int resourcesCollected, out ResourceType resourceType)
     {
-        resourcesCollected = 0;
-        if (startingFoodAmount > 0)
-        {
-            return HarvestFood(harvestAmount, out resourcesCollected);
-        }
-        else if (startingWoodAmount > 0)
-        {
-            return HarvestWood(harvestAmount, out resourcesCollected);
-        }
-        else if (startingStoneAmount > 0)
-        {
-            return HarvestStone(harvestAmount, out resourcesCollected);
-        }
-        return 0;
+        throw new System.Exception("Base class does not implement HarvestResource");
     }
-    public int HarvestFood(int harvestAmount, out int resourcesCollected)
-    {
-        resourcesCollected = harvestAmount;
-        currentFoodAmount -= harvestAmount;
-        if (currentFoodAmount < 0)
-        { // If we collected more resources than the animal/crop can give, minus off what ever excess there was.
-            resourcesCollected += currentFoodAmount;
-        }
-        if (currentFoodAmount < 0)
-        {
-            currentFoodAmount = 0;
-        }
-        return currentFoodAmount;
-    }
-    public int HarvestWood(int harvestAmount, out int resourcesCollected)
-    {
-        resourcesCollected = harvestAmount;
-        currentWoodAmount -= harvestAmount;
-        if (currentWoodAmount < 0)
-        { // If we collected more resources than the tree can give, minus off what ever excess there was.
-            resourcesCollected += currentWoodAmount;
-        }
-        if (currentWoodAmount < 0)
-        {
-            currentWoodAmount = 0;
-        }
-        return currentWoodAmount;
-    }
-    public int HarvestStone(int harvestAmount, out int resourcesCollected)
-    {
-        resourcesCollected = harvestAmount;
-        currentStoneAmount -= harvestAmount;
-        if (currentStoneAmount < 0)
-        { // If we collected more resources than the rock can give, minus off what ever excess there was.
-            resourcesCollected += currentStoneAmount;
-        }
-        if (currentStoneAmount < 0)
-        {
-            currentStoneAmount = 0;
-        }
-        return currentStoneAmount;
-    }
+}
+
+public enum ResourceType
+{
+    Food,
+    Wood,
+    Stone
 }

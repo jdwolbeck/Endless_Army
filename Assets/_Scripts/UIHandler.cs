@@ -65,12 +65,10 @@ public class UIHandler : MonoBehaviour
     }
     public void EnableCreateWorkerPB()
     {
-        Debug.Log("Enabling Worker PB");
         createWorkerPB.SetActive(true);
     }
     public void DisableCreateWorkerPB()
     {
-        Debug.Log("Disabling Worker PB");
         createWorkerPB.SetActive(false);
     }
     public void OnClickBuildTownCenterButton()

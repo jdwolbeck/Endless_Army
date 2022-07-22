@@ -23,7 +23,6 @@ public class UnitControls : MonoBehaviour
     public void DoAction()
     {
         Vector3 mousePosition = Input.mousePosition;
-        Debug.Log(transform.ToString() + ": Doing action... *Right click pressed @ " + mousePosition.ToString() + "*");
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
@@ -41,9 +40,9 @@ public class UnitControls : MonoBehaviour
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ResourceLayer"))
             {
-                GetComponent<WorkerScript>().HarvestResource(hit.transform.parent.gameObject);
+                Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
+                GetComponent<WorkerScript>().HarvestResource(hit.transform.gameObject);
             }
         }
-        Debug.Log("hit: " + hit.ToString() + " layer " + hit.transform.gameObject.layer + " transform/position " + hit.transform + "/" + hit.transform.position + " point " + hit.point);
     }
 }

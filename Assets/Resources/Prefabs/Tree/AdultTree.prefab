@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5104619203080420939}
   - component: {fileID: 2639851335973930095}
   m_Layer: 11
-  m_Name: Tree
+  m_Name: AdultTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,15 +47,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d4bfbe683e4ae40bb605fe3358d31e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  progressPrefabs: []
+  maxStartingFoodAmount: 0
+  minStartingFoodAmount: 0
   maxStartingWoodAmount: 100
   minStartingWoodAmount: 50
   maxStartingStoneAmount: 0
   minStartingStoneAmount: 0
-  maxStartingFoodAmount: 0
-  minStartingFoodAmount: 0
+  startingFoodAmount: 0
   startingWoodAmount: 0
   startingStoneAmount: 0
-  startingFoodAmount: 0
+  currentFoodAmount: 0
+  currentWoodAmount: 0
+  currentStoneAmount: 0
 --- !u!114 &2639851335973930095
 MonoBehaviour:
   m_ObjectHideFlags: 0

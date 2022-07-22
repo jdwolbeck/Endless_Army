@@ -71,17 +71,28 @@ public class WorkerScript : MonoBehaviour
                 nextHarvestTime = Time.time + harvestCooldownTime;
 
                 int resourcesObtained;
-                int resourcesRemaining = resourceHandler.HarvestResource(harvestAmount, out resourcesObtained);
-                Debug.Log("Collected " + resourcesObtained + " Wood from " + currentResource.ToString() + " resources remaining at top level " + resourcesRemaining);
+                ResourceType resourceType;
+                int resourcesRemaining = resourceHandler.HarvestResource(harvestAmount, out resourcesObtained, out resourceType);
                 if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
                 {
-                    PlayerResourceManger.instance.UpdatePlayerWood(resourcesObtained);
+                    switch (resourceType)
+                    {
+                        case ResourceType.Food:
+                            PlayerResourceManger.instance.UpdatePlayerFood(resourcesObtained);
+                            break;
+                        case ResourceType.Wood:
+                            PlayerResourceManger.instance.UpdatePlayerWood(resourcesObtained);
+                            break;
+                        case ResourceType.Stone:
+                            PlayerResourceManger.instance.UpdatePlayerStone(resourcesObtained);
+                            break;
+                    }
+
                 }
                 if (resourcesRemaining <= 0)
                 {
                     // Resource depleted
                     StopHarvesting();
-                    Debug.Log("Resource is finished, stop");
                 }
             }
         }
@@ -114,6 +125,14 @@ public class WorkerScript : MonoBehaviour
     {
         if (resource != null)
         {
+            // Find the top level gameObject of this resource
+            GameObject tempResource = resource;
+            while (tempResource.transform.parent != null)
+            {
+                tempResource = tempResource.transform.parent.gameObject;
+                resource = tempResource;
+            }
+
             navAgent.SetDestination(resource.transform.position);
             currentResource = resource;
             resourceHandler = currentResource.GetComponent<ResourceHandler>();
@@ -127,6 +146,7 @@ public class WorkerScript : MonoBehaviour
         {
             Debug.Log("Resource was null");
         }
+        Debug.Log("Worker is going to harvest: " + resource.ToString() + " -- With Handler of: ") ;
     }
     public void StopHarvesting()
     {
@@ -143,7 +163,6 @@ public class WorkerScript : MonoBehaviour
         }
         if (currentResource != null)
         {
-            Debug.Log("Stop action!");
             StopHarvesting();
         }
     }
