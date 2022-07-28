@@ -5,13 +5,14 @@ using UnityEngine.EventSystems;
 
 public class ConstructionHandler : MonoBehaviour
 {
-    private static GameObject currentBuild;
-    private static bool buildingInProgress = false;
+    private GameObject currentBuild;
+    private bool buildingInProgress = false;
     private GameObject townCenterPrefab;
 
     private void Start()
     {
         buildingInProgress = false;
+        Debug.Log("new worker, buliding in progress = false");
         currentBuild = null;
         townCenterPrefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
     }
@@ -44,9 +45,11 @@ public class ConstructionHandler : MonoBehaviour
 
             currentBuild.GetComponent<BuildingControls>().ResetProgressBar();
             currentBuild.GetComponent<BuildingControls>().SetNextPrefabState();
+            Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
             //Destroy(currentBuild);
-            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().StopBuilding();
+            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().StopAction();
+            PlayerResourceManger.instance.playerCurrentWood -= BuildingControls.woodCost;
             InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(currentBuild);
             currentBuild = null;
             //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
@@ -61,7 +64,7 @@ public class ConstructionHandler : MonoBehaviour
     }
     public void BuildTownCenter()
     {
-        if (!buildingInProgress)
+        if (!buildingInProgress && PlayerResourceManger.instance.playerCurrentWood >= BuildingControls.woodCost)
         {
             buildingInProgress = true;
             currentBuild = Instantiate(townCenterPrefab);
@@ -77,6 +80,7 @@ public class ConstructionHandler : MonoBehaviour
             }
             if (currentBuild == null)
             {
+                Debug.Log("Current build was null, cancel building (Instantiate failed?)");
                 buildingInProgress = false;
             }
         }

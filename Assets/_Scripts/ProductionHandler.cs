@@ -58,6 +58,11 @@ public class ProductionHandler : MonoBehaviour
     }
     public void AddWorkerToQueue()
     {
+        if (PlayerResourceManger.instance.playerCurrentFood < WorkerScript.foodCost)
+        {
+            return;
+        }
+        PlayerResourceManger.instance.playerCurrentFood -= WorkerScript.foodCost;
         Debug.Log("Adding worker to Production queue...");
         if (productionQueue.Count == 0)
         {

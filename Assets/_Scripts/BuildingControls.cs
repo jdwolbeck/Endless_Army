@@ -8,6 +8,7 @@ public class BuildingControls : MonoBehaviour
     public List<GameObject> progressPrefabs = new List<GameObject>();
     public GameObject progressBar;
     public GameObject highlight;
+    public const int woodCost = 100;
     private Slider progressSlider;
     private float currentProgress;
     private int currentPrefabState;

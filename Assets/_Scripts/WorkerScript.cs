@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class WorkerScript : MonoBehaviour
 {
+    public const int foodCost = 50;
     private NavMeshAgent navAgent;
     private GameObject currentBuild;
     private int buildRange;

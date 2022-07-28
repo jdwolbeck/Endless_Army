@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance;
+    public GameObject canvas;
     public GameObject workerMenu = null;
     public GameObject townCenterMenu = null;
     public GameObject createWorkerPB = null;
@@ -29,6 +30,7 @@ public class UIHandler : MonoBehaviour
         foodText = foodTextBox.GetComponent<TMP_Text>();
         woodText = woodTextBox.GetComponent<TMP_Text>();
         stoneText = stoneTextBox.GetComponent<TMP_Text>();
+        canvas.SetActive(true);
     }
     private void Update()
     {

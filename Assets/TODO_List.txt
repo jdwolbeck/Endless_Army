@@ -1,0 +1,28 @@
+isDone	| Issue...
+--------|------------------------------------------------------------------------------------
+		| Resource requirements for creation of workers and town centers
+		| Warrior implementation
+		| Enemy AI
+		| Additional units
+		| Additional Buildings for Units
+		| Upgrades/costmetics for units
+		| Blueprint improvements to prohibit overlaying existing objects
+		| Random resource generation
+		| Start screen UI
+		| Harvesting animations/particle system
+		| Worker models for holding resources / animations for collecting resources into backpack and offloading into town center
+
+
+
+
+Game concepts:
+ - Each round consists of starting out with a worker and TC, little resources. Wood, Food, Stone are all used for in-round upgrades and unit creation and doesnt carry over to next wave.
+	- Late game unit like a caravan that could carry over some resources into the next wave (could cost gold).
+	- Some neutral team that defends the gold mines from both player and enemy.
+ - Gold can be found on the map that is used to upgrade everything with forever lasting upgrades.
+ - Gold can only be spent on a late-game in-round building like a blacksmith.
+ - Want shield warriors that can block arrows like spartans.
+ - Units have an overall control of defend base, hold forward resources, all out charge enemy base.
+ - Individual unit groups can be controlled with different types of formations like shield wall, spread out, box formation, etc...
+ - Combat triangle for different types of units.
+ - Each round will consist of a set range of enemy resources, starting unit types, and difficulty. But the difficulty will amp up indefinitely (Ladder gamemode that acts as a leaderboard)

@@ -6,8 +6,8 @@ public class StoneResource : ResourceHandler
 {
     private void Update()
     {
-        if ((currentPrefabProgress > 0 && currentStoneAmount == 0) ||
-            (currentPrefabProgress == (progressPrefabs.Count - 1) && (startingStoneAmount - currentStoneAmount) > 0))
+        if ((currentPrefabProgress == (progressPrefabs.Count - 1) && (StonePercentageLeft() < 0.5f && StonePercentageLeft() > 0)) || // Half Depleted
+            (currentPrefabProgress > 0 && currentStoneAmount == 0))                                                                  // Depleted State
         {
             //Advance which prefab we are keeping active and keep the outline's state the same after the switch
             progressPrefabs[currentPrefabProgress].SetActive(false);
@@ -44,5 +44,9 @@ public class StoneResource : ResourceHandler
             currentStoneAmount = 0;
         }
         return currentStoneAmount;
+    }
+    private float StonePercentageLeft()
+    {
+        return (float)currentStoneAmount / startingStoneAmount;
     }
 }

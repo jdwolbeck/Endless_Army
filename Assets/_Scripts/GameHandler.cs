@@ -24,6 +24,8 @@ public class GameHandler : MonoBehaviour
         enemyBuildings = new List<GameObject>();
         neutralUnits = new List<GameObject>();
         resourceObjects = new List<GameObject>();
+
+
     }
     private void Start()
     {
