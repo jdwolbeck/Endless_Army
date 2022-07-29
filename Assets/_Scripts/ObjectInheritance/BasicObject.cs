@@ -7,7 +7,10 @@ public class BasicObject : MonoBehaviour
 {
     public TeamEnum Team;
     protected virtual void Awake() { }
-
+    protected virtual void Start() 
+    {
+        Team = TeamManager.instance.AssignTeam(gameObject.layer);
+    }
     public virtual void DoAction() { }
     protected float DistanceToTarget(Transform target)
     {

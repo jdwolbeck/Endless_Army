@@ -5,8 +5,21 @@ using UnityEngine.AI;
 
 public class FighterUnit : BasicUnit
 {
-    void Update()
+    protected override void Awake()
     {
+        base.Awake();
+        MaxHealth = Health = 50f;
+        AttackRange = 2f;
+        AttackSpeed = 0.75f;
+        Damage = 5f;
+    }
+    protected override void Start()
+    {
+        base.Start();
         navAgent.SetDestination(new Vector3(2, 0, 1));
+    }
+    protected override void Update()
+    {
+        base.Update();
     }
 }

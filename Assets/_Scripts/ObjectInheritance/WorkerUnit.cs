@@ -24,13 +24,14 @@ public class WorkerUnit : BasicUnit
     protected override void Awake()
     {
         base.Awake();
-        MaxHealth = Health = 10f;
+        MaxHealth = Health = 25f;
         AttackRange = 2f;
         AttackSpeed = 1f;
-        Damage = 1f;
+        Damage = 2f;
     }
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         buildRange = 4;
         constructingBuild = false;
         buildCooldownTime = 1.0f;

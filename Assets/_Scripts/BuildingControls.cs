@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class BuildingControls : MonoBehaviour
 {
     public List<GameObject> progressPrefabs = new List<GameObject>();
+    public GameObject blueprint;
     public GameObject progressBar;
     public GameObject highlight;
     public const int woodCost = 100;
+    public int currentColliders;
     private Slider progressSlider;
     private float currentProgress;
     private int currentPrefabState;
@@ -18,6 +20,7 @@ public class BuildingControls : MonoBehaviour
         currentProgress = 0;
         currentPrefabState = 0;
         progressSlider = progressBar.GetComponent<Slider>();
+        currentColliders = 0;
     }
     public void SelectBuilding()
     {
@@ -37,6 +40,7 @@ public class BuildingControls : MonoBehaviour
     {
         bool stateChanged = false;
 
+        Debug.Log("SetPrefabState: current / next " + currentPrefabState + " / " + nextPrefabState);
         if (currentPrefabState != nextPrefabState &&
             nextPrefabState <= progressPrefabs.Count &&
             progressPrefabs[nextPrefabState] != null)
@@ -96,5 +100,13 @@ public class BuildingControls : MonoBehaviour
                 SetPrefabState(3);
             }
         }
+    }
+    public void OnTriggerEnter(Collider other)
+    {
+        currentColliders++;
+    }
+    public void OnTriggerExit(Collider other)
+    {
+        currentColliders--;
     }
 }

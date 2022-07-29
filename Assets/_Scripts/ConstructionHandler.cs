@@ -6,19 +6,33 @@ using UnityEngine.EventSystems;
 public class ConstructionHandler : MonoBehaviour
 {
     private GameObject currentBuild;
+    private BuildingControls currentBuildControls;
     private bool buildingInProgress = false;
     private GameObject townCenterPrefab;
+    private Material tcBlueprintGoodMat;
+    private Material tcBlueprintBadMat;
 
     private void Start()
     {
         buildingInProgress = false;
         currentBuild = null;
+        currentBuildControls = null;
         townCenterPrefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
+        tcBlueprintGoodMat = Resources.Load("Materials/BlueprintGoodMat") as Material;
+        tcBlueprintBadMat = Resources.Load("Materials/BlueprintBadMat") as Material;
     }
     void Update()
     {
         if (buildingInProgress)
         {
+            if (currentBuildControls.currentColliders > 0)
+            {
+                currentBuildControls.blueprint.GetComponent<MeshRenderer>().material = tcBlueprintBadMat;
+            }
+            else
+            {
+                currentBuildControls.blueprint.GetComponent<MeshRenderer>().material = tcBlueprintGoodMat;
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
@@ -33,7 +47,9 @@ public class ConstructionHandler : MonoBehaviour
             }
         }
 
-        if (buildingInProgress && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (buildingInProgress && Input.GetMouseButtonDown(0) && 
+            !EventSystem.current.IsPointerOverGameObject() &&
+            currentBuildControls.currentColliders == 0)
         {
             //GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterProg0") as GameObject;
             //GameObject go = Instantiate(prefab);
@@ -42,8 +58,10 @@ public class ConstructionHandler : MonoBehaviour
             //pos.y = go.transform.position.y; // Keep the y component of the GameObject
             //go.transform.position = pos;
 
-            currentBuild.GetComponent<BuildingControls>().ResetProgressBar();
-            currentBuild.GetComponent<BuildingControls>().SetNextPrefabState();
+            currentBuildControls.ResetProgressBar();
+            currentBuildControls.SetNextPrefabState();
+            Destroy(currentBuild.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
+            //currentBuild.GetComponent<BuildingControls>().blueprint.GetComponent<BoxCollider>().isTrigger = false; // This is to make the blueprint not trigger any more after a building is fully built
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
             //Destroy(currentBuild);
@@ -53,6 +71,7 @@ public class ConstructionHandler : MonoBehaviour
             //InputHandler.instance.selectedUnits[0].GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
             GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
             currentBuild = null;
+            currentBuildControls = null;
             //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
         }
         if (buildingInProgress && Input.GetMouseButtonDown(1))
@@ -61,6 +80,7 @@ public class ConstructionHandler : MonoBehaviour
             buildingInProgress = false;
             Destroy(currentBuild);
             currentBuild = null;
+            currentBuildControls = null;
         }
     }
     public void BuildTownCenter()
@@ -69,6 +89,8 @@ public class ConstructionHandler : MonoBehaviour
         {
             buildingInProgress = true;
             currentBuild = Instantiate(townCenterPrefab);
+            currentBuild.AddComponent<Rigidbody>().useGravity = false;
+            currentBuildControls = currentBuild.GetComponent<BuildingControls>();
             if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
             {
                 GameHandler.instance.playerBuildings.Add(currentBuild);

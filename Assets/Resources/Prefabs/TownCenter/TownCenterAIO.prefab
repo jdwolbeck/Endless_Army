@@ -398,7 +398,7 @@ Transform:
   - {fileID: 5687630956194951027}
   - {fileID: 8927726833808840128}
   - {fileID: 7935942349810379514}
-  - {fileID: 4943236524277130896}
+  - {fileID: 3164321459049581150}
   - {fileID: 1788440210479122350}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -416,10 +416,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressPrefabs:
-  - {fileID: 755437291193934926}
+  - {fileID: 7281142750328588416}
   - {fileID: 3821186747833964318}
   - {fileID: 2359917946154379300}
   - {fileID: 3583735550651821}
+  blueprint: {fileID: 7281142750328588416}
   progressBar: {fileID: 83186798221263848}
   highlight: {fileID: 1767228288420742542}
 --- !u!114 &1835143002382326563
@@ -511,7 +512,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1001 &4928067427623191707
+--- !u!1001 &3104116765604112469
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -572,15 +573,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2714c1746a13fe846a947b38dabf5c49, type: 3}
---- !u!1 &755437291193934926 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5629456660156506325, guid: 2714c1746a13fe846a947b38dabf5c49, type: 3}
-  m_PrefabInstance: {fileID: 4928067427623191707}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4943236524277130896 stripped
+--- !u!4 &3164321459049581150 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 71464246635995659, guid: 2714c1746a13fe846a947b38dabf5c49, type: 3}
-  m_PrefabInstance: {fileID: 4928067427623191707}
+  m_PrefabInstance: {fileID: 3104116765604112469}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7281142750328588416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5629456660156506325, guid: 2714c1746a13fe846a947b38dabf5c49, type: 3}
+  m_PrefabInstance: {fileID: 3104116765604112469}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5625948536578428280
 PrefabInstance:

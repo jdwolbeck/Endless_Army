@@ -9,6 +9,10 @@ public class BasicUnit : BasicObject
     [SerializeField]
     protected GameObject HealthBar;
     protected Slider HealthSlider;
+    [SerializeField]
+    protected GameObject TeamShirt;
+    [SerializeField]
+    protected GameObject TeamShirtShoulder;
     protected NavMeshAgent navAgent;
     protected float AttackRange;
     protected float AttackSpeed;
@@ -30,6 +34,13 @@ public class BasicUnit : BasicObject
         Damage = 1f;
         isMovingToTarget = false;
         attackCooldown = 0f;
+        HealthBar.SetActive(false);
+    }
+    protected override void Start()
+    {
+        base.Start();
+        TeamShirt.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
+        TeamShirtShoulder.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
     }
     protected virtual void Update()
     {
@@ -53,16 +64,13 @@ public class BasicUnit : BasicObject
         {
             currentTarget = null;
         }
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("EnemyUnitLayer")))
         {
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
-            {
-                navAgent.SetDestination(hit.point);
-            }
-            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("EnemyUnitLayer"))
-            {
-                Attack(hit.transform.gameObject.GetComponent<BasicUnit>());
-            }
+            Attack(hit.transform.gameObject.GetComponent<BasicUnit>());
+        }
+        else if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
+        {
+            navAgent.SetDestination(hit.point);
         }
     }
     protected void Attack(BasicUnit target)
@@ -76,7 +84,6 @@ public class BasicUnit : BasicObject
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {
-                Debug.Log("Within attack range: " + DistanceToTarget(currentTarget.transform) + "/" + AttackRange);
                 navAgent.SetDestination(gameObject.transform.position);
                 if (attackCooldown <= 0)
                 {
@@ -101,6 +108,10 @@ public class BasicUnit : BasicObject
         }
         else
         {
+            if (!HealthBar.activeInHierarchy)
+            {
+                HealthBar.SetActive(true);
+            }
             HealthSlider.normalizedValue = Health / MaxHealth;
         }
     }
