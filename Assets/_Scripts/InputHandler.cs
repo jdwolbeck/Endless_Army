@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
-    public List<GameObject> selectedUnits = new List<GameObject>();
+    public List<BasicUnit> selectedUnits = new List<BasicUnit>();
     public List<GameObject> selectedBuildings = new List<GameObject>();
     public GameObject selectedResource;
     private bool isDragging = false;
@@ -49,7 +49,7 @@ public class InputHandler : MonoBehaviour
                         DeselectUnits();
                     }
                     unitControls.SelectUnit();
-                    selectedUnits.Add(hit.transform.gameObject);
+                    selectedUnits.Add(hit.transform.gameObject.GetComponent<BasicUnit>());
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
@@ -100,7 +100,7 @@ public class InputHandler : MonoBehaviour
                     if (IsWithinSelectionBounds(unit))
                     {
                         unit.GetComponent<UnitControls>().SelectUnit();
-                        selectedUnits.Add(unit.transform.gameObject);
+                        selectedUnits.Add(unit.transform.gameObject.GetComponent<BasicUnit>());
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class InputHandler : MonoBehaviour
             {
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
-                    selectedUnits[i].GetComponent<UnitControls>().DoAction();
+                    selectedUnits[i].DoAction();
                 }
             }
             else // selectedBuildings.Count > 0

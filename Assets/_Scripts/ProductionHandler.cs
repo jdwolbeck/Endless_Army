@@ -17,7 +17,7 @@ public class ProductionHandler : MonoBehaviour
     private void Start()
     {
         buildingControls = GetComponent<BuildingControls>();
-        workerPrefab = Resources.Load("Prefabs/Worker") as GameObject;
+        workerPrefab = Resources.Load("Prefabs/Units/Worker") as GameObject;
         uiHandler = GameHandler.instance.GetComponent<UIHandler>();
         workerProductionTime = 10.0f; // 10 Seconds to build
     }
@@ -58,12 +58,11 @@ public class ProductionHandler : MonoBehaviour
     }
     public void AddWorkerToQueue()
     {
-        if (PlayerResourceManger.instance.playerCurrentFood < WorkerScript.foodCost)
+        if (PlayerResourceManger.instance.playerCurrentFood < WorkerUnit.foodCost)
         {
             return;
         }
-        PlayerResourceManger.instance.playerCurrentFood -= WorkerScript.foodCost;
-        Debug.Log("Adding worker to Production queue...");
+        PlayerResourceManger.instance.playerCurrentFood -= WorkerUnit.foodCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateWorkerPB();
@@ -71,6 +70,7 @@ public class ProductionHandler : MonoBehaviour
         }
         if (productionQueue.Count < 30)
         {
+            Debug.Log("Adding worker to Production queue...");
             productionQueue.Add(workerPrefab);
         }
         else

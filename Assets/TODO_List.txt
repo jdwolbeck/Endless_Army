@@ -1,6 +1,6 @@
 isDone	| Issue...
 --------|------------------------------------------------------------------------------------
-		| Resource requirements for creation of workers and town centers
+xxx	xxx	| Resource requirements for creation of workers and town centers
 		| Warrior implementation
 		| Enemy AI
 		| Additional units

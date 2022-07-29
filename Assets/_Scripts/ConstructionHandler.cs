@@ -12,7 +12,6 @@ public class ConstructionHandler : MonoBehaviour
     private void Start()
     {
         buildingInProgress = false;
-        Debug.Log("new worker, buliding in progress = false");
         currentBuild = null;
         townCenterPrefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
     }
@@ -48,9 +47,11 @@ public class ConstructionHandler : MonoBehaviour
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
             //Destroy(currentBuild);
-            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().StopAction();
+            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerUnit>().StopAction();
+            GetComponent<WorkerUnit>().StopAction();
             PlayerResourceManger.instance.playerCurrentWood -= BuildingControls.woodCost;
-            InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(currentBuild);
+            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
+            GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
             currentBuild = null;
             //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
         }

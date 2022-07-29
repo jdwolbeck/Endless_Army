@@ -15,6 +15,9 @@ public class PlayerResourceManger : MonoBehaviour
         {
             instance = this;
         }
+        playerCurrentFood = 500;
+        playerCurrentWood = 500;
+        playerCurrentStone = 500;
     }
     public void UpdatePlayerFood(int foodAmount)
     {
