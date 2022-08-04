@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ProductionHandler : MonoBehaviour
 {
@@ -98,6 +99,10 @@ public class ProductionHandler : MonoBehaviour
             obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
         }
         productionQueue.RemoveAt(0);
+        if (buildingControls.hasRallyPoint)
+        {
+            obj.GetComponent<NavMeshAgent>().SetDestination(buildingControls.rallyPoint.transform.position);
+        }
         startTime = Time.time;
     }
 }

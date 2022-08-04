@@ -9,6 +9,8 @@ public class BuildingControls : MonoBehaviour
     public GameObject blueprint;
     public GameObject progressBar;
     public GameObject highlight;
+    public GameObject rallyPoint;
+    public bool hasRallyPoint;
     public const int woodCost = 100;
     public int currentColliders;
     private Slider progressSlider;
@@ -21,20 +23,32 @@ public class BuildingControls : MonoBehaviour
         currentPrefabState = 0;
         progressSlider = progressBar.GetComponent<Slider>();
         currentColliders = 0;
+        hasRallyPoint = false;
     }
     public void SelectBuilding()
     {
         highlight.SetActive(true);
         GetComponent<ProductionHandler>().BuildingSelectionEvent(true);
+        if (hasRallyPoint)
+        {
+            rallyPoint.SetActive(true);
+        }
     }
     public void DeselectBuilding()
     {
         highlight.SetActive(false);
         GetComponent<ProductionHandler>().BuildingSelectionEvent(false);
+        rallyPoint.SetActive(false);
     }
     public void DoAction()
     {
+        RaycastHit hit;
         Debug.Log("Building: " + gameObject.ToString() + " Doing action...");
+        hasRallyPoint = true;
+        rallyPoint.SetActive(true);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out hit);
+        rallyPoint.transform.position = hit.point;
     }
     public bool SetPrefabState(int nextPrefabState)
     {
