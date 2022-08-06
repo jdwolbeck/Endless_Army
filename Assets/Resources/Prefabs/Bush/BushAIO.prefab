@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4226234821410143907}
   - component: {fileID: 4958389225925270345}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BushAIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}

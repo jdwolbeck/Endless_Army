@@ -6,7 +6,7 @@ xxx	xxx	| Resource requirements for creation of workers and town centers
 		| Additional units
 		| Additional Buildings for Units
 		| Upgrades/costmetics for units
-		| Blueprint improvements to prohibit overlaying existing objects
+xxx	xxx	| Blueprint improvements to prohibit overlaying existing objects
 		| Random resource generation
 		| Start screen UI
 		| Harvesting animations/particle system

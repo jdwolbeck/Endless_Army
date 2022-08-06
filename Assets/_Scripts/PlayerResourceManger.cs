@@ -9,7 +9,7 @@ public class PlayerResourceManger : MonoBehaviour
     public int playerCurrentWood;
     public int playerCurrentStone;
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {

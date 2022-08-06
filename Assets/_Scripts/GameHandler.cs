@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameHandler : MonoBehaviour
 {
     public static GameHandler instance;
+    public ScriptableMap Map;
+    private Material groundMat;
     public List<GameObject> playerUnits;
     public List<GameObject> playerBuildings;
     public List<GameObject> enemyUnits;
@@ -24,10 +26,28 @@ public class GameHandler : MonoBehaviour
         enemyBuildings = new List<GameObject>();
         neutralUnits = new List<GameObject>();
         resourceObjects = new List<GameObject>();
-
-
+        Map = Resources.Load<ScriptableMap>("Presets/MapPresets/MapTest");
+        groundMat = Resources.Load<Material>("Materials/GroundMat");
     }
     private void Start()
+    {
+        BuildObjectLists();
+        LoadMap(Map);
+    }
+    void LoadMap(ScriptableMap map)
+    {
+        UnloadCurrentMap();
+        PlayerResourceManger.instance.playerCurrentFood = map.StartingFoodAmount;
+        PlayerResourceManger.instance.playerCurrentWood = map.StartingWoodAmount;
+        PlayerResourceManger.instance.playerCurrentStone = map.StartingStoneAmount;
+        groundMat.color = map.groundColor;
+        Debug.Log("New map has been loaded");
+    }
+    void UnloadCurrentMap()
+    {
+        RemoveAllObjects();
+    }
+    void BuildObjectLists()
     {
         // Go through and populate our lists with the existing GameObjects in the scene
         GameObject[] goList = FindObjectsOfType<GameObject>();
@@ -60,6 +80,47 @@ public class GameHandler : MonoBehaviour
                     resourceObjects.Add(go);
                 }
             }
+        }
+    }
+    void RemoveAllObjects()
+    {
+        // Go through all lists and delete the objects from the scene.
+        GameObject go;
+        for (int i = playerUnits.Count - 1; i >= 0; i--)
+        {
+            go = playerUnits[i];
+            playerUnits.RemoveAt(i);
+            Destroy(go);
+        }
+        for (int i = playerBuildings.Count - 1; i >= 0; i--)
+        {
+            go = playerBuildings[i];
+            playerBuildings.RemoveAt(i);
+            Destroy(go);
+        }
+        for (int i = enemyUnits.Count - 1; i >= 0; i--)
+        {
+            go = enemyUnits[i];
+            enemyUnits.RemoveAt(i);
+            Destroy(go);
+        }
+        for (int i = enemyBuildings.Count - 1; i >= 0; i--)
+        {
+            go = enemyBuildings[i];
+            enemyBuildings.RemoveAt(i);
+            Destroy(go);
+        }
+        for (int i = neutralUnits.Count - 1; i >= 0; i--)
+        {
+            go = neutralUnits[i];
+            neutralUnits.RemoveAt(i);
+            Destroy(go);
+        }
+        for (int i = resourceObjects.Count - 1; i >= 0; i--)
+        {
+            go = resourceObjects[i];
+            resourceObjects.RemoveAt(i);
+            Destroy(go);
         }
     }
 }

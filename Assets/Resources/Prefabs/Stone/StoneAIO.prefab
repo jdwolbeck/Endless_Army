@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8114800008633372997}
   - component: {fileID: 20727123924616130}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: StoneAIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
