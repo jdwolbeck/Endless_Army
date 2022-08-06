@@ -16,4 +16,4 @@ MonoBehaviour:
   StartingFoodAmount: 505
   StartingWoodAmount: 505
   StartingStoneAmount: 505
-  groundColor: {r: 0.41960788, g: 0.2901961, b: 0.227451, a: 1}
+  groundColor: {r: 1, g: 1, b: 1, a: 1}
