@@ -115,4 +115,16 @@ public class BasicUnit : BasicObject
             HealthSlider.normalizedValue = Health / MaxHealth;
         }
     }
+    protected override void Die()
+    {
+        if (Team == TeamEnum.Player)
+        {
+            GameHandler.instance.playerUnits.Remove(gameObject);
+        }
+        else
+        {
+            GameHandler.instance.enemyUnits.Remove(gameObject);
+        }
+        base.Die();
+    }
 }

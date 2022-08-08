@@ -13,6 +13,9 @@ public class InputHandler : MonoBehaviour
     private RaycastHit hit;
     private Vector3 mousePos;
 
+    public delegate void SelectionChanged();
+    public static event SelectionChanged SelectedUnitsChanged;
+
     private void Awake()
     {
         if (instance == null)
@@ -50,6 +53,10 @@ public class InputHandler : MonoBehaviour
                     }
                     unitControls.SelectUnit();
                     selectedUnits.Add(hit.transform.gameObject.GetComponent<BasicUnit>());
+                    if (SelectedUnitsChanged != null)
+                    {
+                        SelectedUnitsChanged();
+                    }
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
@@ -101,6 +108,10 @@ public class InputHandler : MonoBehaviour
                     {
                         unit.GetComponent<UnitControls>().SelectUnit();
                         selectedUnits.Add(unit.transform.gameObject.GetComponent<BasicUnit>());
+                        if (SelectedUnitsChanged != null)
+                        {
+                            SelectedUnitsChanged();
+                        }
                     }
                 }
             }
@@ -137,7 +148,10 @@ public class InputHandler : MonoBehaviour
             }
         }
         selectedUnits.Clear();
-        //GameHandler.instance.GetComponent<UIHandler>().DisableWorkerMenu();
+        if (SelectedUnitsChanged != null)
+        {
+            SelectedUnitsChanged();
+        }
     }
     private void DeselectBuildings()
     {

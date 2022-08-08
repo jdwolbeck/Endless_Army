@@ -19,7 +19,14 @@ public class UIHandler : MonoBehaviour
     private TMP_Text foodText;
     private TMP_Text woodText;
     private TMP_Text stoneText;
-
+    private void OnEnable()
+    {
+        InputHandler.SelectedUnitsChanged += SetWorkerMenu;
+    }
+    private void OnDisable()
+    {
+        InputHandler.SelectedUnitsChanged -= SetWorkerMenu;
+    }
     private void Start()
     {
         if (instance == null)
@@ -34,15 +41,6 @@ public class UIHandler : MonoBehaviour
     }
     private void Update()
     {
-        if (InputHandler.instance.selectedUnits.Count == 1)
-        {   // Only allow the build menu to be open when there is a single worker selected.
-            workerMenu.SetActive(true);
-        }
-        else
-        {
-            workerMenu.SetActive(false);
-        }
-
         if (InputHandler.instance.selectedBuildings.Count == 1)
         {   // Only allow the build menu to be open when there is a single worker selected.
             townCenterMenu.SetActive(true);
@@ -75,10 +73,12 @@ public class UIHandler : MonoBehaviour
     }
     public void OnClickBuildTownCenterButton()
     {
-        for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+        // Tell the first worker to instantiate and setup TC for build.
+        InputHandler.instance.selectedUnits[0].GetComponent<ConstructionHandler>().BuildTownCenter();
+        /*for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
         {
             InputHandler.instance.selectedUnits[i].GetComponent<ConstructionHandler>().BuildTownCenter();
-        }
+        }*/
     }
     public void OnClickBuildWorkerButton()
     {
@@ -90,5 +90,22 @@ public class UIHandler : MonoBehaviour
     public void SetWorkerProductionBar(float progress)
     {
         createWorkerSlider.normalizedValue = progress;
+    }
+    public void SetWorkerMenu()
+    {
+        bool isActive = false;
+        if (InputHandler.instance.selectedUnits.Count != 0)
+        {
+            isActive = true;
+            foreach (BasicUnit unit in InputHandler.instance.selectedUnits)
+            {
+                if (unit is FighterUnit)
+                {
+                    isActive = false;
+                    break;
+                }
+            }
+        }
+        workerMenu.SetActive(isActive);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class WorkerUnit : BasicUnit
 {
     public const int foodCost = 50;
-    private GameObject currentBuild;
+    public GameObject currentBuild { get; private set; }
     private int buildRange;
     private bool constructingBuild;
     private BuildingControls buildControls;

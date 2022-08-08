@@ -17,9 +17,9 @@ public class ConstructionHandler : MonoBehaviour
         buildingInProgress = false;
         currentBuild = null;
         currentBuildControls = null;
-        townCenterPrefab = Resources.Load("Prefabs/TownCenter/TownCenterAIO") as GameObject;
-        tcBlueprintGoodMat = Resources.Load("Materials/BlueprintGoodMat") as Material;
-        tcBlueprintBadMat = Resources.Load("Materials/BlueprintBadMat") as Material;
+        townCenterPrefab = ResourceDictionary.instance.GetPrefab("TownCenterAIO");
+        tcBlueprintGoodMat = ResourceDictionary.instance.GetMaterial("BlueprintGoodMat");
+        tcBlueprintBadMat = ResourceDictionary.instance.GetMaterial("BlueprintBadMat");
     }
     void Update()
     {
@@ -51,33 +51,29 @@ public class ConstructionHandler : MonoBehaviour
             !EventSystem.current.IsPointerOverGameObject() &&
             currentBuildControls.currentColliders == 0)
         {
-            //GameObject prefab = Resources.Load("Prefabs/TownCenter/TownCenterProg0") as GameObject;
-            //GameObject go = Instantiate(prefab);
-
-            //Vector3 pos = currentBuild.transform.position;
-            //pos.y = go.transform.position.y; // Keep the y component of the GameObject
-            //go.transform.position = pos;
-
             currentBuildControls.ResetProgressBar();
             currentBuildControls.SetNextPrefabState();
             Destroy(currentBuild.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
-            //currentBuild.GetComponent<BuildingControls>().blueprint.GetComponent<BoxCollider>().isTrigger = false; // This is to make the blueprint not trigger any more after a building is fully built
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
-            //Destroy(currentBuild);
-            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerUnit>().StopAction();
-            GetComponent<WorkerUnit>().StopAction();
             PlayerResourceManger.instance.playerCurrentWood -= BuildingControls.woodCost;
-            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
-            GetComponent<WorkerUnit>().ConstructBuild(currentBuild);
+            //Now that the TC is placed, tell all workers to go build it (if applicable)
+            for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+            {
+                InputHandler.instance.selectedUnits[i].GetComponent<ConstructionHandler>().StartConstruction(currentBuild);
+            }
             currentBuild = null;
             currentBuildControls = null;
-            //InputHandler.instance.selectedUnits[0].GetComponent<WorkerScript>().ConstructBuild(go);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                BuildTownCenter();
+            }
         }
         if (buildingInProgress && Input.GetMouseButtonDown(1))
         {
-            Debug.Log("Buliding cancelled (Right-Click)");
+            Debug.Log("Building cancelled (Right-Click)");
             buildingInProgress = false;
+            GameHandler.instance.playerBuildings.Remove(currentBuild);
             Destroy(currentBuild);
             currentBuild = null;
             currentBuildControls = null;
@@ -106,6 +102,18 @@ public class ConstructionHandler : MonoBehaviour
                 Debug.Log("Current build was null, cancel building (Instantiate failed?)");
                 buildingInProgress = false;
             }
+        }
+    }
+    public void StartConstruction(GameObject build)
+    {
+        if (!Input.GetKey(KeyCode.LeftShift))
+        {
+            GetComponent<WorkerUnit>().StopAction();
+            GetComponent<WorkerUnit>().ConstructBuild(build);
+        }
+        else if (GetComponent<WorkerUnit>().currentBuild == null)
+        {
+            GetComponent<WorkerUnit>().ConstructBuild(build);
         }
     }
 }

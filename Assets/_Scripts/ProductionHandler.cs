@@ -18,7 +18,7 @@ public class ProductionHandler : MonoBehaviour
     private void Start()
     {
         buildingControls = GetComponent<BuildingControls>();
-        workerPrefab = Resources.Load("Prefabs/Units/Worker") as GameObject;
+        workerPrefab = ResourceDictionary.instance.GetPrefab("Worker");
         uiHandler = GameHandler.instance.GetComponent<UIHandler>();
         workerProductionTime = 10.0f; // 10 Seconds to build
     }

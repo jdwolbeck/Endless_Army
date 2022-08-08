@@ -21,7 +21,7 @@ public class BasicObject : MonoBehaviour
 
         throw new Exception("Tried to calculate distance to a null target!");
     }
-    protected void Die()
+    protected virtual void Die()
     {
         Destroy(gameObject);
     }

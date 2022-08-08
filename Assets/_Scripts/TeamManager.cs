@@ -15,8 +15,8 @@ public class TeamManager : MonoBehaviour
         {
             instance = this;
         }
-        TeamPlayerMat = Resources.Load("Materials/TeamPlayerMat") as Material;
-        TeamEnemyMat = Resources.Load("Materials/TeamEnemyMat") as Material;
+        TeamPlayerMat = ResourceDictionary.instance.GetMaterial("TeamPlayerMat");
+        TeamEnemyMat = ResourceDictionary.instance.GetMaterial("TeamEnemyMat");
     }
 
     public TeamEnum AssignTeam(int objectLayer)
