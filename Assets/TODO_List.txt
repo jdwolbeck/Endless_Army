@@ -27,3 +27,10 @@ Game concepts:
  - Individual unit groups can be controlled with different types of formations like shield wall, spread out, box formation, etc...
  - Combat triangle for different types of units.
  - Each round will consist of a set range of enemy resources, starting unit types, and difficulty. But the difficulty will amp up indefinitely (Ladder gamemode that acts as a leaderboard)
+
+ - Make trees NavObstacles, and if people can go through trees it will allow it
+	- Have special units like mages taht could shrink people around him to allow them to run through trees.
+	- Random modifies that make all units that the AI produces be 50% smaller so they can fight through trees.
+ - Tutorial could have a map for this specific mechanic
+ - Ladder mode could have a custom created maps (every 10 waves?) that utilizes some of these mechanics intentionally
+ - Allow players (for certain modes) to customize how many trees/stones/bushes they would like generated, give them some range to play with. They must stay use the same amount of min% of total resources and max% of total resources.

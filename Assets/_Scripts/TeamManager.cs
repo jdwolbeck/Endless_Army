@@ -6,8 +6,6 @@ using UnityEngine;
 public class TeamManager : MonoBehaviour
 {
     public static TeamManager instance;
-    private Material TeamPlayerMat;
-    private Material TeamEnemyMat;
 
     private void Awake()
     {
@@ -15,10 +13,7 @@ public class TeamManager : MonoBehaviour
         {
             instance = this;
         }
-        TeamPlayerMat = ResourceDictionary.instance.GetMaterial("TeamPlayerMat");
-        TeamEnemyMat = ResourceDictionary.instance.GetMaterial("TeamEnemyMat");
     }
-
     public TeamEnum AssignTeam(int objectLayer)
     {
         if (objectLayer == LayerMask.NameToLayer("PlayerUnitLayer") ||
@@ -40,12 +35,12 @@ public class TeamManager : MonoBehaviour
         if (objectLayer == LayerMask.NameToLayer("PlayerUnitLayer") ||
             objectLayer == LayerMask.NameToLayer("PlayerBuildingLayer"))
         {
-            return TeamPlayerMat;
+            return ResourceDictionary.instance.GetMaterial("TeamPlayerMat");
         }
         else if (objectLayer == LayerMask.NameToLayer("EnemyUnitLayer") ||
                  objectLayer == LayerMask.NameToLayer("EnemyBuildingLayer"))
         {
-            return TeamEnemyMat;
+            return ResourceDictionary.instance.GetMaterial("TeamEnemyMat");
         }
 
         throw new Exception("Unhandled object layer was passed into TeamManager.AssignTeamMaterial...");

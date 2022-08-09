@@ -6,8 +6,6 @@ public class GameHandler : MonoBehaviour
 {
     public static GameHandler instance;
     public ScriptableMap Map;
-    public GameObject Ground;
-    private Material groundMat;
     public List<GameObject> playerUnits;
     public List<GameObject> playerBuildings;
     public List<GameObject> enemyUnits;
@@ -28,13 +26,11 @@ public class GameHandler : MonoBehaviour
         neutralUnits = new List<GameObject>();
         resourceObjects = new List<GameObject>();
         Map = Resources.Load<ScriptableMap>("Presets/MapPresets/MapTest");
-        groundMat = ResourceDictionary.instance.GetMaterial("GroundMat");
     }
     private void Start()
     {
         BuildObjectLists();
-        //LoadMap(Map);
-        //MapGeneration.instance.GenerateRandomPoints();
+        LoadMap(Map);
     }
     void LoadMap(ScriptableMap map)
     {
@@ -42,8 +38,7 @@ public class GameHandler : MonoBehaviour
         PlayerResourceManger.instance.playerCurrentFood = map.StartingFoodAmount;
         PlayerResourceManger.instance.playerCurrentWood = map.StartingWoodAmount;
         PlayerResourceManger.instance.playerCurrentStone = map.StartingStoneAmount;
-        groundMat.color = map.groundColor;
-        Ground.transform.localScale = Vector3.one;
+        ResourceDictionary.instance.GetMaterial("GroundMat").color = map.groundColor;
         Debug.Log("New map has been loaded");
     }
     void UnloadCurrentMap()
