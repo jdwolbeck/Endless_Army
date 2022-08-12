@@ -71,7 +71,7 @@ public class UIHandler : MonoBehaviour
     {
         createWorkerPB.SetActive(false);
     }
-    public void OnClickBuildTownCenterButton()
+    public void OnClickWorkerMenuBuildTownCenterButton()
     {
         // Tell the first worker to instantiate and setup TC for build.
         InputHandler.instance.selectedUnits[0].GetComponent<ConstructionHandler>().BuildTownCenter();
@@ -80,12 +80,24 @@ public class UIHandler : MonoBehaviour
             InputHandler.instance.selectedUnits[i].GetComponent<ConstructionHandler>().BuildTownCenter();
         }*/
     }
-    public void OnClickBuildWorkerButton()
+    public void OnClickTownCenterMenuBuildWorkerButton()
     {
         for (int i = 0; i < InputHandler.instance.selectedBuildings.Count; i++)
         {
             InputHandler.instance.selectedBuildings[i].GetComponent<ProductionHandler>().AddWorkerToQueue();
         }
+    }
+    public void OnClickMapGenerationMenuGenerateMapButton()
+    {
+        MapManager.instance.GenerateMap();
+    }
+    public void OnClickMapGenerationMenuLoadMapButton()
+    {
+        MapManager.instance.LoadMap(null);
+    }
+    public void OnClickMapGenerationMenuClearMapButton()
+    {
+        MapManager.instance.ClearMap();
     }
     public void SetWorkerProductionBar(float progress)
     {

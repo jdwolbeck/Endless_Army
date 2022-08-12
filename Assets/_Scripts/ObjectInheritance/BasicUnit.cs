@@ -20,7 +20,7 @@ public class BasicUnit : BasicObject
     protected float Health;
     protected float MaxHealth;
     private BasicUnit currentTarget;
-    private bool isMovingToTarget;
+    //private bool isMovingToTarget;
     private float attackCooldown;
 
     protected override void Awake()
@@ -32,7 +32,7 @@ public class BasicUnit : BasicObject
         AttackRange = 1f;
         AttackSpeed = 1f;
         Damage = 1f;
-        isMovingToTarget = false;
+        //isMovingToTarget = false;
         attackCooldown = 0f;
         HealthBar.SetActive(false);
     }

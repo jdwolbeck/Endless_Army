@@ -12,9 +12,13 @@ xxx	xxx	| Blueprint improvements to prohibit overlaying existing objects
 		| Harvesting animations/particle system
 		| Worker models for holding resources / animations for collecting resources into backpack and offloading into town center
 xxx	xxx	| Only Show healthBars when damage has been taken
+		| Create a debuggerMenu on the canvas with specific buttons for testing
+xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific maps.
+		| Update map generation algorithm to utilize the percentile that is required for trees and bushes and stones
 
 
-
+Known BugList:
+ - Recreate: Spawn worker with rally point set. Try to build a TC from this worker while moving towards rally point. (It will ignore the build command - fix this)
 
 Game concepts:
  - Each round consists of starting out with a worker and TC, little resources. Wood, Food, Stone are all used for in-round upgrades and unit creation and doesnt carry over to next wave.

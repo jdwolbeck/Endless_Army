@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameHandler : MonoBehaviour
 {
     public static GameHandler instance;
-    public ScriptableMap Map;
     public List<GameObject> playerUnits;
     public List<GameObject> playerBuildings;
     public List<GameObject> enemyUnits;
@@ -25,25 +24,10 @@ public class GameHandler : MonoBehaviour
         enemyBuildings = new List<GameObject>();
         neutralUnits = new List<GameObject>();
         resourceObjects = new List<GameObject>();
-        Map = Resources.Load<ScriptableMap>("Presets/MapPresets/MapTest");
     }
     private void Start()
     {
         BuildObjectLists();
-        LoadMap(Map);
-    }
-    void LoadMap(ScriptableMap map)
-    {
-        UnloadCurrentMap();
-        PlayerResourceManger.instance.playerCurrentFood = map.StartingFoodAmount;
-        PlayerResourceManger.instance.playerCurrentWood = map.StartingWoodAmount;
-        PlayerResourceManger.instance.playerCurrentStone = map.StartingStoneAmount;
-        ResourceDictionary.instance.GetMaterial("GroundMat").color = map.groundColor;
-        Debug.Log("New map has been loaded");
-    }
-    void UnloadCurrentMap()
-    {
-        RemoveAllObjects();
     }
     void BuildObjectLists()
     {
@@ -80,7 +64,7 @@ public class GameHandler : MonoBehaviour
             }
         }
     }
-    void RemoveAllObjects()
+    public void RemoveAllObjects()
     {
         // Go through all lists and delete the objects from the scene.
         GameObject go;
