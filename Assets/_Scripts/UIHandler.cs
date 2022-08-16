@@ -19,6 +19,8 @@ public class UIHandler : MonoBehaviour
     private TMP_Text foodText;
     private TMP_Text woodText;
     private TMP_Text stoneText;
+    public GameObject MapGenerationMenu;
+    private bool isDebugMenuSet;
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
@@ -98,6 +100,19 @@ public class UIHandler : MonoBehaviour
     public void OnClickMapGenerationMenuClearMapButton()
     {
         MapManager.instance.ClearMap();
+    }
+    public void OnClickDebugMenuShowHideButton()
+    {
+        if (isDebugMenuSet)
+        {
+            MapGenerationMenu.SetActive(false);
+            isDebugMenuSet = false;
+        }
+        else
+        {
+            MapGenerationMenu.SetActive(true);
+            isDebugMenuSet = true;
+        }
     }
     public void SetWorkerProductionBar(float progress)
     {

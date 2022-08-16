@@ -12,7 +12,7 @@ xxx	xxx	| Blueprint improvements to prohibit overlaying existing objects
 		| Harvesting animations/particle system
 		| Worker models for holding resources / animations for collecting resources into backpack and offloading into town center
 xxx	xxx	| Only Show healthBars when damage has been taken
-		| Create a debuggerMenu on the canvas with specific buttons for testing
+xxx	xxx	| Create a debuggerMenu on the canvas with specific buttons for testing
 xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific maps.
 		| Update map generation algorithm to utilize the percentile that is required for trees and bushes and stones
 
