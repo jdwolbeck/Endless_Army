@@ -16,6 +16,10 @@ xxx	xxx	| Create a debuggerMenu on the canvas with specific buttons for testing
 xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific maps.
 		| Update map generation algorithm to utilize the percentile that is required for trees and bushes and stones
 
+Immediate TODO:
+Fix TownCenters to more align with Barracks
+Reimplement Left Shift placing of buildings
+Fix bug that deselects a worker when placing a building
 
 Known BugList:
  - Recreate: Spawn worker with rally point set. Try to build a TC from this worker while moving towards rally point. (It will ignore the build command - fix this)

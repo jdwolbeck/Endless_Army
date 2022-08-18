@@ -9,7 +9,7 @@ public class WorkerUnit : BasicUnit
     public GameObject currentBuild { get; private set; }
     private int buildRange;
     private bool constructingBuild;
-    private BuildingControls buildControls;
+    private BasicBuilding currentBasicBuilding;
     private float buildProgress;
     private float buildCooldownTime;
     private float nextBuildTime;
@@ -51,19 +51,12 @@ public class WorkerUnit : BasicUnit
             {
                 navAgent.SetDestination(transform.position);
                 constructingBuild = true;
-                nextBuildTime = Time.time + buildCooldownTime;
-                Debug.Log("Worker started construction");
+                currentBasicBuilding.UpdateActiveBuilders(true);
+                Debug.Log("Set " + gameObject.ToString() + " as an active worker on " + currentBuild.ToString() + " basicBuild? " + currentBasicBuilding.ToString());
             }
-            if (Time.time > nextBuildTime && constructingBuild)
+            if (constructingBuild && currentBasicBuilding.IsBuildingBuilt())
             {
-                nextBuildTime = Time.time + buildCooldownTime;
-
-                buildControls.IncreaseProgressBar(0.1f);
-                if (buildProgress >= 1.0f)
-                {
-                    // Build complete
-                    StopBuilding();
-                }
+                StopBuilding();
             }
         }
         if (currentResource != null)
@@ -112,12 +105,7 @@ public class WorkerUnit : BasicUnit
         {
             navAgent.SetDestination(build.transform.position);
             currentBuild = build;
-            buildControls = currentBuild.GetComponent<BuildingControls>();
-            if (buildControls == null)
-            {
-                Debug.Log("Build controls was null for build " + build.ToString());
-            }
-            Debug.Log("Setting worker destination to " + build.transform.position.ToString());
+            currentBasicBuilding = currentBuild.GetComponent<BasicBuilding>();
         }
         else
         {
@@ -126,9 +114,12 @@ public class WorkerUnit : BasicUnit
     }
     public void StopBuilding()
     {
-        buildControls = null;
+        if (currentBasicBuilding != null && constructingBuild)
+            currentBasicBuilding.UpdateActiveBuilders(false);
+        currentBasicBuilding = null;
         constructingBuild = false;
         currentBuild = null;
+        navAgent.SetDestination(transform.position);
     }
     public void HarvestResource(GameObject resource)
     {
@@ -178,7 +169,7 @@ public class WorkerUnit : BasicUnit
     public override void DoAction()
     {
         // If we were in the middle of building, stop
-        GetComponent<WorkerUnit>().StopAction();
+        StopAction();
         base.DoAction();
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -192,12 +183,17 @@ public class WorkerUnit : BasicUnit
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ConstructionLayer"))
             {
-                GetComponent<WorkerUnit>().ConstructBuild(hit.transform.parent.gameObject);
+                GameObject go = hit.transform.gameObject;
+                while(go.transform.parent != null)
+                {
+                    go = go.transform.parent.gameObject;
+                }
+                ConstructBuild(go);
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ResourceLayer"))
             {
                 Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
-                GetComponent<WorkerUnit>().HarvestResource(hit.transform.gameObject);
+                HarvestResource(hit.transform.gameObject);
             }
         }
     }

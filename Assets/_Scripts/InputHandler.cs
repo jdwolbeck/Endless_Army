@@ -9,6 +9,7 @@ public class InputHandler : MonoBehaviour
     public List<BasicUnit> selectedUnits = new List<BasicUnit>();
     public List<GameObject> selectedBuildings = new List<GameObject>();
     public GameObject selectedResource;
+    public bool lockSelectedObjects = false;
     private bool isDragging = false;
     private RaycastHit hit;
     private Vector3 mousePos;
@@ -35,7 +36,7 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         // Check what we are clicking on with left mouse.
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (!lockSelectedObjects && Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             mousePos = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
@@ -64,15 +65,21 @@ public class InputHandler : MonoBehaviour
                 DeselectResource();
                 DeselectUnits();
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
-                BuildingControls buildingControls = hit.transform.parent.GetComponent<BuildingControls>();
-                if (buildingControls != null)
+                // = hit.transform.parent.GetComponent<BasicBuilding>();
+                GameObject go = hit.transform.gameObject;
+                while(go.transform.parent != null)
+                {
+                    go = go.transform.parent.gameObject;
+                }
+                BasicBuilding basicBuilding = go.GetComponent<BasicBuilding>(); ;
+                if (basicBuilding != null)
                 {
                     if (!Input.GetKey(KeyCode.LeftShift))
                     {
                         DeselectBuildings();
                     }
-                    buildingControls.SelectBuilding();
-                    selectedBuildings.Add(hit.transform.parent.gameObject);
+                    basicBuilding.SelectBuilding();
+                    selectedBuildings.Add(go);
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
@@ -98,7 +105,7 @@ public class InputHandler : MonoBehaviour
         }
 
         // Logic for when we release the left click (click-and-drag logic)
-        if (Input.GetMouseButtonUp(0))
+        if (!lockSelectedObjects && Input.GetMouseButtonUp(0))
         {
             if (GameHandler.instance.playerUnits != null)
             {
@@ -119,7 +126,7 @@ public class InputHandler : MonoBehaviour
         }
 
         // When we right click with units selected, do something.
-        if (Input.GetMouseButtonDown(1) && (selectedUnits.Count > 0 || selectedBuildings.Count > 0))
+        if (!lockSelectedObjects && Input.GetMouseButtonDown(1) && (selectedUnits.Count > 0 || selectedBuildings.Count > 0))
         {
             mousePos = Input.mousePosition;
             if (selectedUnits.Count > 0)
@@ -133,7 +140,7 @@ public class InputHandler : MonoBehaviour
             {
                 for (int i = 0; i < selectedBuildings.Count; i++)
                 {
-                    selectedBuildings[i].GetComponent<BuildingControls>().DoAction();
+                    selectedBuildings[i].GetComponent<BasicBuilding>().DoAction();
                 }
             }
         }
@@ -159,7 +166,7 @@ public class InputHandler : MonoBehaviour
         {
             for (int i = 0; i < selectedBuildings.Count; i++)
             {
-                selectedBuildings[i].GetComponent<BuildingControls>().DeselectBuilding();
+                selectedBuildings[i].GetComponent<BasicBuilding>().DeselectBuilding();
             }
         }
         selectedBuildings.Clear();

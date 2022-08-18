@@ -77,10 +77,11 @@ public class UIHandler : MonoBehaviour
     {
         // Tell the first worker to instantiate and setup TC for build.
         InputHandler.instance.selectedUnits[0].GetComponent<ConstructionHandler>().BuildTownCenter();
-        /*for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
-        {
-            InputHandler.instance.selectedUnits[i].GetComponent<ConstructionHandler>().BuildTownCenter();
-        }*/
+    }
+    public void OnClickWorkerMenuBuildBarracksButton()
+    {
+        // Tell the first worker to instantiate and setup TC for build.
+        InputHandler.instance.selectedUnits[0].GetComponent<ConstructionHandler>().BuildBarracks();
     }
     public void OnClickTownCenterMenuBuildWorkerButton()
     {

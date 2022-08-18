@@ -21,6 +21,7 @@ public class ResourceDictionary : MonoBehaviour
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Bush").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Stone").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/TownCenter").ToList());
+        Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Barracks").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Tree").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Units").ToList());
         Materials = Resources.LoadAll<Material>("Materials").ToList();

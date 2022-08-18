@@ -7,6 +7,9 @@ public class ConstructionHandler : MonoBehaviour
 {
     private GameObject currentBuild;
     private BuildingControls currentBuildControls;
+
+    private BasicBuilding currentBasicBuilding;
+    
     private bool buildingInProgress = false;
     private GameObject townCenterPrefab;
     private Material tcBlueprintGoodMat;
@@ -21,18 +24,10 @@ public class ConstructionHandler : MonoBehaviour
         tcBlueprintGoodMat = ResourceDictionary.instance.GetMaterial("BlueprintGoodMat");
         tcBlueprintBadMat = ResourceDictionary.instance.GetMaterial("BlueprintBadMat");
     }
-    void Update()
+    private void Update()
     {
         if (buildingInProgress)
         {
-            if (currentBuildControls.currentColliders > 0)
-            {
-                currentBuildControls.blueprint.GetComponent<MeshRenderer>().material = tcBlueprintBadMat;
-            }
-            else
-            {
-                currentBuildControls.blueprint.GetComponent<MeshRenderer>().material = tcBlueprintGoodMat;
-            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
@@ -40,19 +35,18 @@ public class ConstructionHandler : MonoBehaviour
                 Vector3 newPos = hit.point;
                 newPos.y = currentBuild.transform.position.y; // Keep the y component of the GameObject to not make it phase through ground
                 currentBuild.transform.position = newPos;
-            } 
+            }
             else
             {
                 Debug.Log("Ray did not hit anything.");
             }
         }
 
-        if (buildingInProgress && Input.GetMouseButtonDown(0) && 
+        if (buildingInProgress && Input.GetMouseButtonDown(0) &&
             !EventSystem.current.IsPointerOverGameObject() &&
-            currentBuildControls.currentColliders == 0)
+            currentBasicBuilding.canBuildHere)
         {
-            currentBuildControls.ResetProgressBar();
-            currentBuildControls.SetNextPrefabState();
+            InputHandler.instance.lockSelectedObjects = false;
             Destroy(currentBuild.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
@@ -64,13 +58,10 @@ public class ConstructionHandler : MonoBehaviour
             }
             currentBuild = null;
             currentBuildControls = null;
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                BuildTownCenter();
-            }
         }
         if (buildingInProgress && Input.GetMouseButtonDown(1))
         {
+            InputHandler.instance.lockSelectedObjects = false;
             Debug.Log("Building cancelled (Right-Click)");
             buildingInProgress = false;
             GameHandler.instance.playerBuildings.Remove(currentBuild);
@@ -83,10 +74,37 @@ public class ConstructionHandler : MonoBehaviour
     {
         if (!buildingInProgress && PlayerResourceManger.instance.playerCurrentWood >= BuildingControls.woodCost)
         {
+            InputHandler.instance.lockSelectedObjects = true;
             buildingInProgress = true;
             currentBuild = Instantiate(townCenterPrefab);
             currentBuild.AddComponent<Rigidbody>().useGravity = false;
             currentBuildControls = currentBuild.GetComponent<BuildingControls>();
+            if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
+            {
+                GameHandler.instance.playerBuildings.Add(currentBuild);
+                currentBuild.layer = LayerMask.NameToLayer("PlayerBuildingLayer");
+            }
+            else
+            {
+                GameHandler.instance.enemyBuildings.Add(currentBuild);
+                currentBuild.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
+            }
+            if (currentBuild == null)
+            {
+                Debug.Log("Current build was null, cancel building (Instantiate failed?)");
+                buildingInProgress = false;
+            }
+        }
+    }
+    public void BuildBarracks()
+    {
+        if (!buildingInProgress && PlayerResourceManger.instance.playerCurrentWood >= BuildingControls.woodCost)
+        {
+            InputHandler.instance.lockSelectedObjects = true;
+            buildingInProgress = true;
+            currentBuild = Instantiate(ResourceDictionary.instance.GetPrefab("BarracksEGO"));
+            currentBuild.AddComponent<Rigidbody>().useGravity = false;
+            currentBasicBuilding = currentBuild.GetComponent<BasicBuilding>();
             if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
             {
                 GameHandler.instance.playerBuildings.Add(currentBuild);
