@@ -6,13 +6,29 @@ using UnityEngine;
 public class BasicObject : MonoBehaviour
 {
     public TeamEnum Team;
-    public GameObject TeamIndicators; // TODO
+    public GameObject highlight;
+    public GameObject TeamIndicators;
+    public int FoodCost;
+    public int WoodCost;
+    public int StoneCost;
+    public float ProductionTime;
+    public float MaxHealth;
+    protected float currentHealth;
+
     protected virtual void Awake() { }
     protected virtual void Start() 
     {
         Team = TeamManager.instance.AssignTeam(gameObject.layer);
     }
     public virtual void DoAction() { }
+    public virtual void SelectObject()
+    {
+        highlight.SetActive(true);
+    }
+    public virtual void DeselectObject()
+    {
+        highlight.SetActive(false);
+    }
     protected virtual void Die()
     {
         Destroy(gameObject);
@@ -46,6 +62,15 @@ public class BasicObject : MonoBehaviour
                 continue;
             SetMaterialRecursively(child.gameObject, mat);
         }
+    }
+    public virtual void LoadFromPreset(ScriptableObj obj)
+    {
+        FoodCost = obj.FoodCost;
+        WoodCost = obj.WoodCost;
+        StoneCost = obj.StoneCost;
+        ProductionTime = obj.ProductionTime;
+        MaxHealth = obj.MaxHealth;
+        currentHealth = MaxHealth;
     }
 }
 public enum TeamEnum

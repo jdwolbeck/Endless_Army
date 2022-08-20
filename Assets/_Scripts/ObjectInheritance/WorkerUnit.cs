@@ -5,14 +5,11 @@ using UnityEngine.AI;
 
 public class WorkerUnit : BasicUnit
 {
-    public const int foodCost = 50;
+    //public static new int FoodCost = 50;
     public GameObject currentBuild { get; private set; }
     private int buildRange;
     private bool constructingBuild;
     private BasicBuilding currentBasicBuilding;
-    private float buildProgress;
-    private float buildCooldownTime;
-    private float nextBuildTime;
     private GameObject currentResource;
     private ResourceHandler resourceHandler;
     private bool isHarvesting;
@@ -24,23 +21,19 @@ public class WorkerUnit : BasicUnit
     protected override void Awake()
     {
         base.Awake();
-        MaxHealth = Health = 25f;
-        AttackRange = 2f;
-        AttackSpeed = 1f;
-        Damage = 2f;
     }
     protected override void Start()
     {
         base.Start();
         buildRange = 4;
         constructingBuild = false;
-        buildCooldownTime = 1.0f;
-        nextBuildTime = 0;
         isHarvesting = false;
         harvestRange = 3;
         harvestCooldownTime = 1.5f;
         nextHarvestTime = 0;
         harvestAmount = 10;
+        if (isSpawnedFromInspector)
+            LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker"));
     }
     protected override void Update()
     {

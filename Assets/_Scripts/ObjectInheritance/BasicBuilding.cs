@@ -7,18 +7,15 @@ using UnityEngine.UI;
 public class BasicBuilding : BasicObject
 {
     public GameObject buildingBlocks;
-    public GameObject highlight;
     public GameObject rallyPoint;
     public GameObject progressBar;
     public bool canBuildHere;
-
-    protected float buildTime;
+    public bool hasRallyPoint;
 
     private List<Transform> prefabObjectList;
     private List<Material> buildingBlockMatList;
     private Slider progressSlider;
     private float currentProgress;
-    private bool hasRallyPoint;
     private bool isBuilt;
     private bool blueprintMatsApplied;
     private int currentColliders;
@@ -28,17 +25,12 @@ public class BasicBuilding : BasicObject
     {
         base.Awake();
         canBuildHere = true;
-        buildTime = 10f;
         prefabObjectList = new List<Transform>();
         buildingBlockMatList = new List<Material>();
         progressSlider = progressBar.GetComponent<Slider>();
-        currentProgress = 0;
-        hasRallyPoint = false;
-        isBuilt = false;
-        blueprintMatsApplied = false;
-        currentColliders = 0;
-        currentWorkers = 0;
-        SetBlueprintMats(true);
+        SaveBuildingBlocksMats();
+        SetMaterialRecursively(buildingBlocks, ResourceDictionary.instance.GetMaterial("BlueprintGoodMat"));
+        blueprintMatsApplied = true;
         SetLayerRecursively(buildingBlocks, LayerMask.NameToLayer("ConstructionLayer"));
     }
     protected virtual void Update()
@@ -47,10 +39,10 @@ public class BasicBuilding : BasicObject
         if (currentWorkers > 0)
         {
             currentProgress += Time.deltaTime * currentWorkers;
-            progressSlider.normalizedValue = currentProgress / buildTime;
+            progressSlider.normalizedValue = currentProgress / ProductionTime;
 
             UpgradeProgressPrefab();
-            if (currentProgress >= buildTime)
+            if (currentProgress >= ProductionTime)
             {
                 isBuilt = true;
                 progressBar.SetActive(false);
@@ -74,17 +66,17 @@ public class BasicBuilding : BasicObject
         Physics.Raycast(ray, out hit);
         rallyPoint.transform.position = hit.point;
     }
-    public virtual void SelectBuilding()
+    public override void SelectObject()
     {
-        highlight.SetActive(true);
+        base.SelectObject();
         if (hasRallyPoint)
         {
             rallyPoint.SetActive(true);
         }
     }
-    public virtual void DeselectBuilding()
+    public override void DeselectObject()
     {
-        highlight.SetActive(false);
+        base.DeselectObject();
         rallyPoint.SetActive(false);
     }
     public void UpdateActiveBuilders(bool addWorker)
@@ -103,7 +95,8 @@ public class BasicBuilding : BasicObject
         // We started building our building, should only occur on the first call.
         if (blueprintMatsApplied)
         {
-            SetBlueprintMats(false);
+            ApplyBuildingBlocksMats();
+            blueprintMatsApplied = false;
             progressBar.SetActive(true);
         }
         // Populate our object list with every 1st generation child of our top-level transform.
@@ -123,9 +116,9 @@ public class BasicBuilding : BasicObject
             }
         }
     }
-    private void SetBlueprintMats(bool setBPMats)
+    private void SaveBuildingBlocksMats()
     {
-        for(int i = 0; i < buildingBlocks.transform.childCount; i++)
+        for (int i = 0; i < buildingBlocks.transform.childCount; i++)
         {
             // If a certain GO has a meshrenderer it means that it is a visible 3d object on a prefab.
             MeshRenderer meshR;
@@ -133,22 +126,28 @@ public class BasicBuilding : BasicObject
             if (buildingBlocks.transform.GetChild(i).TryGetComponent<MeshRenderer>(out meshR))
             {
                 if (buildingBlocks.transform.GetChild(i).TryGetComponent<NavMeshObstacle>(out navMeshObstacle))
-                    navMeshObstacle.enabled = !setBPMats;
+                    navMeshObstacle.enabled = false;
 
-                if (setBPMats)
-                {
-                    buildingBlockMatList.Add(meshR.material);
-                    meshR.material = ResourceDictionary.instance.GetMaterial("BlueprintGoodMat");
-                }
-                else
-                {
-                    meshR.material = buildingBlockMatList[0];
-                    buildingBlockMatList.RemoveAt(0);
-                }
+                buildingBlockMatList.Add(meshR.material);
             }
         }
+    }
+    private void ApplyBuildingBlocksMats()
+    {
+        for (int i = 0; i < buildingBlocks.transform.childCount; i++)
+        {
+            // If a certain GO has a meshrenderer it means that it is a visible 3d object on a prefab.
+            MeshRenderer meshR;
+            NavMeshObstacle navMeshObstacle;
+            if (buildingBlocks.transform.GetChild(i).TryGetComponent<MeshRenderer>(out meshR))
+            {
+                if (buildingBlocks.transform.GetChild(i).TryGetComponent<NavMeshObstacle>(out navMeshObstacle))
+                    navMeshObstacle.enabled = true;
 
-        blueprintMatsApplied = setBPMats;
+                meshR.material = buildingBlockMatList[0];
+                buildingBlockMatList.RemoveAt(0);
+            }
+        }
     }
     private void ChangeBlueprintColor()
     {

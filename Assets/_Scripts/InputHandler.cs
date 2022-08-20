@@ -7,7 +7,7 @@ public class InputHandler : MonoBehaviour
 {
     public static InputHandler instance;
     public List<BasicUnit> selectedUnits = new List<BasicUnit>();
-    public List<GameObject> selectedBuildings = new List<GameObject>();
+    public List<BasicBuilding> selectedBuildings = new List<BasicBuilding>();
     public GameObject selectedResource;
     public bool lockSelectedObjects = false;
     private bool isDragging = false;
@@ -16,6 +16,7 @@ public class InputHandler : MonoBehaviour
 
     public delegate void SelectionChanged();
     public static event SelectionChanged SelectedUnitsChanged;
+    public static event SelectionChanged SelectedBuildingsChanged;
 
     private void Awake()
     {
@@ -45,14 +46,14 @@ public class InputHandler : MonoBehaviour
                 DeselectResource();
                 DeselectBuildings();
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
-                UnitControls unitControls = hit.transform.GetComponent<UnitControls>();
-                if (unitControls != null)
+                BasicUnit basicUnit = hit.transform.GetComponent<BasicUnit>();
+                if (basicUnit != null)
                 {
                     if (!Input.GetKey(KeyCode.LeftShift))
                     {
                         DeselectUnits();
                     }
-                    unitControls.SelectUnit();
+                    basicUnit.SelectObject();
                     selectedUnits.Add(hit.transform.gameObject.GetComponent<BasicUnit>());
                     if (SelectedUnitsChanged != null)
                     {
@@ -65,7 +66,6 @@ public class InputHandler : MonoBehaviour
                 DeselectResource();
                 DeselectUnits();
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
-                // = hit.transform.parent.GetComponent<BasicBuilding>();
                 GameObject go = hit.transform.gameObject;
                 while(go.transform.parent != null)
                 {
@@ -78,8 +78,12 @@ public class InputHandler : MonoBehaviour
                     {
                         DeselectBuildings();
                     }
-                    basicBuilding.SelectBuilding();
-                    selectedBuildings.Add(go);
+                    basicBuilding.SelectObject();
+                    selectedBuildings.Add(go.GetComponent<BasicBuilding>());
+                    if (SelectedBuildingsChanged != null)
+                    {
+                        SelectedBuildingsChanged();
+                    }
                 }
             }
             else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
@@ -97,10 +101,13 @@ public class InputHandler : MonoBehaviour
             }
             else
             {
-                isDragging = true;
-                DeselectResource();
-                DeselectUnits();
-                DeselectBuildings();
+                if (!lockSelectedObjects)
+                {
+                    isDragging = true;
+                    DeselectResource();
+                    DeselectUnits();
+                    DeselectBuildings();
+                }
             }
         }
 
@@ -113,7 +120,7 @@ public class InputHandler : MonoBehaviour
                 {
                     if (IsWithinSelectionBounds(unit))
                     {
-                        unit.GetComponent<UnitControls>().SelectUnit();
+                        unit.GetComponent<BasicUnit>().SelectObject();
                         selectedUnits.Add(unit.transform.gameObject.GetComponent<BasicUnit>());
                         if (SelectedUnitsChanged != null)
                         {
@@ -151,7 +158,7 @@ public class InputHandler : MonoBehaviour
         {
             for (int i = 0; i < selectedUnits.Count; i++)
             {
-                selectedUnits[i].GetComponent<UnitControls>().DeselectUnit();
+                selectedUnits[i].GetComponent<BasicUnit>().DeselectObject();
             }
         }
         selectedUnits.Clear();
@@ -166,10 +173,14 @@ public class InputHandler : MonoBehaviour
         {
             for (int i = 0; i < selectedBuildings.Count; i++)
             {
-                selectedBuildings[i].GetComponent<BasicBuilding>().DeselectBuilding();
+                selectedBuildings[i].GetComponent<BasicBuilding>().DeselectObject();
             }
         }
         selectedBuildings.Clear();
+        if (SelectedBuildingsChanged != null)
+        {
+            SelectedBuildingsChanged();
+        }
     }
     private void DeselectResource()
     {

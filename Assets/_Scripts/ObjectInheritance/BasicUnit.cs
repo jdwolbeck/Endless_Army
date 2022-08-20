@@ -7,33 +7,23 @@ using UnityEngine.UI;
 
 public class BasicUnit : BasicObject
 {
-    [SerializeField]
-    protected GameObject HealthBar;
-    protected Slider HealthSlider;
-    [SerializeField]
-    protected GameObject TeamShirt;
-    [SerializeField]
-    protected GameObject TeamShirtShoulder;
+    public bool isSpawnedFromInspector;
+    [SerializeField] protected GameObject HealthBar;
+    [SerializeField] protected GameObject TeamShirt;
+    [SerializeField] protected GameObject TeamShirtShoulder;
     protected NavMeshAgent navAgent;
+    protected Slider HealthSlider;
     protected float AttackRange;
     protected float AttackSpeed;
     protected float Damage;
-    protected float Health;
-    protected float MaxHealth;
     private BasicUnit currentTarget;
-    //private bool isMovingToTarget;
     private float attackCooldown;
 
     protected override void Awake()
     {
         base.Awake();
         navAgent = GetComponent<NavMeshAgent>();
-        MaxHealth = Health = 5f;
         HealthSlider = HealthBar.GetComponent<Slider>();
-        AttackRange = 1f;
-        AttackSpeed = 1f;
-        Damage = 1f;
-        //isMovingToTarget = false;
         attackCooldown = 0f;
         HealthBar.SetActive(false);
     }
@@ -110,9 +100,9 @@ public class BasicUnit : BasicObject
     }
     protected void TakeDamage(float damage)
     {
-        Health -= damage;
+        currentHealth -= damage;
         Debug.Log(gameObject.ToString() + ": Took damage");
-        if (Health <= 0)
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -122,7 +112,7 @@ public class BasicUnit : BasicObject
             {
                 HealthBar.SetActive(true);
             }
-            HealthSlider.normalizedValue = Health / MaxHealth;
+            HealthSlider.normalizedValue = currentHealth / MaxHealth;
         }
     }
     protected override void Die()
@@ -136,5 +126,12 @@ public class BasicUnit : BasicObject
             GameHandler.instance.enemyUnits.Remove(gameObject);
         }
         base.Die();
+    }
+    public override void LoadFromPreset(ScriptableObj obj)
+    {
+        base.LoadFromPreset(obj);
+        AttackRange = ((ScriptableUnit)obj).AttackRange;
+        AttackSpeed = ((ScriptableUnit)obj).AttackSpeed;
+        Damage = ((ScriptableUnit)obj).Damage;
     }
 }

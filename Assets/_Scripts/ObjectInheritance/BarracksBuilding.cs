@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class TownCenterBuilding : BasicBuilding
+public class BarracksBuilding : BasicBuilding
 {
     public List<GameObject> productionQueue = new List<GameObject>();
     private UIHandler uiHandler;
@@ -26,16 +25,16 @@ public class TownCenterBuilding : BasicBuilding
             progress = (Time.time - startTime) / scriptableUnit.ProductionTime;
             if (objIsSelected)
             {
-                uiHandler.SetWorkerProductionBar(progress);
+                uiHandler.SetFighterProductionBar(progress);
             }
             if (progress >= 1.0f)
             {
-                SpawnWorker();
+                SpawnFighter();
             }
         }
         else if (tcpbEnabled && objIsSelected) // And Count == 0
         {
-            uiHandler.DisableCreateWorkerPB();
+            uiHandler.DisableCreateFighterPB();
             tcpbEnabled = false;
         }
     }
@@ -47,11 +46,11 @@ public class TownCenterBuilding : BasicBuilding
     public override void DeselectObject()
     {
         base.DeselectObject();
-       BuildingSelectionEvent(false);
+        BuildingSelectionEvent(false);
     }
-    public void AddWorkerToQueue()
+    public void AddFighterToQueue()
     {
-        scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker");
+        scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter");
         if (PlayerResourceManger.instance.playerCurrentFood < scriptableUnit.FoodCost ||
             PlayerResourceManger.instance.playerCurrentWood < scriptableUnit.WoodCost ||
             PlayerResourceManger.instance.playerCurrentStone < scriptableUnit.StoneCost)
@@ -63,13 +62,13 @@ public class TownCenterBuilding : BasicBuilding
         PlayerResourceManger.instance.playerCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
-            uiHandler.EnableCreateWorkerPB();
+            uiHandler.EnableCreateFighterPB();
             tcpbEnabled = true;
         }
         if (productionQueue.Count < 30)
         {
-            Debug.Log("Adding worker to Production queue...");
-            productionQueue.Add(ResourceDictionary.instance.GetPrefab("Worker"));
+            Debug.Log("Adding fighter to Production queue...");
+            productionQueue.Add(ResourceDictionary.instance.GetPrefab("Fighter"));
         }
         else
         {
@@ -81,9 +80,9 @@ public class TownCenterBuilding : BasicBuilding
             startTime = Time.time;
         }
     }
-    private void SpawnWorker()
+    private void SpawnFighter()
     {
-        uiHandler.SetWorkerProductionBar(0);
+        uiHandler.SetFighterProductionBar(0);
         GameObject obj = Instantiate(productionQueue[0], transform.position - transform.forward, Quaternion.identity);
         obj.GetComponent<BasicUnit>().LoadFromPreset(scriptableUnit);
         if (gameObject.layer == LayerMask.NameToLayer("PlayerBuildingLayer"))
@@ -99,7 +98,7 @@ public class TownCenterBuilding : BasicBuilding
         productionQueue.RemoveAt(0);
         if (hasRallyPoint)
         {
-            obj.GetComponent<NavMeshAgent>().SetDestination(rallyPoint.transform.position);
+            obj.GetComponent<UnityEngine.AI.NavMeshAgent>().SetDestination(rallyPoint.transform.position);
         }
         startTime = Time.time;
     }

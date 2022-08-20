@@ -1406,7 +1406,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1280543248302116278}
-  - component: {fileID: 1019068886563300463}
+  - component: {fileID: 6507636387801339633}
   m_Layer: 0
   m_Name: BarracksEGO
   m_TagString: Untagged
@@ -1433,7 +1433,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1019068886563300463
+--- !u!114 &6507636387801339633
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1442,7 +1442,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6842957374088885394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2e97241c6effe042b81822bffd91cd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 246cddbec2c58d4469f1fe7d81cea3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 0
@@ -1452,6 +1452,7 @@ MonoBehaviour:
   rallyPoint: {fileID: 1961524306393240429}
   progressBar: {fileID: 563557043539012562}
   canBuildHere: 0
+  hasRallyPoint: 0
 --- !u!1 &6922374942066665854
 GameObject:
   m_ObjectHideFlags: 0

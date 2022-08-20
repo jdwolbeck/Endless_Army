@@ -10,8 +10,11 @@ public class UIHandler : MonoBehaviour
     public GameObject canvas;
     public GameObject workerMenu = null;
     public GameObject townCenterMenu = null;
+    public GameObject barracksMenu = null;
     public GameObject createWorkerPB = null;
+    public GameObject createFighterPB = null;
     private Slider createWorkerSlider;
+    private Slider createFighterSlider;
     public GameObject hudMenu = null;
     public GameObject foodTextBox;
     public GameObject woodTextBox;
@@ -24,10 +27,14 @@ public class UIHandler : MonoBehaviour
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
+        InputHandler.SelectedBuildingsChanged += SetTownCenterMenu;
+        InputHandler.SelectedBuildingsChanged += SetBarracksMenu;
     }
     private void OnDisable()
     {
         InputHandler.SelectedUnitsChanged -= SetWorkerMenu;
+        InputHandler.SelectedBuildingsChanged -= SetTownCenterMenu;
+        InputHandler.SelectedBuildingsChanged -= SetBarracksMenu;
     }
     private void Start()
     {
@@ -36,6 +43,7 @@ public class UIHandler : MonoBehaviour
             instance = this;
         }
         createWorkerSlider = createWorkerPB.GetComponent<Slider>();
+        createFighterSlider = createFighterPB.GetComponent<Slider>();
         foodText = foodTextBox.GetComponent<TMP_Text>();
         woodText = woodTextBox.GetComponent<TMP_Text>();
         stoneText = stoneTextBox.GetComponent<TMP_Text>();
@@ -43,15 +51,6 @@ public class UIHandler : MonoBehaviour
     }
     private void Update()
     {
-        if (InputHandler.instance.selectedBuildings.Count == 1)
-        {   // Only allow the build menu to be open when there is a single worker selected.
-            townCenterMenu.SetActive(true);
-        }
-        else
-        {
-            townCenterMenu.SetActive(false);
-        }
-
         if (PlayerResourceManger.instance.playerCurrentFood != int.Parse(foodText.text))
         {
             foodText.text = PlayerResourceManger.instance.playerCurrentFood.ToString();
@@ -73,6 +72,14 @@ public class UIHandler : MonoBehaviour
     {
         createWorkerPB.SetActive(false);
     }
+    public void EnableCreateFighterPB()
+    {
+        createFighterPB.SetActive(true);
+    }
+    public void DisableCreateFighterPB()
+    {
+        createFighterPB.SetActive(false);
+    }
     public void OnClickWorkerMenuBuildTownCenterButton()
     {
         // Tell the first worker to instantiate and setup TC for build.
@@ -87,7 +94,14 @@ public class UIHandler : MonoBehaviour
     {
         for (int i = 0; i < InputHandler.instance.selectedBuildings.Count; i++)
         {
-            InputHandler.instance.selectedBuildings[i].GetComponent<ProductionHandler>().AddWorkerToQueue();
+            InputHandler.instance.selectedBuildings[i].GetComponent<TownCenterBuilding>().AddWorkerToQueue();
+        }
+    }
+    public void OnClickBarracksMenuBuildFighterButton()
+    {
+        for (int i = 0; i < InputHandler.instance.selectedBuildings.Count; i++)
+        {
+            InputHandler.instance.selectedBuildings[i].GetComponent<BarracksBuilding>().AddFighterToQueue();
         }
     }
     public void OnClickMapGenerationMenuGenerateMapButton()
@@ -119,6 +133,10 @@ public class UIHandler : MonoBehaviour
     {
         createWorkerSlider.normalizedValue = progress;
     }
+    public void SetFighterProductionBar(float progress)
+    {
+        createFighterSlider.normalizedValue = progress;
+    }
     public void SetWorkerMenu()
     {
         bool isActive = false;
@@ -127,7 +145,7 @@ public class UIHandler : MonoBehaviour
             isActive = true;
             foreach (BasicUnit unit in InputHandler.instance.selectedUnits)
             {
-                if (unit is FighterUnit)
+                if (unit is not WorkerUnit)
                 {
                     isActive = false;
                     break;
@@ -135,5 +153,39 @@ public class UIHandler : MonoBehaviour
             }
         }
         workerMenu.SetActive(isActive);
+    }
+    public void SetTownCenterMenu()
+    {
+        bool isActive = false;
+        if (InputHandler.instance.selectedBuildings.Count != 0)
+        {
+            isActive = true;
+            foreach (BasicBuilding building in InputHandler.instance.selectedBuildings)
+            {
+                if (building is not TownCenterBuilding)
+                {
+                    isActive = false;
+                    break;
+                }
+            }
+        }
+        townCenterMenu.SetActive(isActive);
+    }
+    public void SetBarracksMenu()
+    {
+        bool isActive = false;
+        if (InputHandler.instance.selectedBuildings.Count != 0)
+        {
+            isActive = true;
+            foreach (BasicBuilding building in InputHandler.instance.selectedBuildings)
+            {
+                if (building is not BarracksBuilding)
+                {
+                    isActive = false;
+                    break;
+                }
+            }
+        }
+        barracksMenu.SetActive(isActive);
     }
 }
