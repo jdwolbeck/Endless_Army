@@ -69,7 +69,7 @@ public class TownCenterBuilding : BasicBuilding
         if (productionQueue.Count < 30)
         {
             Debug.Log("Adding worker to Production queue...");
-            productionQueue.Add(ResourceDictionary.instance.GetPrefab("Worker"));
+            productionQueue.Add(ResourceDictionary.instance.GetPrefab("RigifyBasicHumanoid"));
         }
         else
         {

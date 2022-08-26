@@ -7,34 +7,56 @@ using UnityEngine.UI;
 
 public class BasicUnit : BasicObject
 {
+    public Animator animator;
     public bool isSpawnedFromInspector;
     [SerializeField] protected GameObject HealthBar;
-    [SerializeField] protected GameObject TeamShirt;
-    [SerializeField] protected GameObject TeamShirtShoulder;
     protected NavMeshAgent navAgent;
     protected Slider HealthSlider;
     protected float AttackRange;
     protected float AttackSpeed;
     protected float Damage;
+    protected bool animatorPresent;
     private BasicUnit currentTarget;
     private float attackCooldown;
+    private int lastState;
+    private string idleState = "metarigWAnimation|New";
+    private string runState = "metarigWAnimation|Run";
 
     protected override void Awake()
     {
         base.Awake();
+        animatorPresent = false;
         navAgent = GetComponent<NavMeshAgent>();
         HealthSlider = HealthBar.GetComponent<Slider>();
         attackCooldown = 0f;
         HealthBar.SetActive(false);
+        TryGetComponent<Animator>(out animator);
+        if (animator != null)
+            animatorPresent = true;
+        lastState = -1;
     }
     protected override void Start()
     {
         base.Start();
-        TeamShirt.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
-        TeamShirtShoulder.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
+        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+        //TeamShirt.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
+        //TeamShirtShoulder.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
     }
     protected virtual void Update()
     {
+        if (animatorPresent)
+        {
+            if (navAgent.velocity == Vector3.zero && lastState != 0)
+            {
+                lastState = 0;
+                animator.Play(idleState);
+            }
+            else if (navAgent.velocity != Vector3.zero && lastState != 1)
+            {
+                lastState = 1;
+                animator.Play(runState);
+            }
+        }
         if (attackCooldown > 0)
         {
             attackCooldown -= Time.deltaTime;

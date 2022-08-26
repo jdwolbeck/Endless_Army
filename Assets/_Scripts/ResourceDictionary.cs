@@ -26,6 +26,7 @@ public class ResourceDictionary : MonoBehaviour
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Barracks").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Tree").ToList());
         Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Units").ToList());
+        Prefabs.AddRange(Resources.LoadAll<GameObject>("Prefabs/Blender").ToList());
         PrefabsDict = new Dictionary<string, GameObject>();
         foreach (GameObject prefab in Prefabs)
         {
