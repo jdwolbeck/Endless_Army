@@ -7,20 +7,20 @@ using UnityEngine.UI;
 
 public class BasicUnit : BasicObject
 {
-    public Animator animator;
     public bool isSpawnedFromInspector;
+    protected ItemManager equippedItemManager;
     [SerializeField] protected GameObject HealthBar;
     protected NavMeshAgent navAgent;
     protected Slider HealthSlider;
+    protected float Damage;
     protected float AttackRange;
     protected float AttackSpeed;
-    protected float Damage;
+    protected float attackCooldown;
+    protected BasicUnit currentTarget;
+    protected bool inCombat;
+
+    protected Animator animator;
     protected bool animatorPresent;
-    private BasicUnit currentTarget;
-    private float attackCooldown;
-    private int lastState;
-    private string idleState = "metarigWAnimation|New";
-    private string runState = "metarigWAnimation|Run";
 
     protected override void Awake()
     {
@@ -28,12 +28,13 @@ public class BasicUnit : BasicObject
         animatorPresent = false;
         navAgent = GetComponent<NavMeshAgent>();
         HealthSlider = HealthBar.GetComponent<Slider>();
-        attackCooldown = 0f;
         HealthBar.SetActive(false);
+        TryGetComponent<ItemManager>( out equippedItemManager);
+        if (equippedItemManager == null)
+            Debug.Log("Unable to find the Item Manager!");
         TryGetComponent<Animator>(out animator);
         if (animator != null)
             animatorPresent = true;
-        lastState = -1;
     }
     protected override void Start()
     {
@@ -46,16 +47,9 @@ public class BasicUnit : BasicObject
     {
         if (animatorPresent)
         {
-            if (navAgent.velocity == Vector3.zero && lastState != 0)
-            {
-                lastState = 0;
-                animator.Play(idleState);
-            }
-            else if (navAgent.velocity != Vector3.zero && lastState != 1)
-            {
-                lastState = 1;
-                animator.Play(runState);
-            }
+            float speedPercent = navAgent.velocity.magnitude / navAgent.speed;
+            animator.SetFloat("SpeedPercent", speedPercent, .1f, Time.deltaTime); // BlendTree Variable, local speed%, transition time between animations, deltaTime
+            animator.SetBool("InCombat", inCombat);
         }
         if (attackCooldown > 0)
         {
@@ -80,9 +74,12 @@ public class BasicUnit : BasicObject
         if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("EnemyUnitLayer")))
         {
             Attack(hit.transform.gameObject.GetComponent<BasicUnit>());
+            hit.transform.gameObject.GetComponent<BasicObject>().ObjectDied += ClearTarget;
         }
         else if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
         {
+            if (inCombat)
+                inCombat = false;
             navAgent.SetDestination(hit.point);
         }
     }
@@ -106,10 +103,11 @@ public class BasicUnit : BasicObject
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {
+                inCombat = true;
                 navAgent.SetDestination(gameObject.transform.position);
                 if (attackCooldown <= 0)
                 {
-                    Debug.Log(gameObject.ToString() + ": Attacked enemy unit");
+                    //Debug.Log(gameObject.ToString() + ": Attacked enemy unit");
                     attackCooldown = 1 / AttackSpeed;
                     target.TakeDamage(Damage);
                 }
@@ -123,7 +121,7 @@ public class BasicUnit : BasicObject
     protected void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log(gameObject.ToString() + ": Took damage");
+        //Debug.Log(gameObject.ToString() + ": Took damage");
         if (currentHealth <= 0)
         {
             Die();
@@ -149,6 +147,12 @@ public class BasicUnit : BasicObject
         }
         base.Die();
     }
+    protected void ClearTarget()
+    {
+        currentTarget = null;
+        inCombat = false;
+    }
+
     public override void LoadFromPreset(ScriptableObj obj)
     {
         base.LoadFromPreset(obj);

@@ -35,6 +35,7 @@ public class ResourceDictionary : MonoBehaviour
 
         Presets = new List<ScriptableObject>();
         Presets.AddRange(Resources.LoadAll<ScriptableObject>("Presets/Buildings").ToList());
+        Presets.AddRange(Resources.LoadAll<ScriptableObject>("Presets/Items").ToList());
         Presets.AddRange(Resources.LoadAll<ScriptableObject>("Presets/Maps").ToList());
         Presets.AddRange(Resources.LoadAll<ScriptableObject>("Presets/Units").ToList());
         PresetsDict = new Dictionary<string, ScriptableObject>();

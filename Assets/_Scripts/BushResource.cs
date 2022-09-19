@@ -6,11 +6,10 @@ public class BushResource : ResourceHandler
 {
     private void Update()
     {
-        if ((currentPrefabProgress == (progressPrefabs.Count - 1) && (FoodPercentageLeft() < 1f    && FoodPercentageLeft() >= 0.75f)) || // Just started harvesting Bush
-            (currentPrefabProgress == (progressPrefabs.Count - 2) && (FoodPercentageLeft() < 0.75f && FoodPercentageLeft() >= 0.5f )) || // 3/4 State
-            (currentPrefabProgress == (progressPrefabs.Count - 3) && (FoodPercentageLeft() < 0.5f  && FoodPercentageLeft() >= 0.25f)) || // Half State
-            (currentPrefabProgress == (progressPrefabs.Count - 4) && (FoodPercentageLeft() < 0.25f && FoodPercentageLeft() > 0     )) || // Quarter State
-            (currentPrefabProgress > 0 && currentFoodAmount == 0))                                                                       // Depleted State
+        if ((currentPrefabProgress == (progressPrefabs.Count - 1) && (FoodPercentageLeft() < 0.75f    && FoodPercentageLeft() >= 0.5f)) || // Just started harvesting Bush -> 3/4 State
+            (currentPrefabProgress == (progressPrefabs.Count - 2) && (FoodPercentageLeft() < 0.5f && FoodPercentageLeft() >= 0.25f )) ||   // 3/4 State -> Half State
+            (currentPrefabProgress == (progressPrefabs.Count - 3) && (FoodPercentageLeft() < 0.25f  && FoodPercentageLeft() >= 0)) ||      // Half State -> Quarter State
+            (currentPrefabProgress > 0 && currentFoodAmount == 0))                                                                         // Quarter State -> Depleted State
         {
             //Advance which prefab we are keeping active and keep the outline's state the same after the switch
             progressPrefabs[currentPrefabProgress].SetActive(false);

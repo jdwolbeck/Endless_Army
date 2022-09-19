@@ -12,6 +12,9 @@ public class WorkerUnit : BasicUnit
     private BasicBuilding currentBasicBuilding;
     private GameObject currentResource;
     private ResourceHandler resourceHandler;
+    protected bool harvestingWood;
+    protected bool harvestingStone;
+    protected bool harvestingBerries;
     private bool isHarvesting;
     private int harvestRange;
     private float harvestCooldownTime;
@@ -26,17 +29,25 @@ public class WorkerUnit : BasicUnit
     {
         base.Start();
         buildRange = 4;
-        constructingBuild = false;
-        isHarvesting = false;
         harvestRange = 3;
         harvestCooldownTime = 1.5f;
-        nextHarvestTime = 0;
         harvestAmount = 10;
+        equippedItemManager.SetDefaultEquipment((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         if (isSpawnedFromInspector)
             LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker"));
     }
     protected override void Update()
     {
+        if (animatorPresent)
+        {
+            //Debug.Log("HarvestingBerries = " + animator.GetBool("HarvestingBerries") + "   ====   harvestingBerries " + harvestingBerries);
+            animator.SetBool("HarvestingWood", harvestingWood);
+            animator.SetBool("HarvestingStone", harvestingStone);
+            animator.SetBool("HarvestingBerries", harvestingBerries);
+            animator.SetBool("ConstructingBuild", constructingBuild);
+        }
+
         base.Update();
         if (currentBuild != null)
         {
@@ -44,6 +55,7 @@ public class WorkerUnit : BasicUnit
             {
                 navAgent.SetDestination(transform.position);
                 constructingBuild = true;
+                equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
                 currentBasicBuilding.UpdateActiveBuilders(true);
                 Debug.Log("Set " + gameObject.ToString() + " as an active worker on " + currentBuild.ToString() + " basicBuild? " + currentBasicBuilding.ToString());
             }
@@ -59,6 +71,33 @@ public class WorkerUnit : BasicUnit
                 navAgent.SetDestination(transform.position);
                 isHarvesting = true;
                 nextHarvestTime = Time.time + harvestCooldownTime;
+
+                if (animatorPresent)
+                {
+                    ResourceType resourceType;
+                    int resourcesObtained;
+                    resourceHandler.HarvestResource(0, out resourcesObtained, out resourceType);
+                    if (resourcesObtained > 0)
+                    {
+                        Debug.Log("Uh oh, boyo, too many resources collected for boolean setting??");
+                    }
+                    switch (resourceType)
+                    {
+                        case ResourceType.Food:
+                            harvestingBerries = true;
+                            equippedItemManager.Unequip(EquipmentSlot.RightWeapon);
+                            equippedItemManager.Unequip(EquipmentSlot.LeftWeapon);
+                            break;
+                        case ResourceType.Wood:
+                            harvestingWood = true;
+                            equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("LumberAxe"));
+                            break;
+                        case ResourceType.Stone:
+                            harvestingStone = true;
+                            equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Pickaxe"));
+                            break;
+                    }
+                }
                 Debug.Log("Worker started harvesting " + currentResource.ToString());
             }
             if (Time.time > nextHarvestTime && isHarvesting)
@@ -113,6 +152,8 @@ public class WorkerUnit : BasicUnit
         constructingBuild = false;
         currentBuild = null;
         navAgent.SetDestination(transform.position);
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
     }
     public void HarvestResource(GameObject resource)
     {
@@ -145,7 +186,12 @@ public class WorkerUnit : BasicUnit
     {
         resourceHandler = null;
         isHarvesting = false;
+        harvestingBerries = false;
+        harvestingStone = false;
+        harvestingWood = false;
         currentResource = null;
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
         Debug.Log("Stopping harvesting...");
     }
     public void StopAction()
@@ -153,6 +199,7 @@ public class WorkerUnit : BasicUnit
         if (currentBuild != null)
         {
             StopBuilding();
+            equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         }
         if (currentResource != null)
         {

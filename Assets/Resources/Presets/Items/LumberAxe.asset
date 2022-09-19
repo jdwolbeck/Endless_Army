@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02b8f0fafa77d84ab6b39c4e4558e4b, type: 3}
+  m_Name: LumberAxe
+  m_EditorClassIdentifier: 
+  itemName: LumberAxe
+  equipSlot: 6
+  meshRenderer: {fileID: 1972355225486238788, guid: 6d6e968b622205948af0a5f27c057f7e, type: 3}
+  isTwoHanded: 1
+  itemWeight: 0
+  attackSpeed: 0
+  damage: 0
+  rangedDefense: 0
+  meleeDefense: 0
+  magicDefense: 0
