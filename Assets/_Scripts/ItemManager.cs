@@ -14,18 +14,6 @@ public enum EquipmentSlot
     RightWeapon
 }
 
-public struct EquipmentSlots
-{
-    GameObject Head;
-    GameObject Shoulder;
-    GameObject Chest;
-    GameObject Hands;
-    GameObject Legs;
-    GameObject Feet;
-    GameObject LeftWeapon;
-    GameObject RightWeapon;
-}
-
 public class ItemManager : MonoBehaviour
 {
     public ScriptableItem[] DefaultEquipment;
@@ -56,12 +44,14 @@ public class ItemManager : MonoBehaviour
         if (newItem.equipSlot == EquipmentSlot.LeftWeapon)
         {
             parentTransform = leftHandHoldBone.transform;
+            GetComponent<BasicUnit>().SetAnimatorLayerWeight("LeftHand Layer", 1.0f);
             if (newItem.isTwoHanded)
                 Unequip(EquipmentSlot.RightWeapon);
         }
         else if (newItem.equipSlot == EquipmentSlot.RightWeapon)
         {
             parentTransform = rightHandHoldBone.transform;
+            GetComponent<BasicUnit>().SetAnimatorLayerWeight("RightHand Layer", 1.0f);
             if (newItem.isTwoHanded)
                 Unequip(EquipmentSlot.LeftWeapon);
         }
@@ -92,6 +82,16 @@ public class ItemManager : MonoBehaviour
             CurrentEquipment[(int)slot] = null;
             Destroy(CurrentMeshRenderersList[(int)slot].gameObject);
             CurrentMeshRenderersList[(int)slot] = null;
+
+
+            if (slot == EquipmentSlot.LeftWeapon)
+            {
+                GetComponent<BasicUnit>().SetAnimatorLayerWeight("LeftHand Layer", 0);
+            }
+            else if (slot == EquipmentSlot.RightWeapon)
+            {
+                GetComponent<BasicUnit>().SetAnimatorLayerWeight("RightHand Layer", 0);
+            }
         }
     }
 }

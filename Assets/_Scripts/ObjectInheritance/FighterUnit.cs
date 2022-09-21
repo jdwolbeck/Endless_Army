@@ -12,6 +12,8 @@ public class FighterUnit : BasicUnit
     protected override void Start()
     {
         base.Start();
+        equippedItemManager.SetDefaultEquipment((ScriptableItem)ResourceDictionary.instance.GetPreset("ShortSword"));
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         if (isSpawnedFromInspector)
         {
             LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter"));

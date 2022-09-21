@@ -68,7 +68,7 @@ public class BarracksBuilding : BasicBuilding
         if (productionQueue.Count < 30)
         {
             Debug.Log("Adding fighter to Production queue...");
-            productionQueue.Add(ResourceDictionary.instance.GetPrefab("Fighter"));
+            productionQueue.Add(ResourceDictionary.instance.GetPrefab("Blend_FighterUnit"));
         }
         else
         {

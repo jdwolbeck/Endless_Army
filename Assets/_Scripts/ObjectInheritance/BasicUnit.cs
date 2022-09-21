@@ -66,7 +66,6 @@ public class BasicUnit : BasicObject
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
-
         if (currentTarget != null)
         {
             currentTarget = null;
@@ -152,12 +151,15 @@ public class BasicUnit : BasicObject
         currentTarget = null;
         inCombat = false;
     }
-
     public override void LoadFromPreset(ScriptableObj obj)
     {
         base.LoadFromPreset(obj);
         AttackRange = ((ScriptableUnit)obj).AttackRange;
         AttackSpeed = ((ScriptableUnit)obj).AttackSpeed;
         Damage = ((ScriptableUnit)obj).Damage;
+    }
+    public void SetAnimatorLayerWeight(string layerName, float weight)
+    {
+        animator.SetLayerWeight(animator.GetLayerIndex(layerName), weight);
     }
 }

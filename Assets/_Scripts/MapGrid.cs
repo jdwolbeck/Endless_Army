@@ -29,7 +29,7 @@ public class MapGrid
 
     public MapGrid()
     {
-        MapScriptable = Resources.Load("Presets/MapPresets/MapTest") as ScriptableMap;
+        MapScriptable = (ScriptableMap)ResourceDictionary.instance.GetPreset("MapTest");
         CurrentTreeArray = new int[MapScriptable.MapWidth, MapScriptable.MapHeight];
         CurrentStoneArray = new int[MapScriptable.MapWidth, MapScriptable.MapHeight];
         CurrentBushArray = new int[MapScriptable.MapWidth, MapScriptable.MapHeight];
