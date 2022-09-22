@@ -654,7 +654,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.01
+      value: -3.27
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalPosition.y
@@ -662,7 +662,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.15
+      value: -5.95
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalRotation.w
@@ -711,6 +711,10 @@ PrefabInstance:
     - target: {fileID: 8908947093248256229, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908947093248256229, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942394913064178504, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
@@ -1824,6 +1828,7 @@ GameObject:
   - component: {fileID: 605221171}
   - component: {fileID: 605221172}
   - component: {fileID: 605221173}
+  - component: {fileID: 605221174}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -1969,6 +1974,18 @@ MonoBehaviour:
   Ground: {fileID: 118870393}
   UIMapGrid: {fileID: 672087654}
   generatedMapButton: {fileID: 8060271218404160473, guid: 1ff585170122329489851ff05e9dccb2, type: 3}
+--- !u!114 &605221174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605221164}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85fa7fe2f2d8b64e82049a9befc1b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &625370034
 GameObject:
   m_ObjectHideFlags: 0
@@ -3991,6 +4008,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8908947093248256229, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8942394913064178504, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -4482,6 +4503,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 8908947093248256229, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8942394913064178504, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -4856,7 +4881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.41
+      value: 8.21
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4864,7 +4889,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.84
+      value: -2.24
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4913,6 +4938,10 @@ PrefabInstance:
     - target: {fileID: 8908947093248256229, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908947093248256229, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942394913064178504, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_Layer

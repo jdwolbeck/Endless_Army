@@ -331,8 +331,6 @@ MonoBehaviour:
   MaxHealth: 0
   isSpawnedFromInspector: 0
   HealthBar: {fileID: 8264113068114935411}
-  TeamShirt: {fileID: 3354850121542868437}
-  TeamShirtShoulder: {fileID: 6503599263370886991}
 --- !u!1 &4231900987328206386
 GameObject:
   m_ObjectHideFlags: 0

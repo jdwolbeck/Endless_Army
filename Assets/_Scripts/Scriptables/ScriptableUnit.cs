@@ -8,4 +8,6 @@ public class ScriptableUnit : ScriptableObj
     public float AttackRange;
     public float AttackSpeed;
     public float Damage;
+    public float SightRange;
+    public float HearingRange;
 }

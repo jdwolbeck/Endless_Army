@@ -46,7 +46,7 @@ public class InputHandler : MonoBehaviour
                 DeselectResource();
                 DeselectBuildings();
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
-                BasicUnit basicUnit = hit.transform.GetComponent<BasicUnit>();
+                BasicUnit basicUnit = hit.transform.gameObject.GetComponent<BasicUnit>();
                 if (basicUnit != null)
                 {
                     if (!Input.GetKey(KeyCode.LeftShift))
@@ -54,7 +54,8 @@ public class InputHandler : MonoBehaviour
                         DeselectUnits();
                     }
                     basicUnit.SelectObject();
-                    selectedUnits.Add(hit.transform.gameObject.GetComponent<BasicUnit>());
+                    basicUnit.ObjectDied += CheckForObjectDeath;
+                    selectedUnits.Add(basicUnit);
                     if (SelectedUnitsChanged != null)
                     {
                         SelectedUnitsChanged();
@@ -79,7 +80,7 @@ public class InputHandler : MonoBehaviour
                         DeselectBuildings();
                     }
                     basicBuilding.SelectObject();
-                    selectedBuildings.Add(go.GetComponent<BasicBuilding>());
+                    selectedBuildings.Add(basicBuilding);
                     if (SelectedBuildingsChanged != null)
                     {
                         SelectedBuildingsChanged();
@@ -120,8 +121,10 @@ public class InputHandler : MonoBehaviour
                 {
                     if (IsWithinSelectionBounds(unit))
                     {
-                        unit.GetComponent<BasicUnit>().SelectObject();
-                        selectedUnits.Add(unit.transform.gameObject.GetComponent<BasicUnit>());
+                        BasicUnit basicUnit = unit.GetComponent<BasicUnit>();
+                        basicUnit.SelectObject();
+                        basicUnit.ObjectDied += CheckForObjectDeath;
+                        selectedUnits.Add(basicUnit);
                         if (SelectedUnitsChanged != null)
                         {
                             SelectedUnitsChanged();
@@ -147,7 +150,7 @@ public class InputHandler : MonoBehaviour
             {
                 for (int i = 0; i < selectedBuildings.Count; i++)
                 {
-                    selectedBuildings[i].GetComponent<BasicBuilding>().DoAction();
+                    selectedBuildings[i].DoAction();
                 }
             }
         }
@@ -158,7 +161,8 @@ public class InputHandler : MonoBehaviour
         {
             for (int i = 0; i < selectedUnits.Count; i++)
             {
-                selectedUnits[i].GetComponent<BasicUnit>().DeselectObject();
+                selectedUnits[i].DeselectObject();
+                selectedUnits[i].ObjectDied -= CheckForObjectDeath;
             }
         }
         selectedUnits.Clear();
@@ -173,7 +177,7 @@ public class InputHandler : MonoBehaviour
         {
             for (int i = 0; i < selectedBuildings.Count; i++)
             {
-                selectedBuildings[i].GetComponent<BasicBuilding>().DeselectObject();
+                selectedBuildings[i].DeselectObject();
             }
         }
         selectedBuildings.Clear();
@@ -197,10 +201,17 @@ public class InputHandler : MonoBehaviour
         {
             return false;
         }
-
         Camera cam = Camera.main;
         Bounds viewPortBounds = Multiselect.GetViewPortBounds(cam, mousePos, Input.mousePosition);
-
         return viewPortBounds.Contains(cam.WorldToViewportPoint(obj.transform.position));
+    }
+    public void CheckForObjectDeath(GameObject go)
+    {
+        if (go != null)
+        {
+            selectedUnits.Remove(go.GetComponent<BasicUnit>());
+        }
+        else
+            Debug.Log("CheckforObjectDeath in InputHandler has an input basicUnit as null.");
     }
 }

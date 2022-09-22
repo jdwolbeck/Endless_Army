@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class BasicUnit : BasicObject
 {
     public bool isSpawnedFromInspector;
+    public BasicObject attacker;
+    public bool takenDamageRecently { get; private set; }
+    private float damageTimer;
     protected ItemManager equippedItemManager;
     [SerializeField] protected GameObject HealthBar;
     protected NavMeshAgent navAgent;
@@ -59,6 +62,13 @@ public class BasicUnit : BasicObject
         {
             Attack(currentTarget);
         }
+        if (takenDamageRecently)
+        {
+            if (Time.time > damageTimer + 5f)
+            {
+                takenDamageRecently = false;
+            }
+        }
     }
     public override void DoAction()
     {
@@ -72,8 +82,7 @@ public class BasicUnit : BasicObject
         }
         if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("EnemyUnitLayer")))
         {
-            Attack(hit.transform.gameObject.GetComponent<BasicUnit>());
-            hit.transform.gameObject.GetComponent<BasicObject>().ObjectDied += ClearTarget;
+            SetAttackTarget(hit.transform.gameObject.GetComponent<BasicUnit>());
         }
         else if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
         {
@@ -81,6 +90,11 @@ public class BasicUnit : BasicObject
                 inCombat = false;
             navAgent.SetDestination(hit.point);
         }
+    }
+    public void SetAttackTarget(BasicUnit target)
+    {
+        Attack(target);
+        target.ObjectDied += ClearTarget;
     }
     protected float DistanceToTarget(Transform target)
     {
@@ -98,7 +112,7 @@ public class BasicUnit : BasicObject
             if (currentTarget != target)
             {// Set the current target if it wasnt previously set
                 currentTarget = target;
-                Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
+                //Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {
@@ -108,7 +122,7 @@ public class BasicUnit : BasicObject
                 {
                     //Debug.Log(gameObject.ToString() + ": Attacked enemy unit");
                     attackCooldown = 1 / AttackSpeed;
-                    target.TakeDamage(Damage);
+                    target.TakeDamage(Damage, gameObject.GetComponent<BasicUnit>());
                 }
             }
             else
@@ -117,8 +131,9 @@ public class BasicUnit : BasicObject
             }
         }
     }
-    protected void TakeDamage(float damage)
+    protected void TakeDamage(float damage, BasicObject attackingObject)
     {
+        attacker = attackingObject;
         currentHealth -= damage;
         //Debug.Log(gameObject.ToString() + ": Took damage");
         if (currentHealth <= 0)
@@ -133,6 +148,8 @@ public class BasicUnit : BasicObject
             }
             HealthSlider.normalizedValue = currentHealth / MaxHealth;
         }
+        takenDamageRecently = true;
+        damageTimer = Time.time;
     }
     protected override void Die()
     {
@@ -146,7 +163,7 @@ public class BasicUnit : BasicObject
         }
         base.Die();
     }
-    protected void ClearTarget()
+    protected void ClearTarget(GameObject go)
     {
         currentTarget = null;
         inCombat = false;
@@ -161,5 +178,9 @@ public class BasicUnit : BasicObject
     public void SetAnimatorLayerWeight(string layerName, float weight)
     {
         animator.SetLayerWeight(animator.GetLayerIndex(layerName), weight);
+    }
+    public bool HasActiveTarget()
+    {
+        return currentTarget != null;
     }
 }

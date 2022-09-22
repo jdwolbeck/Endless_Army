@@ -15,7 +15,7 @@ public class BasicObject : MonoBehaviour
     public float MaxHealth;
     protected float currentHealth;
 
-    public delegate void ObjectDeathEvent();
+    public delegate void ObjectDeathEvent(GameObject go);
     public event ObjectDeathEvent ObjectDied;
 
     protected virtual void Awake() { }
@@ -35,7 +35,9 @@ public class BasicObject : MonoBehaviour
     protected virtual void Die()
     {
         if (ObjectDied != null)
-            ObjectDied();
+        {
+            ObjectDied(gameObject);
+        }
         Destroy(gameObject);
     }
     protected virtual void SetLayerRecursively(GameObject go, int newLayer)

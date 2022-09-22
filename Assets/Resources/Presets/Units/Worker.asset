@@ -20,3 +20,5 @@ MonoBehaviour:
   AttackRange: 2
   AttackSpeed: 1
   Damage: 2
+  SightRange: 15
+  HearingRange: 5
