@@ -42,3 +42,4 @@ Game concepts:
  - Tutorial could have a map for this specific mechanic
  - Ladder mode could have a custom created maps (every 10 waves?) that utilizes some of these mechanics intentionally
  - Allow players (for certain modes) to customize how many trees/stones/bushes they would like generated, give them some range to play with. They must stay use the same amount of min% of total resources and max% of total resources.
+ - Start menu should have a little game scene thats looking at my player with like a sword and sheild (or current equipment) looking out over a ridge and the camera pans over to a randomly generated world with some AI's battling w/ epic music.
