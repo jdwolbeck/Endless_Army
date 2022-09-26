@@ -41,7 +41,7 @@ public class InputHandler : MonoBehaviour
         {
             mousePos = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerUnitLayer")))
+            if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("PlayerUnitLayer")))
             {
                 DeselectResource();
                 DeselectBuildings();
@@ -62,7 +62,7 @@ public class InputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
+            else if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("PlayerBuildingLayer")))
             {
                 DeselectResource();
                 DeselectUnits();
@@ -87,7 +87,7 @@ public class InputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
+            else if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("ResourceLayer")))
             {
                 DeselectBuildings();
                 DeselectUnits();

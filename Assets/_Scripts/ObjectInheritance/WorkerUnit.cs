@@ -20,6 +20,7 @@ public class WorkerUnit : BasicUnit
     private float harvestCooldownTime;
     private float nextHarvestTime;
     private int harvestAmount;
+    private float nextWorkerAnimUpdate;
 
     protected override void Awake()
     {
@@ -34,21 +35,21 @@ public class WorkerUnit : BasicUnit
         harvestAmount = 10;
         equippedItemManager.SetDefaultEquipment((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
-        if (isSpawnedFromInspector)
-            LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker"));
+        //if (isSpawnedFromInspector)
+        LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker"));
     }
     protected override void Update()
     {
-        if (animatorPresent)
+        base.Update();
+        if (animatorPresent && Time.time > nextWorkerAnimUpdate)
         {
+            nextWorkerAnimUpdate = Time.time + 0.083f; // 5/60 -- 5 times a second at 
             //Debug.Log("HarvestingBerries = " + animator.GetBool("HarvestingBerries") + "   ====   harvestingBerries " + harvestingBerries);
             animator.SetBool("HarvestingWood", harvestingWood);
             animator.SetBool("HarvestingStone", harvestingStone);
             animator.SetBool("HarvestingBerries", harvestingBerries);
             animator.SetBool("ConstructingBuild", constructingBuild);
         }
-
-        base.Update();
         if (currentBuild != null)
         {
             if (constructingBuild == false && Vector3.Distance(gameObject.transform.position, currentBuild.transform.position) <= buildRange)

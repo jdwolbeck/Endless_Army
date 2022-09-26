@@ -14,10 +14,8 @@ public class FighterUnit : BasicUnit
         base.Start();
         equippedItemManager.SetDefaultEquipment((ScriptableItem)ResourceDictionary.instance.GetPreset("ShortSword"));
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
-        if (isSpawnedFromInspector)
-        {
-            LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter"));
-        }
+        //if (isSpawnedFromInspector)
+        LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter"));
     }
     protected override void Update()
     {

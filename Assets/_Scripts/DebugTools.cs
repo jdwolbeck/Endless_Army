@@ -21,20 +21,32 @@ public class DebugTools : MonoBehaviour
             if (rand < 1f)
             {
                 obj = Instantiate(ResourceDictionary.instance.GetPrefab("Blend_WorkerUnit"), new Vector3(randLocX, 0, randLocZ), Quaternion.identity);
-                obj.GetComponent<BasicUnit>().LoadFromPreset((ScriptableObj)ResourceDictionary.instance.GetPreset("Worker"));
+                //obj.GetComponent<BasicUnit>().LoadFromPreset((ScriptableObj)ResourceDictionary.instance.GetPreset("Worker"));
                 if (rand < 0.5f || rand >= 1.5f)
+                {
                     obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
+                    GameHandler.instance.enemyUnits.Add(obj);
+                }
                 else
+                {
                     obj.layer = LayerMask.NameToLayer("PlayerUnitLayer");
+                    GameHandler.instance.playerUnits.Add(obj);
+                }
             }
             else
             {
                 obj = Instantiate(ResourceDictionary.instance.GetPrefab("Blend_FighterUnit"), new Vector3(randLocX, 0, randLocZ), Quaternion.identity);
-                obj.GetComponent<BasicUnit>().LoadFromPreset((ScriptableObj)ResourceDictionary.instance.GetPreset("Fighter"));
+                //obj.GetComponent<BasicUnit>().LoadFromPreset((ScriptableObj)ResourceDictionary.instance.GetPreset("Fighter"));
                 if (rand >= 0.5f && rand < 1.5f)
+                {
                     obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
+                    GameHandler.instance.enemyUnits.Add(obj);
+                }
                 else
+                {
                     obj.layer = LayerMask.NameToLayer("PlayerUnitLayer");
+                    GameHandler.instance.playerUnits.Add(obj);
+                }
             }
         }
     }

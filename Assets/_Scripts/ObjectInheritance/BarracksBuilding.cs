@@ -84,7 +84,7 @@ public class BarracksBuilding : BasicBuilding
     {
         uiHandler.SetFighterProductionBar(0);
         GameObject obj = Instantiate(productionQueue[0], transform.position - transform.forward, Quaternion.identity);
-        obj.GetComponent<BasicUnit>().LoadFromPreset(scriptableUnit);
+        //obj.GetComponent<BasicUnit>().LoadFromPreset(scriptableUnit);
         if (gameObject.layer == LayerMask.NameToLayer("PlayerBuildingLayer"))
         {
             GameHandler.instance.playerUnits.Add(obj);

@@ -72,11 +72,11 @@ public class AIBasicUnit : MonoBehaviour
                 {
                     startTime = Time.time;
                     float rand = Random.Range(0f, 1f);
-                    if (rand < 0.3f)
+                    if (rand < 0.8f)
                     {
                         CurrentActionList.Add(AIAction.RandomMovement);
                     }
-                    else if (rand < 0.35f)
+                    else if (rand < 1f)
                     {
                         CurrentActionList.Add(AIAction.RandomRotation);
                     }
@@ -86,6 +86,7 @@ public class AIBasicUnit : MonoBehaviour
                     }
                 }
             }
+            waitUntil += 0.083f; // 5/60 only call this at a bare minimum of 5 times every second.
         }
     }
     protected void DoRandomMovement()

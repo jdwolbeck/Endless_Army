@@ -471,7 +471,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &522787896443806848
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1094,7 +1094,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6629407551095604224
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2284,7 +2284,10 @@ MonoBehaviour:
   ProductionTime: 0
   MaxHealth: 0
   isSpawnedFromInspector: 0
+  attacker: {fileID: 0}
   HealthBar: {fileID: 4615572910506909673}
+  Armature: {fileID: 1641068938221807755}
+  Model: {fileID: 8813881415253580206}
 --- !u!114 &4648362698903453706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2323,7 +2326,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 2
 --- !u!136 &4389996303818442726
 CapsuleCollider:
   m_ObjectHideFlags: 0

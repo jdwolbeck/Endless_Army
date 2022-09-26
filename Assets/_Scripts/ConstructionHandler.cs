@@ -69,7 +69,6 @@ public class ConstructionHandler : MonoBehaviour
         }
         if (buildingInProgress && Input.GetMouseButtonDown(1))
         {
-            Debug.Log("Building cancelled (Right-Click)");
             buildingInProgress = false;
             GameHandler.instance.playerBuildings.Remove(currentBuild);
             Destroy(currentBuild);
