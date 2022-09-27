@@ -210,22 +210,19 @@ public class MapGeneration : MonoBehaviour
     }
     void ClearSpawnArea(MapGrid map)
     {
-        Vector2 p1Spawn = new Vector2((int)(map.MapScriptable.MapWidth * 0.2f), (int)(map.MapScriptable.MapHeight * 0.2f));
-        Vector2 p2Spawn = new Vector2((int)(map.MapScriptable.MapWidth * 0.8f), (int)(map.MapScriptable.MapHeight * 0.8f));
         for (int i = 0; i < map.MapScriptable.MapWidth; i++)
         {
             for (int j = 0; j < map.MapScriptable.MapHeight; j++)
             {
+                spawnAreas[i, j] = 0;
                 // Check to see if each point is within the spawn area's radius
-                if ((Mathf.Pow(i - p1Spawn.x, 2) + Mathf.Pow(j - p1Spawn.y, 2) <= Mathf.Pow(map.MapScriptable.SpawnRadius, 2)) || //(x-i)^2 + (y-j)^2 <= r^2
-                    (Mathf.Pow(i - p2Spawn.x, 2) + Mathf.Pow(j - p2Spawn.y, 2) <= Mathf.Pow(map.MapScriptable.SpawnRadius, 2)))   //(x-i)^2 + (y-j)^2 <= r^2
+                for (int k = 0; k < map.MapScriptable.NumberOfPlayers; k++)
                 {
-                    spawnAreas[i, j] = 1;
-                    ClearPoint(map, i, j);
-                }
-                else
-                {
-                    spawnAreas[i, j] = 0;
+                    if ((Mathf.Pow(i - map.PlayerSpawns[k].x, 2) + Mathf.Pow(j - map.PlayerSpawns[k].y, 2) <= Mathf.Pow(map.MapScriptable.SpawnRadius, 2))) //(x-i)^2 + (y-j)^2 <= r^2
+                    {
+                        spawnAreas[i, j] = 1;
+                        ClearPoint(map, i, j);
+                    }
                 }
             }
         }

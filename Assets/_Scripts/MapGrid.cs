@@ -26,6 +26,7 @@ public class MapGrid
     public string[,] CurrentBasicObjectArray;
     public GameObject[,] CurrentGameObjectArray;
     public MapObjectEnum[,] CurrentGameMap;
+    public List<Vector2> PlayerSpawns;
 
     public MapGrid()
     {
@@ -36,7 +37,57 @@ public class MapGrid
         CurrentBasicObjectArray = new string[MapScriptable.MapWidth, MapScriptable.MapHeight];
         CurrentGameObjectArray = new GameObject[MapScriptable.MapWidth, MapScriptable.MapHeight];
         CurrentGameMap = new MapObjectEnum[MapScriptable.MapWidth, MapScriptable.MapHeight];
-}
+
+        // Used for determining spawn points
+        float spawnDegrees;
+        float degreesPerPlayer = 360.0f / MapScriptable.NumberOfPlayers;
+        float spawnRadius = (MapScriptable.MapWidth / 2f) * 0.8f;
+        float x;
+        float y;
+        PlayerSpawns = new List<Vector2>();
+        for (int i = 0; i < MapScriptable.NumberOfPlayers; i++)
+        {
+            spawnDegrees = degreesPerPlayer * i; // number of degrees around the map in which this team will spawn
+            // Use triginometry to figure out the x, y coordinates for this player spawn.
+            if (spawnDegrees <= 90)
+            {
+                x = spawnRadius * Mathf.Cos(Mathf.Deg2Rad * spawnDegrees);
+                y = spawnRadius * Mathf.Sin(Mathf.Deg2Rad * spawnDegrees);
+            }
+            else if (spawnDegrees <= 180)
+            {
+                spawnDegrees = 180 - spawnDegrees;
+                x = spawnRadius * Mathf.Cos(Mathf.Deg2Rad * spawnDegrees);
+                x *= -1;
+                y = spawnRadius * Mathf.Sin(Mathf.Deg2Rad * spawnDegrees);
+            }
+            else if (spawnDegrees <= 270)
+            {
+                spawnDegrees = spawnDegrees - 180; 
+                x = spawnRadius * Mathf.Cos(Mathf.Deg2Rad * spawnDegrees);
+                x *= -1;
+                y = spawnRadius * Mathf.Sin(Mathf.Deg2Rad * spawnDegrees);
+                y *= -1;
+            }
+            else if (spawnDegrees <= 360)
+            {
+                spawnDegrees = 360 - spawnDegrees;
+                x = spawnRadius * Mathf.Cos(Mathf.Deg2Rad * spawnDegrees);
+                y = spawnRadius * Mathf.Sin(Mathf.Deg2Rad * spawnDegrees);
+                y *= -1;
+            }
+            else
+            {
+                spawnDegrees = spawnDegrees - 360;
+                x = spawnRadius * Mathf.Cos(Mathf.Deg2Rad * spawnDegrees);
+                y = spawnRadius * Mathf.Sin(Mathf.Deg2Rad * spawnDegrees);
+            }
+            // Since our coordinate system used for instatiation is set to the bottom left and the circle equations are set for the center of the map offset the calculated x,y
+            x += (MapScriptable.MapWidth / 2);
+            y += MapScriptable.MapHeight / 2;
+            PlayerSpawns.Add(new Vector2(x, y));
+        }
+    }
     public void UpdateCurrentMap()
     {
         for (int i = 0; i < MapScriptable.MapWidth; i++)
@@ -94,12 +145,12 @@ public class MapGrid
                 SpawnResource(i, j);
             }
         }
+        InstantiatePlayerSpawns();
     }
     private void SpawnResource(int x, int y)
     {
         float randSize = 1f;
         float randomRotation = Random.Range(0, 360);
-        Vector3 newPosition = Vector3.zero;
         string resourceType = "";
         if (CurrentTreeArray[x, y] == 1)
         {
@@ -123,6 +174,7 @@ public class MapGrid
         GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab(resourceType + "AIO"));
         go.transform.rotation = Quaternion.Euler(0, randomRotation, 0);
         go.transform.localScale = new Vector3(randSize, randSize, randSize);
+        /*
         newPosition.x = x;
         newPosition.x -= MapScriptable.MapWidth / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the right half of the map.
         newPosition.x *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
@@ -132,9 +184,43 @@ public class MapGrid
         newPosition.z -= MapScriptable.MapHeight / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the top half of the map.
         newPosition.z *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
         newPosition.z += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
-        go.transform.position = newPosition;
+        */
+        Vector2 newPosition = TranslateCoordinatesToGameWorld(new Vector2(x, y));
+        go.transform.position = new Vector3(newPosition.x, 0, newPosition.y);
 
         CurrentGameObjectArray[x, y] = go;
         GameHandler.instance.resourceObjects.Add(go);
+    }
+    private void InstantiatePlayerSpawns()
+    {
+        Vector2 gamePosition = new Vector2();
+        for (int i = 0; i < PlayerSpawns.Count; i++)
+        {
+            gamePosition = TranslateCoordinatesToGameWorld(PlayerSpawns[i]);
+            if (i == 0)
+            {
+                GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
+                go.layer = LayerMask.NameToLayer("PlayerBuildingLayer");
+            }
+            else
+            {
+                GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
+                go.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
+            }
+        }
+    }
+    private Vector2 TranslateCoordinatesToGameWorld(Vector2 inputCoords)
+    {
+        Vector2 outputCoords = new Vector2();
+        outputCoords.x = inputCoords.x;
+        outputCoords.x -= MapScriptable.MapWidth / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the right half of the map.
+        outputCoords.x *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
+        outputCoords.x += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
+        outputCoords.y = inputCoords.y;
+        outputCoords.y -= MapScriptable.MapHeight / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the top half of the map.
+        outputCoords.y *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
+        outputCoords.y += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
+
+        return outputCoords;
     }
 }
