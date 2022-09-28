@@ -11,7 +11,7 @@ public class WorkerUnit : BasicUnit
     private bool constructingBuild;
     private BasicBuilding currentBasicBuilding;
     private GameObject currentResource;
-    private ResourceHandler resourceHandler;
+    private BasicResource resourceHandler;
     protected bool harvestingWood;
     protected bool harvestingStone;
     protected bool harvestingBerries;
@@ -113,13 +113,13 @@ public class WorkerUnit : BasicUnit
                     switch (resourceType)
                     {
                         case ResourceType.Food:
-                            PlayerResourceManger.instance.UpdatePlayerFood(resourcesObtained);
+                            TeamManager.instance.teamList[0].UpdateTeamFood(resourcesObtained);
                             break;
                         case ResourceType.Wood:
-                            PlayerResourceManger.instance.UpdatePlayerWood(resourcesObtained);
+                            TeamManager.instance.teamList[0].UpdateTeamWood(resourcesObtained);
                             break;
                         case ResourceType.Stone:
-                            PlayerResourceManger.instance.UpdatePlayerStone(resourcesObtained);
+                            TeamManager.instance.teamList[0].UpdateTeamStone(resourcesObtained);
                             break;
                     }
 
@@ -170,18 +170,18 @@ public class WorkerUnit : BasicUnit
 
             navAgent.SetDestination(resource.transform.position);
             currentResource = resource;
-            resourceHandler = currentResource.GetComponent<ResourceHandler>();
+            resourceHandler = currentResource.GetComponent<BasicResource>();
             if (resourceHandler == null)
             {
                 Debug.Log("Resource handler was null for resource " + resource.ToString());
             }
-            Debug.Log("Setting worker destination to " + resource.transform.position.ToString());
+            //Debug.Log("Setting worker destination to " + resource.transform.position.ToString());
         }
         else
         {
             Debug.Log("Resource was null");
         }
-        Debug.Log("Worker is going to harvest: " + resource.ToString() + " -- With Handler of: ");
+        //Debug.Log("Worker is going to harvest: " + resource.ToString() + " -- With Handler of: ");
     }
     public void StopHarvesting()
     {
@@ -216,7 +216,7 @@ public class WorkerUnit : BasicUnit
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(ray, out hit, 10000))
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
             {
@@ -233,7 +233,7 @@ public class WorkerUnit : BasicUnit
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ResourceLayer"))
             {
-                Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
+                //Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
                 HarvestResource(hit.transform.gameObject);
             }
         }

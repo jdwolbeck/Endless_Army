@@ -51,17 +51,17 @@ public class UIHandler : MonoBehaviour
     }
     private void Update()
     {
-        if (PlayerResourceManger.instance.playerCurrentFood != int.Parse(foodText.text))
+        if (TeamManager.instance.teamList[0].playerCurrentFood != int.Parse(foodText.text))
         {
-            foodText.text = PlayerResourceManger.instance.playerCurrentFood.ToString();
+            foodText.text = TeamManager.instance.teamList[0].playerCurrentFood.ToString();
         }
-        if (PlayerResourceManger.instance.playerCurrentWood != int.Parse(woodText.text))
+        if (TeamManager.instance.teamList[0].playerCurrentWood != int.Parse(woodText.text))
         {
-            woodText.text = PlayerResourceManger.instance.playerCurrentWood.ToString();
+            woodText.text = TeamManager.instance.teamList[0].playerCurrentWood.ToString();
         }
-        if (PlayerResourceManger.instance.playerCurrentStone != int.Parse(stoneText.text))
+        if (TeamManager.instance.teamList[0].playerCurrentStone != int.Parse(stoneText.text))
         {
-            stoneText.text = PlayerResourceManger.instance.playerCurrentStone.ToString();
+            stoneText.text = TeamManager.instance.teamList[0].playerCurrentStone.ToString();
         }
     }
     public void EnableCreateWorkerPB()

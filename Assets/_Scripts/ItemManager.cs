@@ -21,10 +21,11 @@ public class ItemManager : MonoBehaviour
     public MeshRenderer[] CurrentMeshRenderersList;
     public Transform leftHandHoldBone;
     public Transform rightHandHoldBone;
+    private int numOfSlots;
 
     private void Awake()
     {
-        int numOfSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
+        numOfSlots = System.Enum.GetNames(typeof(EquipmentSlot)).Length;
         DefaultEquipment = new ScriptableItem[numOfSlots];
         CurrentEquipment = new ScriptableItem[numOfSlots];
         CurrentMeshRenderersList = new MeshRenderer[numOfSlots];
@@ -77,8 +78,9 @@ public class ItemManager : MonoBehaviour
     public void Unequip(EquipmentSlot slot)
     {
         //Debug.Log("Unequip slot " + slot.ToString());
-        if (CurrentEquipment[(int)slot] != null)
+        if ((int)slot < numOfSlots && (int)slot >= 0 && CurrentEquipment[(int)slot] != null)
         {
+            Debug.Log("Unequip that shee");
             CurrentEquipment[(int)slot] = null;
             Destroy(CurrentMeshRenderersList[(int)slot].gameObject);
             CurrentMeshRenderersList[(int)slot] = null;
@@ -91,6 +93,18 @@ public class ItemManager : MonoBehaviour
             else if (slot == EquipmentSlot.RightWeapon)
             {
                 GetComponent<BasicUnit>().SetAnimatorLayerWeight("RightHand Layer", 0);
+            }
+        }
+    }
+    public void UnequipAll()
+    {
+        Debug.Log("Calling unequip all...");
+        for (int i = 0; i < numOfSlots; i++)
+        {
+            if (CurrentEquipment[i] != null)
+            {
+                Debug.Log("unequip slot " + ((EquipmentSlot)i).ToString());
+                Unequip((EquipmentSlot)i);
             }
         }
     }

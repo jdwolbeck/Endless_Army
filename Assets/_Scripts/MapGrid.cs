@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum MapObjectEnum
 {
@@ -137,6 +139,8 @@ public class MapGrid
         newScale.z = MapScriptable.MapHeight / 10; // Planes are 10x10 Primative Cubes by default.
         newScale.z *= MapScriptable.ResourceSpreadFactor; // Expand to the largest tile spread size of the resources.
         MapManager.instance.Ground.transform.localScale = newScale;//new Vector3(2 * MAP_WIDTH / 10, 1, 2 * MAP_HEIGHT / 10);
+        
+        MapManager.instance.Ground.GetComponent<NavMeshSurface>().BuildNavMesh();
 
         for (int i = 0; i < MapScriptable.MapWidth; i++)
         {
@@ -174,17 +178,6 @@ public class MapGrid
         GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab(resourceType + "AIO"));
         go.transform.rotation = Quaternion.Euler(0, randomRotation, 0);
         go.transform.localScale = new Vector3(randSize, randSize, randSize);
-        /*
-        newPosition.x = x;
-        newPosition.x -= MapScriptable.MapWidth / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the right half of the map.
-        newPosition.x *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
-        newPosition.x += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
-        newPosition.y = 0;
-        newPosition.z = y;
-        newPosition.z -= MapScriptable.MapHeight / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the top half of the map.
-        newPosition.z *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
-        newPosition.z += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
-        */
         Vector2 newPosition = TranslateCoordinatesToGameWorld(new Vector2(x, y));
         go.transform.position = new Vector3(newPosition.x, 0, newPosition.y);
 
@@ -201,11 +194,15 @@ public class MapGrid
             {
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
                 go.layer = LayerMask.NameToLayer("PlayerBuildingLayer");
+                GameHandler.instance.playerBuildings.Add(go);
+                go.GetComponent<BasicBuilding>().FinishBuilding();
             }
             else
             {
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
                 go.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
+                GameHandler.instance.enemyBuildings.Add(go);
+                go.GetComponent<BasicBuilding>().FinishBuilding();
             }
         }
     }

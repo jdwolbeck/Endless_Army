@@ -26,7 +26,7 @@ public class ConstructionHandler : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
+            if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
             {
                 Vector3 newPos = hit.point;
                 newPos.y = currentBuild.transform.position.y; // Keep the y component of the GameObject to not make it phase through ground
@@ -40,17 +40,17 @@ public class ConstructionHandler : MonoBehaviour
 
         if (buildingInProgress && Input.GetMouseButtonDown(0) &&
             !EventSystem.current.IsPointerOverGameObject() &&
-            PlayerResourceManger.instance.playerCurrentFood >= scriptableBuilding.FoodCost &&
-            PlayerResourceManger.instance.playerCurrentWood >= scriptableBuilding.WoodCost &&
-            PlayerResourceManger.instance.playerCurrentStone >= scriptableBuilding.StoneCost &&
+            TeamManager.instance.teamList[0].playerCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentStone >= scriptableBuilding.StoneCost &&
             currentBasicBuilding.canBuildHere)
         {
             Destroy(currentBuild.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
-            PlayerResourceManger.instance.playerCurrentFood -= scriptableBuilding.FoodCost;
-            PlayerResourceManger.instance.playerCurrentWood -= scriptableBuilding.WoodCost;
-            PlayerResourceManger.instance.playerCurrentStone -= scriptableBuilding.StoneCost;
+            TeamManager.instance.teamList[0].playerCurrentFood -= scriptableBuilding.FoodCost;
+            TeamManager.instance.teamList[0].playerCurrentWood -= scriptableBuilding.WoodCost;
+            TeamManager.instance.teamList[0].playerCurrentStone -= scriptableBuilding.StoneCost;
             //Now that the TC is placed, tell all workers to go build it (if applicable)
             for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
             {
@@ -81,9 +81,9 @@ public class ConstructionHandler : MonoBehaviour
     {
         scriptableBuilding = (ScriptableBuilding)ResourceDictionary.instance.GetPreset("TownCenter");
         if (!buildingInProgress &&
-            PlayerResourceManger.instance.playerCurrentFood >= scriptableBuilding.FoodCost &&
-            PlayerResourceManger.instance.playerCurrentWood >= scriptableBuilding.WoodCost &&
-            PlayerResourceManger.instance.playerCurrentStone >= scriptableBuilding.StoneCost)
+            TeamManager.instance.teamList[0].playerCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentStone >= scriptableBuilding.StoneCost)
         {
             lastBuild = new LastBuildingConstructed(BuildTownCenter);
             InputHandler.instance.lockSelectedObjects = true;
@@ -117,9 +117,9 @@ public class ConstructionHandler : MonoBehaviour
     {
         scriptableBuilding = (ScriptableBuilding)ResourceDictionary.instance.GetPreset("Barracks");
         if (!buildingInProgress &&
-            PlayerResourceManger.instance.playerCurrentFood >= scriptableBuilding.FoodCost &&
-            PlayerResourceManger.instance.playerCurrentWood >= scriptableBuilding.WoodCost &&
-            PlayerResourceManger.instance.playerCurrentStone >= scriptableBuilding.StoneCost)
+            TeamManager.instance.teamList[0].playerCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[0].playerCurrentStone >= scriptableBuilding.StoneCost)
         {
             lastBuild = new LastBuildingConstructed(BuildBarracks);
             InputHandler.instance.lockSelectedObjects = true;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BushResource : ResourceHandler
+public class BushResource : BasicResource
 {
     private void Update()
     {

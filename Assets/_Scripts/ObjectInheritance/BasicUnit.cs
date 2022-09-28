@@ -13,6 +13,7 @@ public class BasicUnit : BasicObject
     private float damageTimer;
     protected ItemManager equippedItemManager;
     [SerializeField] protected GameObject HealthBar;
+    protected GameObject HealthBarCanvas;
     protected NavMeshAgent navAgent;
     protected Slider HealthSlider;
     protected float Damage;
@@ -31,7 +32,8 @@ public class BasicUnit : BasicObject
         animatorPresent = false;
         navAgent = GetComponent<NavMeshAgent>();
         HealthSlider = HealthBar.GetComponent<Slider>();
-        HealthBar.SetActive(false);
+        HealthBarCanvas = HealthBar.transform.parent.gameObject;
+        HealthBarCanvas.SetActive(false);
         TryGetComponent<ItemManager>( out equippedItemManager);
         if (equippedItemManager == null)
             Debug.Log("Unable to find the Item Manager!");
@@ -43,8 +45,6 @@ public class BasicUnit : BasicObject
     {
         base.Start();
         SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
-        //TeamShirt.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
-        //TeamShirtShoulder.GetComponent<MeshRenderer>().material = TeamManager.instance.AssignTeamMaterial(gameObject.layer);
     }
     protected virtual void Update()
     {
@@ -80,11 +80,11 @@ public class BasicUnit : BasicObject
         {
             currentTarget = null;
         }
-        if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("EnemyUnitLayer")))
+        if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")))
         {
             SetAttackTarget(hit.transform.gameObject.GetComponent<BasicUnit>());
         }
-        else if (Physics.Raycast(ray, out hit, 100, LayerMask.GetMask("GroundLayer")))
+        else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
         {
             if (inCombat)
                 inCombat = false;
@@ -142,9 +142,9 @@ public class BasicUnit : BasicObject
         }
         else
         {
-            if (!HealthBar.activeInHierarchy)
+            if (!HealthBarCanvas.activeInHierarchy)
             {
-                HealthBar.SetActive(true);
+                HealthBarCanvas.SetActive(true);
             }
             HealthSlider.normalizedValue = currentHealth / MaxHealth;
         }

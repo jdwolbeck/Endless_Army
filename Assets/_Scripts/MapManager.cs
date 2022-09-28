@@ -27,7 +27,11 @@ public class MapManager : MonoBehaviour
     public void GenerateMap()
     {
         MapGrid newMap = new MapGrid();
-        MapGeneration.instance.GenerateNewMap(newMap);
+        if (!MapGeneration.instance.GenerateNewMap(newMap))
+        {
+            Debug.Log("Map generation failed...");
+            return;
+        }
         MapList.Add(newMap);
         Button btn = Instantiate(generatedMapButton, Vector3.zero, Quaternion.identity, UIMapGrid.transform);
         btn.GetComponentInChildren<TMP_Text>().text = "GeneratedMap " + tempGeneratedCount.ToString();
@@ -48,9 +52,9 @@ public class MapManager : MonoBehaviour
             }
         }
         UnloadCurrentMap();
-        PlayerResourceManger.instance.playerCurrentFood = map.MapScriptable.StartingFoodAmount;
-        PlayerResourceManger.instance.playerCurrentWood = map.MapScriptable.StartingWoodAmount;
-        PlayerResourceManger.instance.playerCurrentStone = map.MapScriptable.StartingStoneAmount;
+        TeamManager.instance.teamList[0].playerCurrentFood = map.MapScriptable.StartingFoodAmount;
+        TeamManager.instance.teamList[0].playerCurrentWood = map.MapScriptable.StartingWoodAmount;
+        TeamManager.instance.teamList[0].playerCurrentStone = map.MapScriptable.StartingStoneAmount;
         ResourceDictionary.instance.GetMaterial("GroundMat").color = map.MapScriptable.GroundColor;
         map.InstantiateMap();
     }

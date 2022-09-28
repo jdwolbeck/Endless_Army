@@ -19,7 +19,7 @@ public class MapGeneration : MonoBehaviour
             instance = this;
         }
     }
-    public void GenerateNewMap(MapGrid map)
+    public bool GenerateNewMap(MapGrid map)
     {
         int loopCount = 0;
         int mapWidth = map.MapScriptable.MapWidth;
@@ -67,7 +67,11 @@ public class MapGeneration : MonoBehaviour
             loopCount++;
         }
         if (loopCount == 15)
+        {
             Debug.Log("We looped 15 times and still resulted in no Map, modify generation algorithm/coverage requirements??");
+            return false;
+        }
+        return true;
     }
     void GenerateLayer(MapGrid map, string resourceType)
     {

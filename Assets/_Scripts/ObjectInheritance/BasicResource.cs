@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceHandler : MonoBehaviour
+public class BasicResource : MonoBehaviour
 {
     [SerializeField]
     protected int maxStartingFoodAmount;

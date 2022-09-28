@@ -6,6 +6,7 @@ using UnityEngine;
 public class TeamManager : MonoBehaviour
 {
     public static TeamManager instance;
+    public List<TeamResourceManager> teamList;
 
     private void Awake()
     {
@@ -13,6 +14,10 @@ public class TeamManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+    private void Start()
+    {
+        teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
     }
     public TeamEnum AssignTeam(int objectLayer)
     {

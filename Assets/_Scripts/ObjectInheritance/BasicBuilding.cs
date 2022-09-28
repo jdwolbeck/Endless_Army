@@ -90,6 +90,19 @@ public class BasicBuilding : BasicObject
     {
         return isBuilt;
     }
+    public void FinishBuilding()
+    {
+        if (gameObject.layer == 0)
+        {
+            Debug.Log("Finish building called on a building that has no layer set.");
+        }
+        progressSlider.normalizedValue = 1f;
+        UpgradeProgressPrefab();
+        isBuilt = true;
+        progressBar.SetActive(false);
+        SetLayerRecursively(buildingBlocks, gameObject.layer);
+        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+    }
     private void UpgradeProgressPrefab()
     {
         // We started building our building, should only occur on the first call.

@@ -104,7 +104,7 @@ public class AIBasicUnit : MonoBehaviour
         ray.direction = new Vector3(0, -1, 0);
         //Debug.DrawRay(rayTest.origin, rayTest.direction * 200, Color.red);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 200))
+        if (Physics.Raycast(ray, out hit, 10000))
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
             {

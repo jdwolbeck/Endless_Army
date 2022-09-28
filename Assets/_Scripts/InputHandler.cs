@@ -41,7 +41,7 @@ public class InputHandler : MonoBehaviour
         {
             mousePos = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePos);
-            if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("PlayerUnitLayer")))
+            if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerUnitLayer")))
             {
                 DeselectResource();
                 DeselectBuildings();
@@ -62,7 +62,7 @@ public class InputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("PlayerBuildingLayer")))
+            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
             {
                 DeselectResource();
                 DeselectUnits();
@@ -87,12 +87,12 @@ public class InputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("ResourceLayer")))
+            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("ResourceLayer")))
             {
                 DeselectBuildings();
                 DeselectUnits();
                 // Grab the script that is responsible for handling all of a units actions and prefab objects.
-                ResourceHandler resourceHandler = hit.transform.parent.GetComponentInParent<ResourceHandler>();
+                BasicResource resourceHandler = hit.transform.parent.GetComponentInParent<BasicResource>();
                 if (resourceHandler != null)
                 {
                     DeselectResource();
@@ -190,7 +190,7 @@ public class InputHandler : MonoBehaviour
     {
         if (selectedResource != null)
         {
-            selectedResource.GetComponent<ResourceHandler>().DeselectResource();
+            selectedResource.GetComponent<BasicResource>().DeselectResource();
             selectedResource = null;
         }
     }

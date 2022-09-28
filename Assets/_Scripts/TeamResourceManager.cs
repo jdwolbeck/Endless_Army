@@ -2,24 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerResourceManger : MonoBehaviour
+public class TeamResourceManager : MonoBehaviour
 {
-    public static PlayerResourceManger instance;
     public int playerCurrentFood;
     public int playerCurrentWood;
     public int playerCurrentStone;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
         playerCurrentFood = 500;
         playerCurrentWood = 500;
         playerCurrentStone = 500;
     }
-    public void UpdatePlayerFood(int foodAmount)
+    public void UpdateTeamFood(int foodAmount)
     {
         playerCurrentFood += foodAmount;
         if (playerCurrentFood < 0)
@@ -27,7 +22,7 @@ public class PlayerResourceManger : MonoBehaviour
             playerCurrentFood = 0;
         }
     }
-    public void UpdatePlayerWood(int woodAmount)
+    public void UpdateTeamWood(int woodAmount)
     {
         playerCurrentWood += woodAmount;
         if (playerCurrentWood < 0)
@@ -35,7 +30,7 @@ public class PlayerResourceManger : MonoBehaviour
             playerCurrentWood = 0;
         }
     }
-    public void UpdatePlayerStone(int stoneAmount)
+    public void UpdateTeamStone(int stoneAmount)
     {
         playerCurrentStone += stoneAmount;
         if (playerCurrentStone < 0)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameHandler : MonoBehaviour
 {
@@ -66,10 +67,13 @@ public class GameHandler : MonoBehaviour
     }
     public void RemoveAllObjects()
     {
+        ItemManager itemManager;
         // Go through all lists and delete the objects from the scene.
         GameObject go;
         for (int i = playerUnits.Count - 1; i >= 0; i--)
         {
+            if (TryGetComponent(out itemManager))
+                itemManager.UnequipAll();
             go = playerUnits[i];
             playerUnits.RemoveAt(i);
             Destroy(go);
@@ -82,7 +86,11 @@ public class GameHandler : MonoBehaviour
         }
         for (int i = enemyUnits.Count - 1; i >= 0; i--)
         {
-            go = enemyUnits[i];
+            go = enemyUnits[i]; 
+            if (go.TryGetComponent(out itemManager))
+            {
+                itemManager.UnequipAll();
+            }
             enemyUnits.RemoveAt(i);
             Destroy(go);
         }
@@ -94,6 +102,8 @@ public class GameHandler : MonoBehaviour
         }
         for (int i = neutralUnits.Count - 1; i >= 0; i--)
         {
+            if (TryGetComponent(out itemManager))
+                itemManager.UnequipAll();
             go = neutralUnits[i];
             neutralUnits.RemoveAt(i);
             Destroy(go);

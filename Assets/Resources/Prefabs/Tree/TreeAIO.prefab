@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1341320158017632915}
   - component: {fileID: -7756039793545106774}
+  - component: {fileID: 8861139034124766866}
   m_Layer: 11
   m_Name: TreeAIO
   m_TagString: Untagged
@@ -57,6 +58,22 @@ MonoBehaviour:
   - {fileID: 7154165404585027729}
   - {fileID: 4277825325013529129}
   - {fileID: 8509748714242445396}
+--- !u!208 &8861139034124766866
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7344476934233864574}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.25, y: 0.5, z: 0.25}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.12
 --- !u!1001 &2471787633112684816
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: c26c5c01d4ca9214a99bd263ecb6611f, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &91512959
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,12 +347,13 @@ GameObject:
   - component: {fileID: 118870396}
   - component: {fileID: 118870395}
   - component: {fileID: 118870394}
+  - component: {fileID: 118870398}
   m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 40
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!64 &118870394
 MeshCollider:
@@ -431,8 +432,38 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &118870398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 118870393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.13
+  m_MinRegionArea: 1
+  m_NavMeshData: {fileID: 23800000, guid: 040795734cf097c48ad509a7e5e13ffe, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1001 &161543024
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -608,6 +639,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7075074042645349524, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7075074042645349524, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7079066387213723722, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -650,7 +689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalPosition.x
@@ -810,7 +849,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickMapGenerationMenuLoadMapButton
         m_Mode: 1
@@ -1113,6 +1152,95 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 287327302}
   m_CullTransparentMesh: 1
+--- !u!1 &302576336
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 302576338}
+  - component: {fileID: 302576337}
+  m_Layer: 0
+  m_Name: Team Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &302576337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302576336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f57735c89d65243b016baa8f3beab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamList: []
+--- !u!4 &302576338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302576336}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &348386116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 348386118}
+  - component: {fileID: 348386117}
+  m_Layer: 0
+  m_Name: Debug Tools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &348386117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348386116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a85fa7fe2f2d8b64e82049a9befc1b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &348386118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348386116}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376299439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1312,6 +1440,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385336401}
   m_CullTransparentMesh: 1
+--- !u!1 &433748860
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 433748862}
+  - component: {fileID: 433748861}
+  m_Layer: 0
+  m_Name: Input Handler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &433748861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433748860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 238535195dbb2624f9f45819c87155b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedUnits: []
+  selectedBuildings: []
+  selectedResource: {fileID: 0}
+  lockSelectedObjects: 0
+--- !u!4 &433748862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433748860}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &460114176 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 337509473034896766, guid: 69ee3a5454bbd244bae8847ba2604eb1, type: 3}
@@ -1474,7 +1650,7 @@ PrefabInstance:
     - target: {fileID: 337509473344416597, guid: 69ee3a5454bbd244bae8847ba2604eb1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 605221168}
+      objectReference: {fileID: 1382815003}
     - target: {fileID: 337509473344416597, guid: 69ee3a5454bbd244bae8847ba2604eb1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnClickTownCenterMenuBuildWorkerButton
@@ -1613,6 +1789,10 @@ PrefabInstance:
       value: BushAIO
       objectReference: {fileID: 0}
     - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -1674,7 +1854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1988,15 +2168,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 605221166}
-  - component: {fileID: 605221165}
   - component: {fileID: 605221167}
-  - component: {fileID: 605221168}
-  - component: {fileID: 605221169}
-  - component: {fileID: 605221170}
-  - component: {fileID: 605221171}
   - component: {fileID: 605221172}
-  - component: {fileID: 605221173}
-  - component: {fileID: 605221174}
   m_Layer: 0
   m_Name: Game Handler
   m_TagString: Untagged
@@ -2004,22 +2177,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &605221165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238535195dbb2624f9f45819c87155b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedUnits: []
-  selectedBuildings: []
-  selectedResource: {fileID: 0}
-  lockSelectedObjects: 0
 --- !u!4 &605221166
 Transform:
   m_ObjectHideFlags: 0
@@ -2033,7 +2190,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &605221167
 MonoBehaviour:
@@ -2053,68 +2210,6 @@ MonoBehaviour:
   enemyBuildings: []
   neutralUnits: []
   resourceObjects: []
---- !u!114 &605221168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0cd5135339b264c9c3b8cd91736973, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 1996330505}
-  workerMenu: {fileID: 980360339}
-  townCenterMenu: {fileID: 118497072}
-  barracksMenu: {fileID: 1613769961}
-  createWorkerPB: {fileID: 460114176}
-  createFighterPB: {fileID: 2127446668}
-  hudMenu: {fileID: 385336401}
-  foodTextBox: {fileID: 517895409}
-  woodTextBox: {fileID: 969136466}
-  stoneTextBox: {fileID: 287327302}
-  MapGenerationMenu: {fileID: 274047556}
---- !u!114 &605221169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8440f16ee76c4d4a82834946305205a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCurrentFood: 0
-  playerCurrentWood: 0
-  playerCurrentStone: 0
---- !u!114 &605221170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f57735c89d65243b016baa8f3beab3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &605221171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa9f8686c8584a84292fe24af0f70bf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &605221172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2125,33 +2220,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16b9c4fd1aa80194eb0c4f1528cec5a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &605221173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 021e01a59c28b8047b1f5220eacde4b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Ground: {fileID: 118870393}
-  UIMapGrid: {fileID: 672087654}
-  generatedMapButton: {fileID: 8060271218404160473, guid: 1ff585170122329489851ff05e9dccb2, type: 3}
---- !u!114 &605221174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 605221164}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a85fa7fe2f2d8b64e82049a9befc1b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &625370034
@@ -2259,7 +2327,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_LocalScale.x
@@ -2344,6 +2412,10 @@ PrefabInstance:
     - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_Name
       value: TreeAIO (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2439,7 +2511,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickMapGenerationMenuClearMapButton
         m_Mode: 1
@@ -2699,7 +2771,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &722482693
 PrefabInstance:
@@ -2747,6 +2819,10 @@ PrefabInstance:
     - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_Name
       value: StoneAIO
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2798,7 +2874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_LocalScale.x
@@ -2918,6 +2994,10 @@ PrefabInstance:
       value: StoneAIO (1)
       objectReference: {fileID: 0}
     - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -2967,7 +3047,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_LocalScale.x
@@ -3129,7 +3209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3202,6 +3282,10 @@ PrefabInstance:
     - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_Name
       value: TreeAIO
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3297,7 +3381,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickDebugMenuShowHideButton
         m_Mode: 1
@@ -3832,6 +3916,10 @@ PrefabInstance:
       value: BushAIO (1)
       objectReference: {fileID: 0}
     - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -3893,7 +3981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_LocalScale.x
@@ -4042,7 +4130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1341320158017632915, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_LocalScale.x
@@ -4129,6 +4217,10 @@ PrefabInstance:
       value: TreeAIO (2)
       objectReference: {fileID: 0}
     - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344476934233864574, guid: 2fea4965c36d8634e9a1f97ebede02c4, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -4186,6 +4278,10 @@ PrefabInstance:
       value: StoneAIO (2)
       objectReference: {fileID: 0}
     - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3763895024647561937, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -4235,7 +4331,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 8114800008633372997, guid: 4fd08f09a31d69441898292eaf193b54, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4317,7 +4413,7 @@ PrefabInstance:
     - target: {fileID: 337509473344416597, guid: 69ee3a5454bbd244bae8847ba2604eb1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 605221168}
+      objectReference: {fileID: 1382815003}
     - target: {fileID: 337509473344416597, guid: 69ee3a5454bbd244bae8847ba2604eb1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnClickBarracksMenuBuildFighterButton
@@ -4456,6 +4552,10 @@ PrefabInstance:
       value: BushAIO (2)
       objectReference: {fileID: 0}
     - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559609798646835833, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -4517,7 +4617,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4226234821410143907, guid: a603548f39e3fc2438393a3bf1572115, type: 3}
       propertyPath: m_LocalScale.x
@@ -4870,7 +4970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4946,6 +5046,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
+--- !u!1 &1382815002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1382815004}
+  - component: {fileID: 1382815003}
+  m_Layer: 0
+  m_Name: UI Handler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1382815003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382815002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0cd5135339b264c9c3b8cd91736973, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1996330505}
+  workerMenu: {fileID: 980360339}
+  townCenterMenu: {fileID: 118497072}
+  barracksMenu: {fileID: 1613769961}
+  createWorkerPB: {fileID: 460114176}
+  createFighterPB: {fileID: 2127446668}
+  hudMenu: {fileID: 385336401}
+  foodTextBox: {fileID: 517895409}
+  woodTextBox: {fileID: 969136466}
+  stoneTextBox: {fileID: 287327302}
+  MapGenerationMenu: {fileID: 274047556}
+--- !u!4 &1382815004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1382815002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1438949310
 GameObject:
   m_ObjectHideFlags: 0
@@ -5012,7 +5167,67 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1451735964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1451735967}
+  - component: {fileID: 1451735966}
+  - component: {fileID: 1451735965}
+  m_Layer: 0
+  m_Name: Map Tools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1451735965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451735964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9f8686c8584a84292fe24af0f70bf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1451735966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451735964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 021e01a59c28b8047b1f5220eacde4b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ground: {fileID: 118870393}
+  UIMapGrid: {fileID: 672087654}
+  generatedMapButton: {fileID: 8060271218404160473, guid: 1ff585170122329489851ff05e9dccb2, type: 3}
+--- !u!4 &1451735967
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451735964}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1547096691
 GameObject:
@@ -5098,7 +5313,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickMapGenerationMenuGenerateMapButton
         m_Mode: 1
@@ -5315,6 +5530,10 @@ PrefabInstance:
       propertyPath: isSpawnedFromInspector
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6426802892667392112, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_ObstacleAvoidanceType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6679248773650722858, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -5322,6 +5541,14 @@ PrefabInstance:
     - target: {fileID: 7065958296561752777, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7075074042645349524, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7075074042645349524, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7079066387213723722, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
@@ -5365,7 +5592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5429,7 +5656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8908947093248256229, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8942394913064178504, guid: 22b8789be1778db4b838e25c4b1a0f46, type: 3}
       propertyPath: m_Layer
@@ -5801,7 +6028,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_RootOrder
-      value: 18
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6139,7 +6366,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickWorkerMenuBuildBarracksButton
         m_Mode: 1
@@ -6408,7 +6635,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 605221168}
+      - m_Target: {fileID: 1382815003}
         m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
         m_MethodName: OnClickWorkerMenuBuildTownCenterButton
         m_Mode: 1
@@ -6606,7 +6833,7 @@ GameObject:
   - component: {fileID: 1996330507}
   - component: {fileID: 1996330506}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: PlayerUICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6692,7 +6919,7 @@ RectTransform:
   - {fileID: 802330585}
   - {fileID: 1613769962}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

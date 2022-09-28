@@ -15,7 +15,7 @@ public class BarracksBuilding : BasicBuilding
     protected override void Awake()
     {
         base.Awake();
-        uiHandler = GameHandler.instance.GetComponent<UIHandler>();
+        uiHandler = UIHandler.instance.GetComponent<UIHandler>();
     }
     protected override void Update()
     {
@@ -51,15 +51,15 @@ public class BarracksBuilding : BasicBuilding
     public void AddFighterToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter");
-        if (PlayerResourceManger.instance.playerCurrentFood < scriptableUnit.FoodCost ||
-            PlayerResourceManger.instance.playerCurrentWood < scriptableUnit.WoodCost ||
-            PlayerResourceManger.instance.playerCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[0].playerCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[0].playerCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[0].playerCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        PlayerResourceManger.instance.playerCurrentFood -= scriptableUnit.FoodCost;
-        PlayerResourceManger.instance.playerCurrentWood -= scriptableUnit.WoodCost;
-        PlayerResourceManger.instance.playerCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[0].playerCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[0].playerCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[0].playerCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateFighterPB();

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeResource : ResourceHandler
+public class TreeResource : BasicResource
 {
     private void Update()
     {

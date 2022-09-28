@@ -16,7 +16,7 @@ public class TownCenterBuilding : BasicBuilding
     protected override void Awake()
     {
         base.Awake();
-        uiHandler = GameHandler.instance.GetComponent<UIHandler>();
+        uiHandler = UIHandler.instance.GetComponent<UIHandler>();
     }
     protected override void Update()
     {
@@ -52,15 +52,15 @@ public class TownCenterBuilding : BasicBuilding
     public void AddWorkerToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker");
-        if (PlayerResourceManger.instance.playerCurrentFood < scriptableUnit.FoodCost ||
-            PlayerResourceManger.instance.playerCurrentWood < scriptableUnit.WoodCost ||
-            PlayerResourceManger.instance.playerCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[0].playerCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[0].playerCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[0].playerCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        PlayerResourceManger.instance.playerCurrentFood -= scriptableUnit.FoodCost;
-        PlayerResourceManger.instance.playerCurrentWood -= scriptableUnit.WoodCost;
-        PlayerResourceManger.instance.playerCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[0].playerCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[0].playerCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[0].playerCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateWorkerPB();
