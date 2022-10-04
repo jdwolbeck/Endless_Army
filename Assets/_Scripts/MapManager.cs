@@ -52,9 +52,7 @@ public class MapManager : MonoBehaviour
             }
         }
         UnloadCurrentMap();
-        TeamManager.instance.teamList[0].playerCurrentFood = map.MapScriptable.StartingFoodAmount;
-        TeamManager.instance.teamList[0].playerCurrentWood = map.MapScriptable.StartingWoodAmount;
-        TeamManager.instance.teamList[0].playerCurrentStone = map.MapScriptable.StartingStoneAmount;
+        TeamManager.instance.InitializeTeams(map.MapScriptable);
         ResourceDictionary.instance.GetMaterial("GroundMat").color = map.MapScriptable.GroundColor;
         map.InstantiateMap();
     }

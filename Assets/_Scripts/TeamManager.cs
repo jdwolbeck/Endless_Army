@@ -50,4 +50,24 @@ public class TeamManager : MonoBehaviour
 
         throw new Exception("Unhandled object layer was passed into TeamManager.AssignTeamMaterial...");
     }
+    public void InitializeTeams(ScriptableMap map)
+    {
+        RemoveAllTeams();
+        for (int i = 0; i < map.NumberOfPlayers; i++)
+        {
+            teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
+            teamList[i].playerCurrentFood = map.StartingFoodAmount;
+            teamList[i].playerCurrentWood = map.StartingWoodAmount;
+            teamList[i].playerCurrentStone = map.StartingStoneAmount;
+        }
+    }
+    private void RemoveAllTeams()
+    {
+        for (int i = 0; i < teamList.Count; i++)
+        {
+            Destroy(teamList[0].gameObject);
+            teamList.RemoveAt(0);
+        }
+        teamList.Clear();
+    }
 }
