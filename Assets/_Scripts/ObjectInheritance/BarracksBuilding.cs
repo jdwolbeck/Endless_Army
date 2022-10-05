@@ -51,15 +51,15 @@ public class BarracksBuilding : BasicBuilding
     public void AddFighterToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter");
-        if (TeamManager.instance.teamList[0].playerCurrentFood < scriptableUnit.FoodCost ||
-            TeamManager.instance.teamList[0].playerCurrentWood < scriptableUnit.WoodCost ||
-            TeamManager.instance.teamList[0].playerCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[0].teamCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[0].teamCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[0].teamCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        TeamManager.instance.teamList[0].playerCurrentFood -= scriptableUnit.FoodCost;
-        TeamManager.instance.teamList[0].playerCurrentWood -= scriptableUnit.WoodCost;
-        TeamManager.instance.teamList[0].playerCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[0].teamCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[0].teamCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[0].teamCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateFighterPB();

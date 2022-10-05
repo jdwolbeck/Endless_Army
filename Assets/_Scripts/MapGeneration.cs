@@ -220,7 +220,7 @@ public class MapGeneration : MonoBehaviour
             {
                 spawnAreas[i, j] = 0;
                 // Check to see if each point is within the spawn area's radius
-                for (int k = 0; k < map.MapScriptable.NumberOfPlayers; k++)
+                for (int k = 0; k < map.MapScriptable.NumberOfTeams; k++)
                 {
                     if ((Mathf.Pow(i - map.PlayerSpawns[k].x, 2) + Mathf.Pow(j - map.PlayerSpawns[k].y, 2) <= Mathf.Pow(map.MapScriptable.SpawnRadius, 2))) //(x-i)^2 + (y-j)^2 <= r^2
                     {

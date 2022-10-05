@@ -12,16 +12,16 @@ TagManager:
   - Water
   - UI
   - GroundLayer
-  - PlayerUnitLayer
-  - PlayerBuildingLayer
-  - EnemyUnitLayer
-  - EnemyBuildingLayer
   - ResourceLayer
   - ConstructionLayer
-  - NeutralLayer
-  - 
-  - 
-  - 
+  - PlayerUnitLayer
+  - PlayerBuildingLayer
+  - AllyUnitLayer
+  - AllyBuildingLayer
+  - EnemyUnitLayer
+  - EnemyBuildingLayer
+  - NeutralUnitLayer
+  - NeutralBuildingLayer
   - 
   - 
   - 

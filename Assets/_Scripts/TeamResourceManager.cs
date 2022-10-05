@@ -4,38 +4,41 @@ using UnityEngine;
 
 public class TeamResourceManager : MonoBehaviour
 {
-    public int playerCurrentFood;
-    public int playerCurrentWood;
-    public int playerCurrentStone;
+    public int teamCurrentFood;
+    public int teamCurrentWood;
+    public int teamCurrentStone;
+    public int teamNumber;
+    public Color teamColor;
 
     private void Awake()
     {
-        playerCurrentFood = 500;
-        playerCurrentWood = 500;
-        playerCurrentStone = 500;
+        teamCurrentFood = 500;
+        teamCurrentWood = 500;
+        teamCurrentStone = 500;
+        teamColor = Color.white;
     }
     public void UpdateTeamFood(int foodAmount)
     {
-        playerCurrentFood += foodAmount;
-        if (playerCurrentFood < 0)
+        teamCurrentFood += foodAmount;
+        if (teamCurrentFood < 0)
         {
-            playerCurrentFood = 0;
+            teamCurrentFood = 0;
         }
     }
     public void UpdateTeamWood(int woodAmount)
     {
-        playerCurrentWood += woodAmount;
-        if (playerCurrentWood < 0)
+        teamCurrentWood += woodAmount;
+        if (teamCurrentWood < 0)
         {
-            playerCurrentWood = 0;
+            teamCurrentWood = 0;
         }
     }
     public void UpdateTeamStone(int stoneAmount)
     {
-        playerCurrentStone += stoneAmount;
-        if (playerCurrentStone < 0)
+        teamCurrentStone += stoneAmount;
+        if (teamCurrentStone < 0)
         {
-            playerCurrentStone = 0;
+            teamCurrentStone = 0;
         }
     }
 }

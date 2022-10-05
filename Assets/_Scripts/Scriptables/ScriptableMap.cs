@@ -8,7 +8,7 @@ public class ScriptableMap : ScriptableObject
     public int StartingFoodAmount;
     public int StartingWoodAmount;
     public int StartingStoneAmount;
-    public int NumberOfPlayers;
+    public int NumberOfTeams;
     public int MapWidth;
     public int MapHeight;
     public int SpawnRadius;
@@ -23,4 +23,5 @@ public class ScriptableMap : ScriptableObject
     public float MinStoneFill;
     public float MinBushFill;
     public Color GroundColor;
+    public List<Vector2> TeamSpawns;
 }

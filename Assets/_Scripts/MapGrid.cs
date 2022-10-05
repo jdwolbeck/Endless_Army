@@ -42,12 +42,12 @@ public class MapGrid
 
         // Used for determining spawn points
         float spawnDegrees;
-        float degreesPerPlayer = 360.0f / MapScriptable.NumberOfPlayers;
+        float degreesPerPlayer = 360.0f / MapScriptable.NumberOfTeams;
         float spawnRadius = (MapScriptable.MapWidth / 2f) * 0.8f;
         float x;
         float y;
         PlayerSpawns = new List<Vector2>();
-        for (int i = 0; i < MapScriptable.NumberOfPlayers; i++)
+        for (int i = 0; i < MapScriptable.NumberOfTeams; i++)
         {
             spawnDegrees = degreesPerPlayer * i; // number of degrees around the map in which this team will spawn
             // Use triginometry to figure out the x, y coordinates for this player spawn.
@@ -149,7 +149,7 @@ public class MapGrid
                 SpawnResource(i, j);
             }
         }
-        InstantiatePlayerSpawns();
+        //InstantiatePlayerSpawns();
     }
     private void SpawnResource(int x, int y)
     {

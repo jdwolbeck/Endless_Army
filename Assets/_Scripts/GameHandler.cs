@@ -72,8 +72,6 @@ public class GameHandler : MonoBehaviour
         GameObject go;
         for (int i = playerUnits.Count - 1; i >= 0; i--)
         {
-            if (TryGetComponent(out itemManager))
-                itemManager.UnequipAll();
             go = playerUnits[i];
             playerUnits.RemoveAt(i);
             Destroy(go);
@@ -87,10 +85,6 @@ public class GameHandler : MonoBehaviour
         for (int i = enemyUnits.Count - 1; i >= 0; i--)
         {
             go = enemyUnits[i]; 
-            if (go.TryGetComponent(out itemManager))
-            {
-                itemManager.UnequipAll();
-            }
             enemyUnits.RemoveAt(i);
             Destroy(go);
         }
@@ -102,8 +96,6 @@ public class GameHandler : MonoBehaviour
         }
         for (int i = neutralUnits.Count - 1; i >= 0; i--)
         {
-            if (TryGetComponent(out itemManager))
-                itemManager.UnequipAll();
             go = neutralUnits[i];
             neutralUnits.RemoveAt(i);
             Destroy(go);

@@ -52,15 +52,15 @@ public class TownCenterBuilding : BasicBuilding
     public void AddWorkerToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker");
-        if (TeamManager.instance.teamList[0].playerCurrentFood < scriptableUnit.FoodCost ||
-            TeamManager.instance.teamList[0].playerCurrentWood < scriptableUnit.WoodCost ||
-            TeamManager.instance.teamList[0].playerCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[0].teamCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[0].teamCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[0].teamCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        TeamManager.instance.teamList[0].playerCurrentFood -= scriptableUnit.FoodCost;
-        TeamManager.instance.teamList[0].playerCurrentWood -= scriptableUnit.WoodCost;
-        TeamManager.instance.teamList[0].playerCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[0].teamCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[0].teamCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[0].teamCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateWorkerPB();
