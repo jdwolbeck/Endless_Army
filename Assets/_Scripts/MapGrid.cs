@@ -47,6 +47,7 @@ public class MapGrid
         float x;
         float y;
         PlayerSpawns = new List<Vector2>();
+        MapScriptable.TeamSpawns = new List<Vector2>();
         for (int i = 0; i < MapScriptable.NumberOfTeams; i++)
         {
             spawnDegrees = degreesPerPlayer * i; // number of degrees around the map in which this team will spawn
@@ -87,6 +88,7 @@ public class MapGrid
             // Since our coordinate system used for instatiation is set to the bottom left and the circle equations are set for the center of the map offset the calculated x,y
             x += (MapScriptable.MapWidth / 2);
             y += MapScriptable.MapHeight / 2;
+            MapScriptable.TeamSpawns.Add(new Vector2(x, y));
             PlayerSpawns.Add(new Vector2(x, y));
         }
     }
@@ -178,7 +180,7 @@ public class MapGrid
         GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab(resourceType + "AIO"));
         go.transform.rotation = Quaternion.Euler(0, randomRotation, 0);
         go.transform.localScale = new Vector3(randSize, randSize, randSize);
-        Vector2 newPosition = TranslateCoordinatesToGameWorld(new Vector2(x, y));
+        Vector2 newPosition = TranslateCoordinatesToGameWorld(MapScriptable, new Vector2(x, y));
         go.transform.position = new Vector3(newPosition.x, 0, newPosition.y);
 
         CurrentGameObjectArray[x, y] = go;
@@ -189,7 +191,7 @@ public class MapGrid
         Vector2 gamePosition = new Vector2();
         for (int i = 0; i < PlayerSpawns.Count; i++)
         {
-            gamePosition = TranslateCoordinatesToGameWorld(PlayerSpawns[i]);
+            gamePosition = TranslateCoordinatesToGameWorld(MapScriptable, PlayerSpawns[i]);
             if (i == 0)
             {
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
@@ -206,16 +208,16 @@ public class MapGrid
             }
         }
     }
-    private Vector2 TranslateCoordinatesToGameWorld(Vector2 inputCoords)
+    public static Vector2 TranslateCoordinatesToGameWorld(ScriptableMap map, Vector2 inputCoords)
     {
         Vector2 outputCoords = new Vector2();
         outputCoords.x = inputCoords.x;
-        outputCoords.x -= MapScriptable.MapWidth / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the right half of the map.
-        outputCoords.x *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
+        outputCoords.x -= map.MapWidth / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the right half of the map.
+        outputCoords.x *= map.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
         outputCoords.x += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
         outputCoords.y = inputCoords.y;
-        outputCoords.y -= MapScriptable.MapHeight / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the top half of the map.
-        outputCoords.y *= MapScriptable.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
+        outputCoords.y -= map.MapHeight / 2f; // The Ground is anchored at the center. If we didnt do this, we would see GameObjects only in the top half of the map.
+        outputCoords.y *= map.ResourceSpreadFactor; // Accomodate for spreading out the largest resource
         outputCoords.y += Random.Range(0.25f, 0.75f); // We must shift by around 0.5f to align with the "tiles" of the map. If we didnt do this we would overhang the edge GameObjects by 0.5f.
 
         return outputCoords;

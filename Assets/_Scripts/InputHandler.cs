@@ -54,6 +54,7 @@ public class InputHandler : MonoBehaviour
                         DeselectUnits();
                     }
                     basicUnit.SelectObject();
+                    basicUnit.ObjectDied -= CheckForObjectDeath;
                     basicUnit.ObjectDied += CheckForObjectDeath;
                     selectedUnits.Add(basicUnit);
                     if (SelectedUnitsChanged != null)
@@ -119,10 +120,11 @@ public class InputHandler : MonoBehaviour
             {
                 foreach (GameObject unit in GameHandler.instance.playerUnits)
                 {
-                    if (IsWithinSelectionBounds(unit))
+                    if (unit != null && IsWithinSelectionBounds(unit))
                     {
                         BasicUnit basicUnit = unit.GetComponent<BasicUnit>();
                         basicUnit.SelectObject();
+                        basicUnit.ObjectDied -= CheckForObjectDeath;
                         basicUnit.ObjectDied += CheckForObjectDeath;
                         selectedUnits.Add(basicUnit);
                         if (SelectedUnitsChanged != null)

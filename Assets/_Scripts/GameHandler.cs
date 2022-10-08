@@ -107,4 +107,8 @@ public class GameHandler : MonoBehaviour
             Destroy(go);
         }
     }
+    public void RemoveUnit(GameObject go, int teamNumber)
+    {
+
+    }
 }

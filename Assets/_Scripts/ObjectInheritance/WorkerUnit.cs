@@ -21,6 +21,7 @@ public class WorkerUnit : BasicUnit
     private float nextHarvestTime;
     private int harvestAmount;
     private float nextWorkerAnimUpdate;
+    private bool aiHarvesting;
 
     protected override void Awake()
     {
@@ -54,6 +55,8 @@ public class WorkerUnit : BasicUnit
         {
             if (constructingBuild == false && Vector3.Distance(gameObject.transform.position, currentBuild.transform.position) <= buildRange)
             {
+                // Look at the building we're constructing
+                transform.LookAt(currentBuild.transform, new Vector3 (0, 1, 0));
                 navAgent.SetDestination(transform.position);
                 constructingBuild = true;
                 equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
@@ -101,6 +104,12 @@ public class WorkerUnit : BasicUnit
                 }
                 Debug.Log("Worker started harvesting " + currentResource.ToString());
             }
+            if (Vector3.Distance(gameObject.transform.position, currentResource.transform.position) <= harvestRange)
+            {
+                // Look at the resource we're harvesting
+                Quaternion lookOnLook = Quaternion.LookRotation(currentResource.transform.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookOnLook, Time.deltaTime * 3);
+            }
             if (Time.time > nextHarvestTime && isHarvesting)
             {
                 nextHarvestTime = Time.time + harvestCooldownTime;
@@ -126,6 +135,24 @@ public class WorkerUnit : BasicUnit
                 }
                 if (resourcesRemaining <= 0)
                 {
+                    if (aiHarvesting)
+                    {
+                        if(gameObject.TryGetComponent(out AIWorkerUnit aiWorker))
+                        {
+                            switch (resourceType)
+                            {
+                                case ResourceType.Food:
+                                    aiWorker.AddNewAction(AIAction.GatherNearestBush, false);
+                                    break;
+                                case ResourceType.Wood:
+                                    aiWorker.AddNewAction(AIAction.ChopNearestTree, false);
+                                    break;
+                                case ResourceType.Stone:
+                                    aiWorker.AddNewAction(AIAction.MineNearestStone, false);
+                                    break;
+                            }
+                        }
+                    }
                     // Resource depleted
                     StopHarvesting();
                 }
@@ -191,6 +218,7 @@ public class WorkerUnit : BasicUnit
         harvestingStone = false;
         harvestingWood = false;
         currentResource = null;
+        aiHarvesting = false;
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
         Debug.Log("Stopping harvesting...");
@@ -225,7 +253,7 @@ public class WorkerUnit : BasicUnit
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ConstructionLayer"))
             {
                 GameObject go = hit.transform.gameObject;
-                while(go.transform.parent != null)
+                while (go.transform.parent != null)
                 {
                     go = go.transform.parent.gameObject;
                 }
@@ -235,7 +263,60 @@ public class WorkerUnit : BasicUnit
             {
                 //Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
                 HarvestResource(hit.transform.gameObject);
+                aiHarvesting = true;
             }
         }
+    }
+    public bool IsBusy()
+    {
+        if (currentBuild == null && currentResource == null)
+        {
+            return false;
+        }
+        return true;
+    }
+    public bool ChopNearestTree()
+    {
+        StopAction();
+        return FindNearestResource(typeof(TreeResource));
+    }
+    public bool GatherNearestBush()
+    {
+        StopAction();
+        return FindNearestResource(typeof(BushResource));
+    }
+    public bool MineNearestStone()
+    {
+        StopAction();
+        return FindNearestResource(typeof(StoneResource));
+    }
+    private bool FindNearestResource(System.Type resourceType)
+    {
+        int loopBreak = 0;
+        while (loopBreak < 25)
+        {
+            Collider[] rangeChecks = Physics.OverlapSphere(transform.position, 0.5f + loopBreak, LayerMask.GetMask("ResourceLayer"));
+            GameObject go;
+            for (int i = 0; i < rangeChecks.Length; i++)
+            {
+                go = rangeChecks[i].gameObject;
+                while (go.transform.parent != null)
+                {
+                    go = go.transform.parent.gameObject;
+                }
+                BasicResource foundResource;
+                if (go.TryGetComponent(out foundResource))
+                {
+                    if (foundResource.GetType() == resourceType && 
+                       (foundResource.currentFoodAmount > 0 || foundResource.currentWoodAmount > 0 || foundResource.currentStoneAmount > 0))
+                    {
+                        HarvestResource(foundResource.gameObject);
+                        return true;
+                    }
+                }
+            }
+            loopBreak++;
+        }
+        return false;
     }
 }

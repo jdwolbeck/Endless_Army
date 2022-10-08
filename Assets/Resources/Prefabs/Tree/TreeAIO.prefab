@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1341320158017632915}
   - component: {fileID: -7756039793545106774}
   - component: {fileID: 8861139034124766866}
-  m_Layer: 11
+  m_Layer: 7
   m_Name: TreeAIO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +86,10 @@ PrefabInstance:
       value: ChoppedTree
       objectReference: {fileID: 0}
     - target: {fileID: 1806065179805051705, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806065179805051705, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -137,6 +141,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3355666127181136847, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4378822999478844561, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7916736150731706266, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5104619203080420939, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b9ba84e6102d9f14dabf3fd05a5f959f, type: 3}
@@ -160,6 +176,10 @@ PrefabInstance:
     - target: {fileID: 1806065179805051705, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
       propertyPath: m_Name
       value: AdultTree
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806065179805051705, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1806065179805051705, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
       propertyPath: m_IsActive
@@ -213,6 +233,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3355666127181136847, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4378822999478844561, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5104619203080420939, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9254c614a2a5f6b47bb890f3db728871, type: 3}
@@ -236,6 +264,10 @@ PrefabInstance:
     - target: {fileID: 1806065179805051705, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}
       propertyPath: m_Name
       value: DepletedTree
+      objectReference: {fileID: 0}
+    - target: {fileID: 1806065179805051705, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1806065179805051705, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}
       propertyPath: m_IsActive
@@ -284,6 +316,10 @@ PrefabInstance:
     - target: {fileID: 3298059520407652668, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3355666127181136847, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5104619203080420939, guid: 3ec32e6d2939d6f47b3a3723f798fdf6, type: 3}

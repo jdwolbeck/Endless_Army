@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BasicObject : MonoBehaviour
 {
-    public TeamEnum Team;
+    public int Team;
     public GameObject highlight;
     public GameObject TeamIndicators;
     public int FoodCost;
@@ -21,7 +21,7 @@ public class BasicObject : MonoBehaviour
     protected virtual void Awake() { }
     protected virtual void Start() 
     {
-        Team = TeamManager.instance.AssignTeam(gameObject.layer);
+        //Team = TeamManager.instance.AssignTeam(gameObject.layer);
     }
     public virtual void DoAction() { }
     public virtual void SelectObject()
@@ -59,9 +59,14 @@ public class BasicObject : MonoBehaviour
             return;
 
         MeshRenderer meshR;
+        SkinnedMeshRenderer skinMeshR;
         if (go.TryGetComponent<MeshRenderer>(out meshR))
         {
             meshR.material = mat;
+        }
+        else if (go.TryGetComponent<SkinnedMeshRenderer>(out skinMeshR))
+        {
+            skinMeshR.material = mat;
         }
         foreach (Transform child in go.transform)
         {
@@ -80,9 +85,12 @@ public class BasicObject : MonoBehaviour
         currentHealth = MaxHealth;
     }
 }
+
+/*
 public enum TeamEnum
 {
     Unknown,
     Player,
     Enemy
 }
+*/

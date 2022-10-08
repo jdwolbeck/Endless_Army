@@ -25,12 +25,18 @@ public class DebugTools : MonoBehaviour
                 if (rand < 0.5f || rand >= 1.5f)
                 {
                     obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
+                    obj.GetComponent<BasicObject>().Team = 1;
                     GameHandler.instance.enemyUnits.Add(obj);
                 }
                 else
                 {
                     obj.layer = LayerMask.NameToLayer("PlayerUnitLayer");
+                    obj.GetComponent<BasicObject>().Team = 0;
                     GameHandler.instance.playerUnits.Add(obj);
+                }
+                if(obj.TryGetComponent(out AIBasicUnit aiBU))
+                {
+                    aiBU.enabled = true;
                 }
             }
             else
@@ -41,11 +47,17 @@ public class DebugTools : MonoBehaviour
                 {
                     obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
                     GameHandler.instance.enemyUnits.Add(obj);
+                    obj.GetComponent<BasicObject>().Team = 1;
                 }
                 else
                 {
                     obj.layer = LayerMask.NameToLayer("PlayerUnitLayer");
+                    obj.GetComponent<BasicObject>().Team = 0;
                     GameHandler.instance.playerUnits.Add(obj);
+                }
+                if (obj.TryGetComponent(out AIBasicUnit aiBU))
+                {
+                    aiBU.enabled = true;
                 }
             }
         }

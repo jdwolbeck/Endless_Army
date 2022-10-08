@@ -47,7 +47,8 @@ public class BasicBuilding : BasicObject
                 isBuilt = true;
                 progressBar.SetActive(false);
                 SetLayerRecursively(buildingBlocks, gameObject.layer);
-                SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+                //SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+                SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(Team));
             }
         }
         // Change the blueprint to a red color if we are currently colliding with another object
@@ -101,7 +102,8 @@ public class BasicBuilding : BasicObject
         isBuilt = true;
         progressBar.SetActive(false);
         SetLayerRecursively(buildingBlocks, gameObject.layer);
-        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+        //SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(Team));
     }
     private void UpgradeProgressPrefab()
     {

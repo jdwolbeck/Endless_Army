@@ -80,7 +80,6 @@ public class ItemManager : MonoBehaviour
         //Debug.Log("Unequip slot " + slot.ToString());
         if ((int)slot < numOfSlots && (int)slot >= 0 && CurrentEquipment[(int)slot] != null)
         {
-            Debug.Log("Unequip that shee");
             CurrentEquipment[(int)slot] = null;
             Destroy(CurrentMeshRenderersList[(int)slot].gameObject);
             CurrentMeshRenderersList[(int)slot] = null;

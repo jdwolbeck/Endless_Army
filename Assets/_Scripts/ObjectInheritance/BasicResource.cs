@@ -20,9 +20,9 @@ public class BasicResource : MonoBehaviour
     protected int startingFoodAmount;
     protected int startingWoodAmount;
     protected int startingStoneAmount;
-    protected int currentFoodAmount;
-    protected int currentWoodAmount;
-    protected int currentStoneAmount;
+    public int currentFoodAmount { protected set; get; }
+    public int currentWoodAmount { protected set; get; }
+    public int currentStoneAmount { protected set; get; }
 
     [SerializeField]
     protected List<GameObject> progressPrefabs = new List<GameObject>();

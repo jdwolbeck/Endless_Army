@@ -51,15 +51,15 @@ public class UIHandler : MonoBehaviour
     }
     private void Update()
     {
-        if (TeamManager.instance.teamList[0].teamCurrentFood != int.Parse(foodText.text))
+        if (TeamManager.instance.teamList.Count > 0 && TeamManager.instance.teamList[0].teamCurrentFood != int.Parse(foodText.text))
         {
             foodText.text = TeamManager.instance.teamList[0].teamCurrentFood.ToString();
         }
-        if (TeamManager.instance.teamList[0].teamCurrentWood != int.Parse(woodText.text))
+        if (TeamManager.instance.teamList.Count > 0 && TeamManager.instance.teamList[0].teamCurrentWood != int.Parse(woodText.text))
         {
             woodText.text = TeamManager.instance.teamList[0].teamCurrentWood.ToString();
         }
-        if (TeamManager.instance.teamList[0].teamCurrentStone != int.Parse(stoneText.text))
+        if (TeamManager.instance.teamList.Count > 0 && TeamManager.instance.teamList[0].teamCurrentStone != int.Parse(stoneText.text))
         {
             stoneText.text = TeamManager.instance.teamList[0].teamCurrentStone.ToString();
         }

@@ -9,6 +9,8 @@ public class TeamResourceManager : MonoBehaviour
     public int teamCurrentStone;
     public int teamNumber;
     public Color teamColor;
+    public List<GameObject> unitList;
+    public List<GameObject> buildingList;
 
     private void Awake()
     {

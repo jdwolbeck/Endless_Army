@@ -21,10 +21,12 @@ public class BasicUnit : BasicObject
     protected float AttackSpeed;
     protected float attackCooldown;
     protected BasicUnit currentTarget;
+    protected bool subscribedToTarget;
     protected bool inCombat;
 
     protected Animator animator;
     protected bool animatorPresent;
+    protected bool aiAttacking;
 
     protected override void Awake()
     {
@@ -44,7 +46,8 @@ public class BasicUnit : BasicObject
     protected override void Start()
     {
         base.Start();
-        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+        //SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(gameObject.layer));
+        SetMaterialRecursively(TeamIndicators, TeamManager.instance.AssignTeamMaterial(Team));
     }
     protected virtual void Update()
     {
@@ -77,8 +80,10 @@ public class BasicUnit : BasicObject
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
         if (currentTarget != null)
+            ClearTarget(currentTarget.gameObject);
+        if (gameObject.TryGetComponent(out AIBasicUnit aiBaseUnit))
         {
-            currentTarget = null;
+            aiBaseUnit.ClearAllTasks();
         }
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")))
         {
@@ -86,15 +91,12 @@ public class BasicUnit : BasicObject
         }
         else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
         {
-            if (inCombat)
-                inCombat = false;
             navAgent.SetDestination(hit.point);
         }
     }
     public void SetAttackTarget(BasicUnit target)
     {
         Attack(target);
-        target.ObjectDied += ClearTarget;
     }
     protected float DistanceToTarget(Transform target)
     {
@@ -116,8 +118,19 @@ public class BasicUnit : BasicObject
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {
+                if (!subscribedToTarget)
+                {
+                    aiAttacking = true;
+                    currentTarget.ObjectDied += ClearTarget;
+                    subscribedToTarget = true;
+                }
                 inCombat = true;
-                navAgent.SetDestination(gameObject.transform.position);
+                navAgent.SetDestination(transform.position);
+
+                // Look at our current target
+                Quaternion lookOnLook = Quaternion.LookRotation(currentTarget.transform.position - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookOnLook, Time.deltaTime * 3);
+
                 if (attackCooldown <= 0)
                 {
                     //Debug.Log(gameObject.ToString() + ": Attacked enemy unit");
@@ -153,6 +166,8 @@ public class BasicUnit : BasicObject
     }
     protected override void Die()
     {
+        GameHandler.instance.RemoveUnit(gameObject, Team);
+        /*
         if (Team == TeamEnum.Player)
         {
             GameHandler.instance.playerUnits.Remove(gameObject);
@@ -161,12 +176,31 @@ public class BasicUnit : BasicObject
         {
             GameHandler.instance.enemyUnits.Remove(gameObject);
         }
+        */
+
+        if (currentTarget != null)
+        {
+            currentTarget.ObjectDied -= ClearTarget;
+        }
         base.Die();
     }
     protected void ClearTarget(GameObject go)
     {
+        if (subscribedToTarget)
+        {
+            currentTarget.ObjectDied -= ClearTarget;
+            subscribedToTarget = false;
+        }
         currentTarget = null;
         inCombat = false;
+        if (aiAttacking)
+        {
+            aiAttacking = false;
+            if (gameObject.TryGetComponent(out AIBasicUnit aiUnit))
+            {
+                aiUnit.AddNewAction(AIAction.AttackNearestEnemy, false);
+            }
+        }
     }
     public override void LoadFromPreset(ScriptableObj obj)
     {
