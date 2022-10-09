@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.AI;
 
 public class StoneResource : BasicResource
 {
@@ -22,6 +22,10 @@ public class StoneResource : BasicResource
             else
             {
                 currentOutline = progressPrefabs[currentPrefabProgress].GetComponent<Outline>();
+            }
+            if (currentPrefabProgress == 0)
+            {
+                GetComponent<NavMeshObstacle>().enabled = false;
             }
         }
     }

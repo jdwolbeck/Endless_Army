@@ -51,15 +51,15 @@ public class BarracksBuilding : BasicBuilding
     public void AddFighterToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Fighter");
-        if (TeamManager.instance.teamList[0].teamCurrentFood < scriptableUnit.FoodCost ||
-            TeamManager.instance.teamList[0].teamCurrentWood < scriptableUnit.WoodCost ||
-            TeamManager.instance.teamList[0].teamCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[Team].teamCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[Team].teamCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[Team].teamCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        TeamManager.instance.teamList[0].teamCurrentFood -= scriptableUnit.FoodCost;
-        TeamManager.instance.teamList[0].teamCurrentWood -= scriptableUnit.WoodCost;
-        TeamManager.instance.teamList[0].teamCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[Team].teamCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[Team].teamCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[Team].teamCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateFighterPB();
@@ -95,6 +95,7 @@ public class BarracksBuilding : BasicBuilding
             GameHandler.instance.enemyUnits.Add(obj);
             obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
         }
+        obj.GetComponent<FighterUnit>().Team = Team;
         productionQueue.RemoveAt(0);
         if (hasRallyPoint)
         {

@@ -51,6 +51,11 @@ public class BasicUnit : BasicObject
     }
     protected virtual void Update()
     {
+        if (!isAddedToObjectList && Team != invalidTeamId)
+        {
+            TeamManager.instance.teamList[Team].unitList.Add(gameObject);
+            isAddedToObjectList = true;
+        }
         if (animatorPresent)
         {
             float speedPercent = navAgent.velocity.magnitude / navAgent.speed;

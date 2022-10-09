@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class TreeResource : BasicResource
 {
@@ -22,6 +23,10 @@ public class TreeResource : BasicResource
             else
             {
                 currentOutline = progressPrefabs[currentPrefabProgress].GetComponent<Outline>();
+            }
+            if (currentPrefabProgress == 0)
+            {
+                GetComponent<NavMeshObstacle>().enabled = false;
             }
         }
     }

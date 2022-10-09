@@ -112,7 +112,7 @@ public class AIWorkerUnit : AIBasicUnit
             {
                 if (CurrentActionList.Count > 0)
                 {
-                    Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
+                    //Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
                     CurrentActionList.RemoveAt(0);
                 }
             }
@@ -130,7 +130,7 @@ public class AIWorkerUnit : AIBasicUnit
             {
                 if (CurrentActionList.Count > 0)
                 {
-                    Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
+                    //Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
                     CurrentActionList.RemoveAt(0);
                 }
             }
@@ -148,7 +148,7 @@ public class AIWorkerUnit : AIBasicUnit
             {
                 if (CurrentActionList.Count > 0)
                 {
-                    Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
+                    //Debug.Log("Removing most current task: " + CurrentActionList[0].ToString() + " Unable to find resource...");
                     CurrentActionList.RemoveAt(0);
                 }
             }

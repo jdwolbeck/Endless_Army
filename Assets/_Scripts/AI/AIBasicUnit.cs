@@ -280,7 +280,6 @@ public class AIBasicUnit : MonoBehaviour
             !basicUnit.HasActiveTarget() && basicUnit.attacker != null && 
              basicUnit.takenDamageRecently && CurrentActionList.Count == 0 )
         {
-            Debug.Log("Check for attackers caused attack");
             CurrentActionList.Add(AIAction.RetailateAgainstEnemy);
             return true;
         }

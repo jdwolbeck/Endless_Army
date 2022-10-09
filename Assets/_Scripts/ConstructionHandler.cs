@@ -40,17 +40,17 @@ public class ConstructionHandler : MonoBehaviour
 
         if (buildingInProgress && Input.GetMouseButtonDown(0) &&
             !EventSystem.current.IsPointerOverGameObject() &&
-            TeamManager.instance.teamList[0].teamCurrentFood >= scriptableBuilding.FoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentWood >= scriptableBuilding.WoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentStone >= scriptableBuilding.StoneCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone >= scriptableBuilding.StoneCost &&
             currentBasicBuilding.canBuildHere)
         {
             Destroy(currentBuild.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
             Debug.Log("Building placed, start construction...");
             buildingInProgress = false;
-            TeamManager.instance.teamList[0].teamCurrentFood -= scriptableBuilding.FoodCost;
-            TeamManager.instance.teamList[0].teamCurrentWood -= scriptableBuilding.WoodCost;
-            TeamManager.instance.teamList[0].teamCurrentStone -= scriptableBuilding.StoneCost;
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood -= scriptableBuilding.FoodCost;
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood -= scriptableBuilding.WoodCost;
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone -= scriptableBuilding.StoneCost;
             //Now that the TC is placed, tell all workers to go build it (if applicable)
             for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
             {
@@ -81,9 +81,9 @@ public class ConstructionHandler : MonoBehaviour
     {
         scriptableBuilding = (ScriptableBuilding)ResourceDictionary.instance.GetPreset("TownCenter");
         if (!buildingInProgress &&
-            TeamManager.instance.teamList[0].teamCurrentFood >= scriptableBuilding.FoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentWood >= scriptableBuilding.WoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentStone >= scriptableBuilding.StoneCost)
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone >= scriptableBuilding.StoneCost)
         {
             lastBuild = new LastBuildingConstructed(BuildTownCenter);
             InputHandler.instance.lockSelectedObjects = true;
@@ -117,9 +117,9 @@ public class ConstructionHandler : MonoBehaviour
     {
         scriptableBuilding = (ScriptableBuilding)ResourceDictionary.instance.GetPreset("Barracks");
         if (!buildingInProgress &&
-            TeamManager.instance.teamList[0].teamCurrentFood >= scriptableBuilding.FoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentWood >= scriptableBuilding.WoodCost &&
-            TeamManager.instance.teamList[0].teamCurrentStone >= scriptableBuilding.StoneCost)
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood >= scriptableBuilding.FoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood >= scriptableBuilding.WoodCost &&
+            TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone >= scriptableBuilding.StoneCost)
         {
             lastBuild = new LastBuildingConstructed(BuildBarracks);
             InputHandler.instance.lockSelectedObjects = true;

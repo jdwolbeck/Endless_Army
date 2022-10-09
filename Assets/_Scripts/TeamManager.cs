@@ -18,11 +18,17 @@ public class TeamManager : MonoBehaviour
     private void Start()
     {
         teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
-        if (teamList.Count > 0 && teamList[0].gameObject.TryGetComponent<AITeamController>(out AITeamController aiTeamController))
+        if (teamList.Count > 0 && teamList[0].gameObject.TryGetComponent(out AITeamController aiTeamController))
         {
             teamList[0].teamNumber = 0;
             // Remove the AI component of the player's Team controller.
             Destroy(aiTeamController);
+        }
+        teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
+        if (teamList.Count > 1 && teamList[1].gameObject.TryGetComponent(out AITeamController aiTeamCont))
+        {
+            teamList[1].teamNumber = 1;
+            Destroy(aiTeamCont);
         }
     }
     /*public TeamEnum AssignTeam(int objectLayer)
@@ -102,10 +108,9 @@ public class TeamManager : MonoBehaviour
     }
     private void RemoveAllTeams()
     {
-        for (int i = 0; i < teamList.Count; i++)
+        for (int i = teamList.Count - 1; i >= 0; i--)
         {
-            Destroy(teamList[0].gameObject);
-            teamList.RemoveAt(0);
+            Destroy(teamList[i].gameObject);
         }
         teamList.Clear();
     }

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.AI;
 
 public class BushResource : BasicResource
 {
@@ -24,6 +24,10 @@ public class BushResource : BasicResource
             else
             {
                 currentOutline = progressPrefabs[currentPrefabProgress].GetComponent<Outline>();
+            }
+            if (currentPrefabProgress == 0)
+            {
+                GetComponent<NavMeshObstacle>().enabled = false;
             }
         }
     }

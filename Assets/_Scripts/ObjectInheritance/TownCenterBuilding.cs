@@ -52,15 +52,15 @@ public class TownCenterBuilding : BasicBuilding
     public void AddWorkerToQueue()
     {
         scriptableUnit = (ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker");
-        if (TeamManager.instance.teamList[0].teamCurrentFood < scriptableUnit.FoodCost ||
-            TeamManager.instance.teamList[0].teamCurrentWood < scriptableUnit.WoodCost ||
-            TeamManager.instance.teamList[0].teamCurrentStone < scriptableUnit.StoneCost)
+        if (TeamManager.instance.teamList[Team].teamCurrentFood < scriptableUnit.FoodCost ||
+            TeamManager.instance.teamList[Team].teamCurrentWood < scriptableUnit.WoodCost ||
+            TeamManager.instance.teamList[Team].teamCurrentStone < scriptableUnit.StoneCost)
         {
             return;
         }
-        TeamManager.instance.teamList[0].teamCurrentFood -= scriptableUnit.FoodCost;
-        TeamManager.instance.teamList[0].teamCurrentWood -= scriptableUnit.WoodCost;
-        TeamManager.instance.teamList[0].teamCurrentStone -= scriptableUnit.StoneCost;
+        TeamManager.instance.teamList[Team].teamCurrentFood -= scriptableUnit.FoodCost;
+        TeamManager.instance.teamList[Team].teamCurrentWood -= scriptableUnit.WoodCost;
+        TeamManager.instance.teamList[Team].teamCurrentStone -= scriptableUnit.StoneCost;
         if (productionQueue.Count == 0)
         {
             uiHandler.EnableCreateWorkerPB();
@@ -68,7 +68,7 @@ public class TownCenterBuilding : BasicBuilding
         }
         if (productionQueue.Count < 30)
         {
-            Debug.Log("Adding worker to Production queue...");
+            //Debug.Log("Adding worker to Production queue...");
             productionQueue.Add(ResourceDictionary.instance.GetPrefab("Blend_WorkerUnit"));
         }
         else
@@ -96,6 +96,7 @@ public class TownCenterBuilding : BasicBuilding
             GameHandler.instance.enemyUnits.Add(obj);
             obj.layer = LayerMask.NameToLayer("EnemyUnitLayer");
         }
+        obj.GetComponent<WorkerUnit>().Team = Team;
         productionQueue.RemoveAt(0);
         if (hasRallyPoint)
         {

@@ -35,6 +35,11 @@ public class BasicBuilding : BasicObject
     }
     protected virtual void Update()
     {
+        if (!isAddedToObjectList && Team != invalidTeamId)
+        {
+            TeamManager.instance.teamList[Team].buildingList.Add(gameObject);
+            isAddedToObjectList = true;
+        }
         // Logic related to the construction of this building
         if (currentWorkers > 0)
         {

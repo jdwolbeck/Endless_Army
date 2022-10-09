@@ -10,7 +10,7 @@ public class WorkerUnit : BasicUnit
     private int buildRange;
     private bool constructingBuild;
     private BasicBuilding currentBasicBuilding;
-    private GameObject currentResource;
+    public GameObject currentResource;
     private BasicResource resourceHandler;
     protected bool harvestingWood;
     protected bool harvestingStone;
@@ -102,7 +102,7 @@ public class WorkerUnit : BasicUnit
                             break;
                     }
                 }
-                Debug.Log("Worker started harvesting " + currentResource.ToString());
+                //Debug.Log("Worker started harvesting " + currentResource.ToString());
             }
             if (Vector3.Distance(gameObject.transform.position, currentResource.transform.position) <= harvestRange)
             {
@@ -117,21 +117,17 @@ public class WorkerUnit : BasicUnit
                 int resourcesObtained;
                 ResourceType resourceType;
                 int resourcesRemaining = resourceHandler.HarvestResource(harvestAmount, out resourcesObtained, out resourceType);
-                if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
+                switch (resourceType)
                 {
-                    switch (resourceType)
-                    {
-                        case ResourceType.Food:
-                            TeamManager.instance.teamList[0].UpdateTeamFood(resourcesObtained);
-                            break;
-                        case ResourceType.Wood:
-                            TeamManager.instance.teamList[0].UpdateTeamWood(resourcesObtained);
-                            break;
-                        case ResourceType.Stone:
-                            TeamManager.instance.teamList[0].UpdateTeamStone(resourcesObtained);
-                            break;
-                    }
-
+                    case ResourceType.Food:
+                        TeamManager.instance.teamList[Team].UpdateTeamFood(resourcesObtained);
+                        break;
+                    case ResourceType.Wood:
+                        TeamManager.instance.teamList[Team].UpdateTeamWood(resourcesObtained);
+                        break;
+                    case ResourceType.Stone:
+                        TeamManager.instance.teamList[Team].UpdateTeamStone(resourcesObtained);
+                        break;
                 }
                 if (resourcesRemaining <= 0)
                 {
@@ -221,7 +217,7 @@ public class WorkerUnit : BasicUnit
         aiHarvesting = false;
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
-        Debug.Log("Stopping harvesting...");
+        //Debug.Log("Stopping harvesting...");
     }
     public void StopAction()
     {
@@ -269,7 +265,7 @@ public class WorkerUnit : BasicUnit
     }
     public bool IsBusy()
     {
-        if (currentBuild == null && currentResource == null)
+        if (currentBuild == null && currentResource == null && currentTarget == null)
         {
             return false;
         }

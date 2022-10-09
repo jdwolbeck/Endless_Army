@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class BasicObject : MonoBehaviour
 {
-    public int Team;
+    protected const int invalidTeamId = 1337;
+
+    public int Team = invalidTeamId;
     public GameObject highlight;
     public GameObject TeamIndicators;
     public int FoodCost;
@@ -14,6 +16,7 @@ public class BasicObject : MonoBehaviour
     public float ProductionTime;
     public float MaxHealth;
     protected float currentHealth;
+    protected bool isAddedToObjectList;
 
     public delegate void ObjectDeathEvent(GameObject go);
     public event ObjectDeathEvent ObjectDied;
