@@ -141,8 +141,9 @@ public class MapGrid
         newScale.z = MapScriptable.MapHeight / 10; // Planes are 10x10 Primative Cubes by default.
         newScale.z *= MapScriptable.ResourceSpreadFactor; // Expand to the largest tile spread size of the resources.
         MapManager.instance.Ground.transform.localScale = newScale;//new Vector3(2 * MAP_WIDTH / 10, 1, 2 * MAP_HEIGHT / 10);
-        
-        MapManager.instance.Ground.GetComponent<NavMeshSurface>().BuildNavMesh();
+        NavMeshSurface navSurface = MapManager.instance.Ground.GetComponent<NavMeshSurface>();
+        navSurface.layerMask = LayerMask.GetMask("GroundLayer");
+        navSurface.BuildNavMesh();
 
         for (int i = 0; i < MapScriptable.MapWidth; i++)
         {

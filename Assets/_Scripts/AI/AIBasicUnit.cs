@@ -60,6 +60,10 @@ public class AIBasicUnit : MonoBehaviour
             CurrentActionList.Add(newAction);
         }
     }
+    public int CheckActionCount()
+    {
+        return CurrentActionList.Count;
+    }
     public void ClearAllTasks()
     {
         CurrentActionList.Clear(); 

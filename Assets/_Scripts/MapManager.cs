@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,15 @@ public class MapManager : MonoBehaviour
     public static MapManager instance;
     public GameObject Ground;
     public List<MapGrid> MapList;
+    public bool UpdateNavMesh;
+    private NavMeshSurface navSurface;
     private List<Button> btnMapList;
     [SerializeField] private Image UIMapGrid;
     private int tempGeneratedCount = 0;
     public Button generatedMapButton;
     private int selectedMap = -1;
+    private bool navMeshBuilt;
+    private float waitUntil = 0.0f;
 
     void Awake()
     {
@@ -23,7 +28,22 @@ public class MapManager : MonoBehaviour
         }
         MapList = new List<MapGrid>();
         btnMapList = new List<Button>();
+        //navSurface = Ground.GetComponent<NavMeshSurface>();
+        //navSurface.minRegionArea = 5f;
     }
+ /*   private void Update()
+    {
+        if (UpdateNavMesh && !navMeshBuilt)
+        {
+            navSurface.BuildNavMesh();
+            navMeshBuilt = true;
+        }
+        if (UpdateNavMesh && Time.time > waitUntil)
+        {
+            navSurface.UpdateNavMesh(navSurface.navMeshData);
+            waitUntil = Time.time + 180f;
+        }
+    }*/
     public void GenerateMap()
     {
         MapGrid newMap = new MapGrid();

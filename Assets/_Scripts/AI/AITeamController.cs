@@ -74,21 +74,25 @@ public class AITeamController : MonoBehaviour
                     for (int i = idleWorkers.Count - 1; i >= 0; i--)
                     {
                         WorkerUnit worker = idleWorkers[i];
-                        if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
+                        AIWorkerUnit workerAI = worker.gameObject.GetComponent<AIWorkerUnit>();
+                        if (workerAI.CheckActionCount() == 0)
                         {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.GatherNearestBush, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.ChopNearestTree, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.MineNearestStone, false);
-                        }
-                        else
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.RandomMovement, false);
+                            if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.GatherNearestBush, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.ChopNearestTree, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.MineNearestStone, false);
+                            }
+                            else
+                            {
+                                workerAI.AddNewAction(AIAction.RandomMovement, false);
+                            }
                         }
                         idleWorkers.Remove(worker);
                     }
@@ -100,21 +104,25 @@ public class AITeamController : MonoBehaviour
                     for (int i = idleWorkers.Count - 1; i >= 0; i--)
                     {
                         WorkerUnit worker = idleWorkers[i];
-                        if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
+                        AIWorkerUnit workerAI = worker.gameObject.GetComponent<AIWorkerUnit>();
+                        if (workerAI.CheckActionCount() == 0)
                         {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.ChopNearestTree, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.GatherNearestBush, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.MineNearestStone, false);
-                        }
-                        else
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.RandomMovement, false);
+                            if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.ChopNearestTree, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.GatherNearestBush, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.MineNearestStone, false);
+                            }
+                            else
+                            {
+                                workerAI.AddNewAction(AIAction.RandomMovement, false);
+                            }
                         }
                         idleWorkers.Remove(worker);
                     }
@@ -126,21 +134,25 @@ public class AITeamController : MonoBehaviour
                     for (int i = idleWorkers.Count - 1; i >= 0; i--)
                     {
                         WorkerUnit worker = idleWorkers[i];
-                        if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
+                        AIWorkerUnit workerAI = worker.gameObject.GetComponent<AIWorkerUnit>();
+                        if (workerAI.CheckActionCount() == 0)
                         {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.MineNearestStone, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.GatherNearestBush, false);
-                        }
-                        else if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.ChopNearestTree, false);
-                        }
-                        else
-                        {
-                            worker.gameObject.GetComponent<AIWorkerUnit>().AddNewAction(AIAction.RandomMovement, false);
+                            if (AnyResourceWithinRadius(worker.gameObject, typeof(StoneResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.MineNearestStone, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(BushResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.GatherNearestBush, false);
+                            }
+                            else if (AnyResourceWithinRadius(worker.gameObject, typeof(TreeResource), 24.5f))
+                            {
+                                workerAI.AddNewAction(AIAction.ChopNearestTree, false);
+                            }
+                            else
+                            {
+                                workerAI.AddNewAction(AIAction.RandomMovement, false);
+                            }
                         }
                         idleWorkers.Remove(worker);
                     }
