@@ -23,6 +23,7 @@ public class UIHandler : MonoBehaviour
     private TMP_Text woodText;
     private TMP_Text stoneText;
     public GameObject MapGenerationMenu;
+    public GameObject MapTypeDropdown;
     private bool isDebugMenuSet;
     private void OnEnable()
     {
@@ -106,7 +107,10 @@ public class UIHandler : MonoBehaviour
     }
     public void OnClickMapGenerationMenuGenerateMapButton()
     {
-        MapManager.instance.GenerateMap();
+        if (MapTypeDropdown.GetComponent<TMP_Dropdown>().value == 1) // RTS Map type
+            MapManager.instance.GenerateMap();
+        else if (MapTypeDropdown.GetComponent<TMP_Dropdown>().value == 2) // Zombor Map type
+            MapManager.instance.GenerateZomborMap();
     }
     public void OnClickMapGenerationMenuLoadMapButton()
     {

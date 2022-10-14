@@ -28,7 +28,8 @@ public class MapGrid
     public string[,] CurrentBasicObjectArray;
     public GameObject[,] CurrentGameObjectArray;
     public MapObjectEnum[,] CurrentGameMap;
-    public List<Vector2> PlayerSpawns;
+    public List<Vector2> TeamSpawns;
+    public MapTypeEnum MapType;
 
     public MapGrid()
     {
@@ -46,8 +47,7 @@ public class MapGrid
         float spawnRadius = (MapScriptable.MapWidth / 2f) * 0.8f;
         float x;
         float y;
-        PlayerSpawns = new List<Vector2>();
-        MapScriptable.TeamSpawns = new List<Vector2>();
+        TeamSpawns = new List<Vector2>();
         for (int i = 0; i < MapScriptable.NumberOfTeams; i++)
         {
             spawnDegrees = degreesPerPlayer * i; // number of degrees around the map in which this team will spawn
@@ -88,8 +88,7 @@ public class MapGrid
             // Since our coordinate system used for instatiation is set to the bottom left and the circle equations are set for the center of the map offset the calculated x,y
             x += (MapScriptable.MapWidth / 2);
             y += MapScriptable.MapHeight / 2;
-            MapScriptable.TeamSpawns.Add(new Vector2(x, y));
-            PlayerSpawns.Add(new Vector2(x, y));
+            TeamSpawns.Add(new Vector2(x, y));
         }
     }
     public void UpdateCurrentMap()
@@ -190,9 +189,9 @@ public class MapGrid
     private void InstantiatePlayerSpawns()
     {
         Vector2 gamePosition = new Vector2();
-        for (int i = 0; i < PlayerSpawns.Count; i++)
+        for (int i = 0; i < TeamSpawns.Count; i++)
         {
-            gamePosition = TranslateCoordinatesToGameWorld(MapScriptable, PlayerSpawns[i]);
+            gamePosition = TranslateCoordinatesToGameWorld(MapScriptable, TeamSpawns[i]);
             if (i == 0)
             {
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
@@ -209,7 +208,7 @@ public class MapGrid
             }
         }
     }
-    public static Vector2 TranslateCoordinatesToGameWorld(ScriptableMap map, Vector2 inputCoords)
+    public Vector2 TranslateCoordinatesToGameWorld(ScriptableMap map, Vector2 inputCoords)
     {
         Vector2 outputCoords = new Vector2();
         outputCoords.x = inputCoords.x;

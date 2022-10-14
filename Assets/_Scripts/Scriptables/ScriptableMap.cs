@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MapTypeEnum
+{
+    Rts,
+    Zombor
+}
 [CreateAssetMenu(fileName = "ScriptableMap")]
 public class ScriptableMap : ScriptableObject
 {    
@@ -23,5 +28,5 @@ public class ScriptableMap : ScriptableObject
     public float MinStoneFill;
     public float MinBushFill;
     public Color GroundColor;
-    public List<Vector2> TeamSpawns;
+    public MapTypeEnum MapType;
 }

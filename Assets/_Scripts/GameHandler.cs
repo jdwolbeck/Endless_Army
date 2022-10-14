@@ -67,7 +67,6 @@ public class GameHandler : MonoBehaviour
     }
     public void RemoveAllObjects()
     {
-        ItemManager itemManager;
         // Go through all lists and delete the objects from the scene.
         GameObject go;
         for (int i = playerUnits.Count - 1; i >= 0; i--)

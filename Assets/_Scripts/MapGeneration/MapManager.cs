@@ -17,8 +17,8 @@ public class MapManager : MonoBehaviour
     private int tempGeneratedCount = 0;
     public Button generatedMapButton;
     private int selectedMap = -1;
-    private bool navMeshBuilt;
-    private float waitUntil = 0.0f;
+    //private bool navMeshBuilt;
+    //private float waitUntil = 0.0f;
 
     void Awake()
     {
@@ -49,12 +49,29 @@ public class MapManager : MonoBehaviour
         MapGrid newMap = new MapGrid();
         if (!MapGeneration.instance.GenerateNewMap(newMap))
         {
-            Debug.Log("Map generation failed...");
+            //Debug.Log("Map generation failed...");
             return;
         }
+        newMap.MapType = MapTypeEnum.Rts;
         MapList.Add(newMap);
         Button btn = Instantiate(generatedMapButton, Vector3.zero, Quaternion.identity, UIMapGrid.transform);
-        btn.GetComponentInChildren<TMP_Text>().text = "GeneratedMap " + tempGeneratedCount.ToString();
+        btn.GetComponentInChildren<TMP_Text>().text = "RTS Map " + tempGeneratedCount.ToString();
+        btn.GetComponent<Button>().onClick.AddListener(() => SelectMap(btn.GetComponentInChildren<TMP_Text>().text));
+        btnMapList.Add(btn);
+        tempGeneratedCount++;
+    }
+    public void GenerateZomborMap()
+    {
+        MapGrid newMap = new MapGrid();
+        if (!MapGeneration.instance.GenerateNewMap(newMap))
+        {
+            //Debug.Log("Map generation failed...");
+            return;
+        }
+        newMap.MapType = MapTypeEnum.Zombor;
+        MapList.Add(newMap);
+        Button btn = Instantiate(generatedMapButton, Vector3.zero, Quaternion.identity, UIMapGrid.transform);
+        btn.GetComponentInChildren<TMP_Text>().text = "Zombor Map " + tempGeneratedCount.ToString();
         btn.GetComponent<Button>().onClick.AddListener(() => SelectMap(btn.GetComponentInChildren<TMP_Text>().text));
         btnMapList.Add(btn);
         tempGeneratedCount++;
@@ -72,7 +89,7 @@ public class MapManager : MonoBehaviour
             }
         }
         UnloadCurrentMap();
-        TeamManager.instance.InitializeTeams(map.MapScriptable);
+        TeamManager.instance.InitializeTeams(map);
         ResourceDictionary.instance.GetMaterial("GroundMat").color = map.MapScriptable.GroundColor;
         map.InstantiateMap();
     }

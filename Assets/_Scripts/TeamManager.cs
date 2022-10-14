@@ -68,21 +68,21 @@ public class TeamManager : MonoBehaviour
 
         throw new Exception("Unhandled object layer was passed into TeamManager.AssignTeamMaterial...");
     }
-    public void InitializeTeams(ScriptableMap map)
+    public void InitializeTeams(MapGrid map)
     {
         RemoveAllTeams();
-        for (int i = 0; i < map.NumberOfTeams; i++)
+        for (int i = 0; i < map.MapScriptable.NumberOfTeams; i++)
         {
             teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
-            teamList[i].teamCurrentFood = map.StartingFoodAmount;
-            teamList[i].teamCurrentWood = map.StartingWoodAmount;
-            teamList[i].teamCurrentStone = map.StartingStoneAmount;
+            teamList[i].teamCurrentFood = map.MapScriptable.StartingFoodAmount;
+            teamList[i].teamCurrentWood = map.MapScriptable.StartingWoodAmount;
+            teamList[i].teamCurrentStone = map.MapScriptable.StartingStoneAmount;
             teamList[i].teamNumber = i;
             teamList[i].teamColor = GenerateTeamColor(i);
 
             ResourceDictionary.instance.GetMaterial("Team" + i.ToString() + "Mat").color = teamList[i].teamColor;
 
-            Vector2 gamePosition = MapGrid.TranslateCoordinatesToGameWorld(map, map.TeamSpawns[i]);
+            Vector2 gamePosition = map.TranslateCoordinatesToGameWorld(map.MapScriptable, map.TeamSpawns[i]);
             if (i == 0)
             {
                 if (teamList[0].gameObject.TryGetComponent<AITeamController>(out AITeamController aiTeamController))

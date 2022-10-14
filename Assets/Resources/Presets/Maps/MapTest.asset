@@ -19,7 +19,7 @@ MonoBehaviour:
   MapWidth: 100
   MapHeight: 100
   SpawnRadius: 7
-  InitialTreePoints: 150
+  InitialTreePoints: 50
   InitialStonePoints: 30
   InitialBushPoints: 25
   ResourceSpreadFactor: 2.5
@@ -30,12 +30,4 @@ MonoBehaviour:
   MinStoneFill: 2.5
   MinBushFill: 2
   GroundColor: {r: 0.25354397, g: 0.6132076, b: 0.15908688, a: 0}
-  TeamSpawns:
-  - {x: 90, y: 50}
-  - {x: 78.28427, y: 78.28427}
-  - {x: 50, y: 90}
-  - {x: 21.715729, y: 78.28427}
-  - {x: 10, y: 50}
-  - {x: 21.715729, y: 21.715729}
-  - {x: 50, y: 10}
-  - {x: 78.28427, y: 21.715729}
+  MapType: 1
