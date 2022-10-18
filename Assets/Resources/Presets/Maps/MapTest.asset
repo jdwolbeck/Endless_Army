@@ -16,16 +16,16 @@ MonoBehaviour:
   StartingWoodAmount: 150
   StartingStoneAmount: 0
   NumberOfTeams: 8
-  MapWidth: 100
-  MapHeight: 100
+  MapWidth: 500
+  MapHeight: 500
   SpawnRadius: 7
   InitialTreePoints: 50
   InitialStonePoints: 30
   InitialBushPoints: 25
   ResourceSpreadFactor: 2.5
-  TreeDampeningFactor: 0.5
-  StoneDampeningFactor: 4
-  BushDampeningFactor: 8
+  TreeDampeningFactor: 0.55
+  StoneDampeningFactor: 3.5
+  BushDampeningFactor: 4
   MinTreeFill: 30
   MinStoneFill: 2.5
   MinBushFill: 2

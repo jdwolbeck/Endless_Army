@@ -25,6 +25,7 @@ public class AITeamController : MonoBehaviour
     private float allowedVarience;
     private TownCenterBuilding mainTownCenter;
     private List<WorkerUnit> idleWorkers;
+    private int count;
     private void Start()
     {
         myTeamManager = gameObject.GetComponent<TeamResourceManager>();
@@ -178,11 +179,12 @@ public class AITeamController : MonoBehaviour
             case BuildableObjectList.Worker:
                 if (mainTownCenter == null)
                 {
+                    count++;
                     foreach (GameObject go in myTeamManager.buildingList)
                     {
                         go.TryGetComponent(out mainTownCenter);
                     }
-                    if (mainTownCenter == null)
+                    if (count != 1 && mainTownCenter == null)
                         Debug.Log("Main TC is still null, all town centers destroyed?");
                 }
                 else

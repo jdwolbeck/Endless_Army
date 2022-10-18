@@ -11,7 +11,9 @@ public class MapGeneration : MonoBehaviour
     private int totalTrees = 0;
     private int totalStones = 0;
     private int totalBushes = 0;
-
+    /*int avgTotalTrees = 0;
+    int avgTotalStones = 0;
+    int avgTotalBushes = 0;*/
     void Awake()
     {
         if (instance == null)
@@ -19,13 +21,6 @@ public class MapGeneration : MonoBehaviour
             instance = this;
         }
     }
-    /*
-     List of points for Trees (50 init):
-
-     */
-    int avgTotalTrees = 0;
-    int avgTotalStones = 0;
-    int avgTotalBushes = 0;
     public bool GenerateNewMap(MapGrid map)
     {
         int loopCount = 0;
@@ -39,16 +34,13 @@ public class MapGeneration : MonoBehaviour
             GenerateLayer(map, "Tree");
             GenerateLayer(map, "Stone");
             GenerateLayer(map, "Bush");
-            /*Debug.Log("Resources before clear (T, S, B): (" + map.MapScriptable.MinTreeFill + ", " + map.MapScriptable.MinStoneFill +
-                ", " + map.MapScriptable.MinBushFill + ") --- (" + (float)(totalTrees * 100) / (mapWidth * mapHeight) + "(" + totalTrees + "), " + 
-                (float)(totalStones * 100) / (mapWidth * mapHeight) + "(" + totalStones + "), " + (float)(totalBushes * 100) / (mapWidth * mapHeight) + "(" + totalBushes + "))");*/
             ClearSurroundingResources(map, map.CurrentBushArray);
             ClearSurroundingResources(map, map.CurrentStoneArray);
             ClearSpawnArea(map);
 
-            avgTotalTrees += totalTrees;
+            /*avgTotalTrees += totalTrees;
             avgTotalStones += totalStones;
-            avgTotalBushes += totalBushes;
+            avgTotalBushes += totalBushes;*/
             float treePercentage = (totalTrees * 100) / ((float)mapWidth * mapHeight);
             float stonePercentage = (totalStones * 100) / ((float)mapWidth * mapHeight);
             float bushPercentage = (totalBushes * 100) / ((float)mapWidth * mapHeight);
@@ -62,15 +54,14 @@ public class MapGeneration : MonoBehaviour
             if (bushPercentage < map.MapScriptable.MinBushFill)
                 sufficientResources = false;
 
-            //Debug.Log("Generated Resources (T, S, B): (" + map.MapScriptable.MinTreeFill + ", " + map.MapScriptable.MinStoneFill +
-                //", " + map.MapScriptable.MinBushFill + ") --- (" + treePercentage + ", " + stonePercentage + ", " + bushPercentage + ")");
-
             if (sufficientResources)
             {
+                Debug.Log("Generated Resources (T, S, B): (" + map.MapScriptable.MinTreeFill + ", " + map.MapScriptable.MinStoneFill +
+                   ", " + map.MapScriptable.MinBushFill + ") --- (" + treePercentage + ", " + stonePercentage + ", " + bushPercentage + ")  attempts " + loopCount);
                 totalTrees = 0;
                 totalStones = 0;
                 totalBushes = 0;
-                //break;
+                break;
             }
 
             ClearAllPoints(map);
@@ -79,15 +70,16 @@ public class MapGeneration : MonoBehaviour
             totalBushes = 0;
             loopCount++;
         }
-        Debug.Log("Generated Resources averages over " + loopCount + " counts (T, S, B): (" + map.MapScriptable.MinTreeFill + ", " + map.MapScriptable.MinStoneFill +
+
+        /*Debug.Log("Generated Resources averages over " + loopCount + " counts (T, S, B): (" + map.MapScriptable.MinTreeFill + ", " + map.MapScriptable.MinStoneFill +
                 ", " + map.MapScriptable.MinBushFill + ") --- (" + (((avgTotalTrees / (float)loopCount) * 100f) / ((float)mapWidth * mapHeight)) + ", " + 
                 (((avgTotalStones / (float)loopCount) * 100f) / ((float)mapWidth * mapHeight)) + ", " + (((avgTotalBushes / (float)loopCount) * 100f) / ((float)mapWidth * mapHeight)) + ")");
         avgTotalTrees = 0;
         avgTotalStones = 0;
-        avgTotalBushes = 0;
+        avgTotalBushes = 0;*/
         if (loopCount == maxLoops)
         {
-            //Debug.Log("We looped " + maxLoops + " times and still resulted in no Map, modify generation algorithm/coverage requirements??");
+            Debug.Log("We looped " + maxLoops + " times and still resulted in no Map, modify generation algorithm/coverage requirements??");
             return false;
         }
         return true;
@@ -99,18 +91,18 @@ public class MapGeneration : MonoBehaviour
         switch (resourceType)
         { // Set how many starting resources we want to spawn. From which will be each resource cluster
             case "Tree":
-                initialPoints = map.MapScriptable.InitialTreePoints;
-                //initialPoints = map.MapScriptable.MapWidth / 2;
+                //initialPoints = map.MapScriptable.InitialTreePoints;
+                initialPoints = (int)((map.MapScriptable.MapWidth * map.MapScriptable.MapWidth) / 150f);
                 resourceArray = map.CurrentTreeArray;
                 break;
             case "Stone":
-                initialPoints = map.MapScriptable.InitialStonePoints;
-                //initialPoints = (int)(map.MapScriptable.MapWidth / 3.5f);
+                //initialPoints = map.MapScriptable.InitialStonePoints;
+                initialPoints = (int)((map.MapScriptable.MapWidth * map.MapScriptable.MapWidth) / 175f);
                 resourceArray = map.CurrentStoneArray;
                 break;
             case "Bush":
-                initialPoints = map.MapScriptable.InitialBushPoints;
-                //initialPoints = map.MapScriptable.MapWidth / 4;
+                //initialPoints = map.MapScriptable.InitialBushPoints;
+                initialPoints = (int)((map.MapScriptable.MapWidth * map.MapScriptable.MapWidth) / 175f);
                 resourceArray = map.CurrentBushArray;
                 break;
             default:
@@ -133,34 +125,20 @@ public class MapGeneration : MonoBehaviour
     }
     void BeginClusterCreep(MapGrid map, int[,] resourceArray, string resourceType)
     {
-        //int[,] startingPoints = new int[map.MapScriptable.MapWidth, map.MapScriptable.MapHeight];
         List<Vector2> startingPoints = new List<Vector2>();
         for (int i = 0; i < map.MapScriptable.MapWidth; i++)
         {
             for (int j = 0; j < map.MapScriptable.MapHeight; j++)
             {
-                //startingPoints[i, j] = resourceArray[i, j];
                 if (resourceArray[i, j] == 1)
                 {
                     startingPoints.Add(new Vector2(i, j));
                 }
             }
         }
-        /*
-        for (int i = 0; i < map.MapScriptable.MapWidth; i++)
-        {
-            for (int j = 0; j < map.MapScriptable.MapHeight; j++)
-            {
-                if (startingPoints[i, j] == 1)
-                {
-                    CreepPoint(new Vector2(i, j), 0, map, resourceArray, resourceType);
-                }
-            }
-        } 
-        */
         foreach (Vector2 point in startingPoints)
         {
-            CreepPoint(point, 0, map, resourceArray, resourceType);
+            CreepPoint(point, 1, map, resourceArray, resourceType);
         }
     }
 
@@ -180,7 +158,6 @@ public class MapGeneration : MonoBehaviour
     }
     void CreepPoint(Vector2 parentPoint, int generation, MapGrid map, int[,] resourceArray, string resourceType)
     {
-        int randChance = 0;
         float dampeningFactor = 0;
         switch (resourceType)
         {
@@ -205,7 +182,7 @@ public class MapGeneration : MonoBehaviour
         }
         if (parentPoint.x - 1 >= 0 && resourceArray[(int)parentPoint.x - 1, (int)parentPoint.y] == 0)
         { // Check Left
-            if (Random.Range(0f, 10f) >= randChance + dampeningFactor)
+            if (Random.Range(0f, 10f) >= dampeningFactor)
             {
                 //SpawnResource((int)parentPoint.x - 1, (int)parentPoint.y, resourceArray, resourceType);
                 SaveResource(map, (int)parentPoint.x - 1, (int)parentPoint.y, resourceArray, resourceType);
@@ -214,7 +191,7 @@ public class MapGeneration : MonoBehaviour
         }
         if (parentPoint.x + 1 < map.MapScriptable.MapWidth && resourceArray[(int)parentPoint.x + 1, (int)parentPoint.y] == 0)
         { // Check Right
-            if (Random.Range(0, 10) >= randChance + dampeningFactor)
+            if (Random.Range(0, 10) >= dampeningFactor)
             {
                 //SpawnResource((int)parentPoint.x + 1, (int)parentPoint.y, resourceArray, resourceType);
                 SaveResource(map, (int)parentPoint.x + 1, (int)parentPoint.y, resourceArray, resourceType);
@@ -223,7 +200,7 @@ public class MapGeneration : MonoBehaviour
         }
         if (parentPoint.y + 1 < map.MapScriptable.MapHeight && resourceArray[(int)parentPoint.x, (int)parentPoint.y + 1] == 0)
         { // Check Up
-            if (Random.Range(0, 10) >= randChance + dampeningFactor)
+            if (Random.Range(0, 10) >= dampeningFactor)
             {
                 //SpawnResource((int)parentPoint.x, (int)parentPoint.y + 1, resourceArray, resourceType);
                 SaveResource(map, (int)parentPoint.x, (int)parentPoint.y + 1, resourceArray, resourceType);
@@ -232,7 +209,7 @@ public class MapGeneration : MonoBehaviour
         }
         if (parentPoint.y - 1 >= 0 && resourceArray[(int)parentPoint.x, (int)parentPoint.y - 1] == 0)
         { // Check Down
-            if (Random.Range(0, 10) >= randChance + dampeningFactor)
+            if (Random.Range(0, 10) >= dampeningFactor)
             {
                 //SpawnResource((int)parentPoint.x, (int)parentPoint.y - 1, resourceArray, resourceType);
                 SaveResource(map, (int)parentPoint.x, (int)parentPoint.y - 1, resourceArray, resourceType);
