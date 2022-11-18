@@ -230,6 +230,10 @@ public class WorkerUnit : BasicUnit
         {
             StopHarvesting();
         }
+        if (HasActiveTarget())
+        {
+            ClearTarget(currentTarget.gameObject);
+        }
     }
     public override void DoAction()
     {
@@ -261,6 +265,18 @@ public class WorkerUnit : BasicUnit
                 HarvestResource(hit.transform.gameObject);
                 aiHarvesting = true;
             }
+        }
+    }
+    public void SetPrioritization(string resourceType)
+    {
+        switch (resourceType)
+        {
+            case "Food":
+                break;
+            case "Wood":
+                break;
+            case "Stone":
+                break;
         }
     }
     public bool IsBusy()

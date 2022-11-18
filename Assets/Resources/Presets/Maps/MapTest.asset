@@ -16,8 +16,8 @@ MonoBehaviour:
   StartingWoodAmount: 150
   StartingStoneAmount: 0
   NumberOfTeams: 8
-  MapWidth: 500
-  MapHeight: 500
+  MapWidth: 300
+  MapHeight: 300
   SpawnRadius: 7
   InitialTreePoints: 50
   InitialStonePoints: 30

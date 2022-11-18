@@ -28,10 +28,21 @@ public class BasicBuilding : BasicObject
         prefabObjectList = new List<Transform>();
         buildingBlockMatList = new List<Material>();
         progressSlider = progressBar.GetComponent<Slider>();
-        SaveBuildingBlocksMats();
-        SetMaterialRecursively(buildingBlocks, ResourceDictionary.instance.GetMaterial("BlueprintGoodMat"));
-        blueprintMatsApplied = true;
-        SetLayerRecursively(buildingBlocks, LayerMask.NameToLayer("ConstructionLayer"));
+    }
+    protected override void Start()
+    {
+        base.Start();
+        if (isSpawnedFromInspector)
+        {
+            FinishBuilding();
+        }
+        else if (!isBuilt)
+        {
+            SaveBuildingBlocksMats();
+            SetMaterialRecursively(buildingBlocks, ResourceDictionary.instance.GetMaterial("BlueprintGoodMat"));
+            blueprintMatsApplied = true;
+            SetLayerRecursively(buildingBlocks, LayerMask.NameToLayer("ConstructionLayer"));
+        }
     }
     protected virtual void Update()
     {
@@ -102,6 +113,7 @@ public class BasicBuilding : BasicObject
         {
             Debug.Log("Finish building called on a building that has no layer set.");
         }
+
         progressSlider.normalizedValue = 1f;
         UpgradeProgressPrefab();
         isBuilt = true;

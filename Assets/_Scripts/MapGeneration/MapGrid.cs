@@ -151,7 +151,6 @@ public class MapGrid
                 SpawnResource(i, j);
             }
         }
-        //InstantiatePlayerSpawns();
     }
     private void SpawnResource(int x, int y)
     {

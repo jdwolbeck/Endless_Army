@@ -7,6 +7,7 @@ public class BasicObject : MonoBehaviour
 {
     protected const int invalidTeamId = 1337;
 
+    public bool isSpawnedFromInspector;
     public int Team = invalidTeamId;
     public GameObject highlight;
     public GameObject TeamIndicators;

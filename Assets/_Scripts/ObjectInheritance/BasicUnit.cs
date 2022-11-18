@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class BasicUnit : BasicObject
 {
-    public bool isSpawnedFromInspector;
     public BasicObject attacker;
     public bool takenDamageRecently { get; private set; }
     private float damageTimer;

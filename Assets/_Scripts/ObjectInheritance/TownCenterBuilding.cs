@@ -13,9 +13,9 @@ public class TownCenterBuilding : BasicBuilding
     private bool tcpbEnabled;
     private bool objIsSelected;
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
         uiHandler = UIHandler.instance.GetComponent<UIHandler>();
     }
     protected override void Update()
@@ -61,7 +61,7 @@ public class TownCenterBuilding : BasicBuilding
         TeamManager.instance.teamList[Team].teamCurrentFood -= scriptableUnit.FoodCost;
         TeamManager.instance.teamList[Team].teamCurrentWood -= scriptableUnit.WoodCost;
         TeamManager.instance.teamList[Team].teamCurrentStone -= scriptableUnit.StoneCost;
-        if (productionQueue.Count == 0)
+        if (Team == 0 && productionQueue.Count == 0)
         {
             uiHandler.EnableCreateWorkerPB();
             tcpbEnabled = true;

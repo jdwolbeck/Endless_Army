@@ -19,12 +19,16 @@ public class UIHandler : MonoBehaviour
     public GameObject foodTextBox;
     public GameObject woodTextBox;
     public GameObject stoneTextBox;
+    public GameObject focusFoodBtn;
+    public GameObject focusWoodBtn;
+    public GameObject focusStoneBtn;
     private TMP_Text foodText;
     private TMP_Text woodText;
     private TMP_Text stoneText;
     public GameObject MapGenerationMenu;
     public GameObject MapTypeDropdown;
     private bool isDebugMenuSet;
+    private string currentPriorityHighlight;
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
@@ -37,12 +41,15 @@ public class UIHandler : MonoBehaviour
         InputHandler.SelectedBuildingsChanged -= SetTownCenterMenu;
         InputHandler.SelectedBuildingsChanged -= SetBarracksMenu;
     }
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
+    }
+    private void Start()
+    {
         createWorkerSlider = createWorkerPB.GetComponent<Slider>();
         createFighterSlider = createFighterPB.GetComponent<Slider>();
         foodText = foodTextBox.GetComponent<TMP_Text>();
@@ -191,5 +198,54 @@ public class UIHandler : MonoBehaviour
             }
         }
         barracksMenu.SetActive(isActive);
+    }
+    public void SetWorkerPrioritization(string resourceType)
+    {
+        SetPrioritizationHighlight(resourceType);
+        if (InputHandler.instance.selectedUnits.Count > 0 && InputHandler.instance.selectedUnits[0] is WorkerUnit)
+            ((WorkerUnit)InputHandler.instance.selectedUnits[0]).SetPrioritization(resourceType);
+    }
+    private void SetPrioritizationHighlight(string resourceType)
+    {
+        // Disable the old highlight
+        switch (currentPriorityHighlight)
+        {
+            case "Food":
+                focusFoodBtn.GetComponent<Image>().enabled = false;
+                break;
+            case "Wood":
+                focusWoodBtn.GetComponent<Image>().enabled = false;
+                break;
+            case "Stone":
+                focusStoneBtn.GetComponent<Image>().enabled = false;
+                break;
+        }
+
+        if (currentPriorityHighlight != resourceType)
+        {
+            // Set the new highlight
+            switch (resourceType)
+            {
+                case "Food":
+                    focusFoodBtn.GetComponent<Image>().enabled = true;
+                    currentPriorityHighlight = "Food";
+                    break;
+                case "Wood":
+                    focusWoodBtn.GetComponent<Image>().enabled = true;
+                    currentPriorityHighlight = "Wood";
+                    break;
+                case "Stone":
+                    focusStoneBtn.GetComponent<Image>().enabled = true;
+                    currentPriorityHighlight = "Stone";
+                    break;
+                default:
+                    currentPriorityHighlight = "";
+                    break;
+            }
+        }
+        else
+        {
+            currentPriorityHighlight = "";
+        }
     }
 }
