@@ -8,6 +8,8 @@ public class BarracksBuilding : BasicBuilding
     private UIHandler uiHandler;
     private ScriptableUnit scriptableUnit;
     private float startTime;
+    private float lastTickTime;
+    private float haltedTickTime;
     private float progress;
     private bool tcpbEnabled;
     private bool objIsSelected;
@@ -15,22 +17,42 @@ public class BarracksBuilding : BasicBuilding
     protected override void Awake()
     {
         base.Awake();
+        maxOperators = 3;
+        currentOperators = maxOperators;
+    }
+    protected override void Start()
+    {
+        base.Start();
         uiHandler = UIHandler.instance.GetComponent<UIHandler>();
+        LoadFromPreset((ScriptableBuilding)ResourceDictionary.instance.GetPreset("Barracks"));
     }
     protected override void Update()
     {
         base.Update();
         if (productionQueue.Count > 0)
         {
-            progress = (Time.time - startTime) / scriptableUnit.ProductionTime;
-            if (objIsSelected)
+            if (currentOperators > 0)
             {
-                uiHandler.SetFighterProductionBar(progress);
+                if (haltedTickTime > lastTickTime)
+                {
+                    // If we have haulted for a while (while we were on fire and have since been repaired)
+                    // Modify the start time to adjust for the time while we were on fire, so we pick back up where we left off.
+                    startTime += haltedTickTime - lastTickTime;
+                }
+                progress = (Time.time - startTime) / scriptableUnit.ProductionTime;
+                if (objIsSelected)
+                {
+                    uiHandler.SetFighterProductionBar(progress);
+                }
+                if (progress >= 1.0f)
+                {
+                    SpawnFighter();
+                }
+                // The last time we had enough operators to keep spawning this fighter
+                lastTickTime = Time.time;
             }
-            if (progress >= 1.0f)
-            {
-                SpawnFighter();
-            }
+            else // The last time in which we were unable to keep spawning this fighter
+                haltedTickTime = Time.time;
         }
         else if (tcpbEnabled && objIsSelected) // And Count == 0
         {

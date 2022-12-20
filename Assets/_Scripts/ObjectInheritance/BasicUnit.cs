@@ -11,15 +11,12 @@ public class BasicUnit : BasicObject
     public bool takenDamageRecently { get; private set; }
     private float damageTimer;
     protected ItemManager equippedItemManager;
-    [SerializeField] protected GameObject HealthBar;
-    protected GameObject HealthBarCanvas;
     protected NavMeshAgent navAgent;
-    protected Slider HealthSlider;
     protected float Damage;
     protected float AttackRange;
     protected float AttackSpeed;
     protected float attackCooldown;
-    protected BasicUnit currentTarget;
+    protected BasicObject currentTarget;
     protected bool subscribedToTarget;
     protected bool inCombat;
 
@@ -32,9 +29,6 @@ public class BasicUnit : BasicObject
         base.Awake();
         animatorPresent = false;
         navAgent = GetComponent<NavMeshAgent>();
-        HealthSlider = HealthBar.GetComponent<Slider>();
-        HealthBarCanvas = HealthBar.transform.parent.gameObject;
-        HealthBarCanvas.SetActive(false);
         TryGetComponent<ItemManager>( out equippedItemManager);
         if (equippedItemManager == null)
             Debug.Log("Unable to find the Item Manager!");
@@ -91,14 +85,23 @@ public class BasicUnit : BasicObject
         }
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")))
         {
-            SetAttackTarget(hit.transform.gameObject.GetComponent<BasicUnit>());
+            SetAttackTarget(hit.transform.gameObject.GetComponent<BasicObject>());
+        }
+        else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyBuildingLayer")))
+        {
+            GameObject go = hit.transform.gameObject;
+            for (int i = 0; i < 100 && go.transform.parent != null; i++)
+            {
+                go = go.transform.parent.gameObject;
+            }
+            SetAttackTarget(go.GetComponent<BasicObject>());
         }
         else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
         {
             navAgent.SetDestination(hit.point);
         }
     }
-    public void SetAttackTarget(BasicUnit target)
+    public void SetAttackTarget(BasicObject target)
     {
         Attack(target);
     }
@@ -111,14 +114,14 @@ public class BasicUnit : BasicObject
 
         throw new Exception("Tried to calculate distance to a null target!");
     }
-    protected void Attack(BasicUnit target)
+    protected void Attack(BasicObject target)
     {
         if (target != null)
         {
             if (currentTarget != target)
             {// Set the current target if it wasnt previously set
                 currentTarget = target;
-                //Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
+                Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {
@@ -139,7 +142,7 @@ public class BasicUnit : BasicObject
                 {
                     //Debug.Log(gameObject.ToString() + ": Attacked enemy unit");
                     attackCooldown = 1 / AttackSpeed;
-                    target.TakeDamage(Damage, gameObject.GetComponent<BasicUnit>());
+                    target.TakeDamage(Damage, gameObject.GetComponent<BasicObject>());
                 }
             }
             else
@@ -148,29 +151,17 @@ public class BasicUnit : BasicObject
             }
         }
     }
-    protected void TakeDamage(float damage, BasicObject attackingObject)
+    public override void TakeDamage(float damage, BasicObject attackingObject)
     {
+        base.TakeDamage(damage, attackingObject);
         attacker = attackingObject;
-        currentHealth -= damage;
-        //Debug.Log(gameObject.ToString() + ": Took damage");
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            if (!HealthBarCanvas.activeInHierarchy)
-            {
-                HealthBarCanvas.SetActive(true);
-            }
-            HealthSlider.normalizedValue = currentHealth / MaxHealth;
-        }
         takenDamageRecently = true;
         damageTimer = Time.time;
     }
     protected override void Die()
     {
         GameHandler.instance.RemoveUnit(gameObject, Team);
+        TeamManager.instance.teamList[(int)Team].unitList.Remove(gameObject);
         /*
         if (Team == TeamEnum.Player)
         {

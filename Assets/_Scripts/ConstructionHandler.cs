@@ -91,7 +91,6 @@ public class ConstructionHandler : MonoBehaviour
             currentBuild = Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"));
             currentBuild.AddComponent<Rigidbody>().useGravity = false;
             currentBasicBuilding = currentBuild.GetComponent<BasicBuilding>();
-            currentBasicBuilding.LoadFromPreset(scriptableBuilding);
             if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
             {
                 GameHandler.instance.playerBuildings.Add(currentBuild);
@@ -127,7 +126,6 @@ public class ConstructionHandler : MonoBehaviour
             currentBuild = Instantiate(ResourceDictionary.instance.GetPrefab("BarracksEGO"));
             currentBuild.AddComponent<Rigidbody>().useGravity = false;
             currentBasicBuilding = currentBuild.GetComponent<BasicBuilding>();
-            currentBasicBuilding.LoadFromPreset(scriptableBuilding);
             if (gameObject.layer == LayerMask.NameToLayer("PlayerUnitLayer"))
             {
                 GameHandler.instance.playerBuildings.Add(currentBuild);

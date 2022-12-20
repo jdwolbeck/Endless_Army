@@ -21,8 +21,10 @@ xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific map
 		| Give attackers "vision" to see how close they are to the closest gameobject of their target
 		| Implement an archer
 
+
+Game name: Hordes of Zombor
+
 Known BugList:
- - Worker got stuck in barracks during build... maybe set destination to outside of prefab.
 
 Game concepts:
  - Each round consists of starting out with a worker and TC, little resources. Wood, Food, Stone are all used for in-round upgrades and unit creation and doesnt carry over to next wave.

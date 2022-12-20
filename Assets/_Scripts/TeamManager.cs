@@ -30,12 +30,12 @@ public class TeamManager : MonoBehaviour
             teamList[1].teamNumber = 1;
             Destroy(aiTeamController);
         }
-        teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
+        /*teamList.Add(Instantiate(ResourceDictionary.instance.GetPrefab("Team"), transform).GetComponent<TeamResourceManager>());
         if (teamList.Count > 2 && teamList[2].gameObject.TryGetComponent(out aiTeamController))
         {
             teamList[2].teamNumber = 2;
             Destroy(aiTeamController);
-        }
+        }*/
     }
     /*public TeamEnum AssignTeam(int objectLayer)
     {

@@ -28,7 +28,7 @@ public class UIHandler : MonoBehaviour
     public GameObject MapGenerationMenu;
     public GameObject MapTypeDropdown;
     private bool isDebugMenuSet;
-    private string currentPriorityHighlight;
+    private bool workerMenuActive;
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
@@ -70,6 +70,10 @@ public class UIHandler : MonoBehaviour
         if (TeamManager.instance.teamList.Count > 0 && TeamManager.instance.teamList[0].teamCurrentStone != int.Parse(stoneText.text))
         {
             stoneText.text = TeamManager.instance.teamList[0].teamCurrentStone.ToString();
+        }
+        if (workerMenuActive)
+        {
+            SetPrioritizationHighlight(DeterminePriorityHighlight());
         }
     }
     public void EnableCreateWorkerPB()
@@ -140,6 +144,18 @@ public class UIHandler : MonoBehaviour
             isDebugMenuSet = true;
         }
     }
+    public void OnClickDebugMenuDoDebugTaskButton()
+    {
+        // This function is used for any variety of debug tasks.
+        GameObject playerTC = GameHandler.instance.playerBuildings[0];
+        foreach (GameObject unit in TeamManager.instance.teamList[1].unitList)
+        {
+            if (unit.TryGetComponent(out BasicUnit basicUnit))
+            {
+                basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>());
+            }
+        }
+    }
     public void SetWorkerProductionBar(float progress)
     {
         createWorkerSlider.normalizedValue = progress;
@@ -164,6 +180,7 @@ public class UIHandler : MonoBehaviour
             }
         }
         workerMenu.SetActive(isActive);
+        workerMenuActive = isActive;
     }
     public void SetTownCenterMenu()
     {
@@ -201,51 +218,68 @@ public class UIHandler : MonoBehaviour
     }
     public void SetWorkerPrioritization(string resourceType)
     {
-        SetPrioritizationHighlight(resourceType);
-        if (InputHandler.instance.selectedUnits.Count > 0 && InputHandler.instance.selectedUnits[0] is WorkerUnit)
-            ((WorkerUnit)InputHandler.instance.selectedUnits[0]).SetPrioritization(resourceType);
+        string curPriority = "";
+        if (workerMenuActive)
+        {
+            string discrepancyFound = DeterminePriorityHighlight();
+            foreach (WorkerUnit worker in InputHandler.instance.selectedUnits)
+            {
+                if (discrepancyFound != "" || worker.GetPrioritization() != resourceType)
+                    worker.SetPrioritization(resourceType);
+            }
+            curPriority = ((WorkerUnit)InputHandler.instance.selectedUnits[0]).GetPrioritization();
+        }
+        SetPrioritizationHighlight(curPriority);
     }
     private void SetPrioritizationHighlight(string resourceType)
     {
-        // Disable the old highlight
-        switch (currentPriorityHighlight)
+        switch (resourceType)
         {
             case "Food":
-                focusFoodBtn.GetComponent<Image>().enabled = false;
+                focusFoodBtn.GetComponent<Image>().enabled = true;
+                focusWoodBtn.GetComponent<Image>().enabled = false;
+                focusStoneBtn.GetComponent<Image>().enabled = false;
                 break;
             case "Wood":
-                focusWoodBtn.GetComponent<Image>().enabled = false;
+                focusFoodBtn.GetComponent<Image>().enabled = false;
+                focusWoodBtn.GetComponent<Image>().enabled = true;
+                focusStoneBtn.GetComponent<Image>().enabled = false;
                 break;
             case "Stone":
+                focusFoodBtn.GetComponent<Image>().enabled = false;
+                focusWoodBtn.GetComponent<Image>().enabled = false;
+                focusStoneBtn.GetComponent<Image>().enabled = true;
+                break;
+            default:
+                focusFoodBtn.GetComponent<Image>().enabled = false;
+                focusWoodBtn.GetComponent<Image>().enabled = false;
                 focusStoneBtn.GetComponent<Image>().enabled = false;
                 break;
         }
-
-        if (currentPriorityHighlight != resourceType)
+    }
+    private string DeterminePriorityHighlight()
+    {
+        string curPriority = "";
+        List<string> priorityList = new List<string>();
+        foreach (WorkerUnit worker in InputHandler.instance.selectedUnits)
         {
-            // Set the new highlight
-            switch (resourceType)
+            priorityList.Add(worker.GetPrioritization());
+        }
+        if (priorityList.Count > 0)
+        {
+            curPriority = priorityList[0];
+            for (int i = 0; i < priorityList.Count; i++)
             {
-                case "Food":
-                    focusFoodBtn.GetComponent<Image>().enabled = true;
-                    currentPriorityHighlight = "Food";
-                    break;
-                case "Wood":
-                    focusWoodBtn.GetComponent<Image>().enabled = true;
-                    currentPriorityHighlight = "Wood";
-                    break;
-                case "Stone":
-                    focusStoneBtn.GetComponent<Image>().enabled = true;
-                    currentPriorityHighlight = "Stone";
-                    break;
-                default:
-                    currentPriorityHighlight = "";
-                    break;
+                for (int j = i + 1; j < priorityList.Count; j++)
+                {
+                    if (priorityList[i] != priorityList[j])
+                    {
+                        curPriority = "";
+                        break;
+                    }
+                }
             }
         }
-        else
-        {
-            currentPriorityHighlight = "";
-        }
+        return curPriority;
     }
 }

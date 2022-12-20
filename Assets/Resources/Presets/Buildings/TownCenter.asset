@@ -16,4 +16,4 @@ MonoBehaviour:
   WoodCost: 150
   StoneCost: 75
   ProductionTime: 20
-  MaxHealth: 500
+  MaxHealth: 100

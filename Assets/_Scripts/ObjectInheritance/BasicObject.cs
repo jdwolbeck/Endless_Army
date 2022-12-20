@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BasicObject : MonoBehaviour
 {
@@ -16,13 +17,21 @@ public class BasicObject : MonoBehaviour
     public int StoneCost;
     public float ProductionTime;
     public float MaxHealth;
+    [SerializeField] protected GameObject HealthBar;
+    protected GameObject HealthBarCanvas;
+    protected Slider HealthSlider;
     protected float currentHealth;
     protected bool isAddedToObjectList;
 
     public delegate void ObjectDeathEvent(GameObject go);
     public event ObjectDeathEvent ObjectDied;
 
-    protected virtual void Awake() { }
+    protected virtual void Awake() 
+    {
+        HealthSlider = HealthBar.GetComponent<Slider>();
+        HealthBarCanvas = HealthBar.transform.parent.gameObject;
+        HealthBarCanvas.SetActive(false);
+    }
     protected virtual void Start() 
     {
         //Team = TeamManager.instance.AssignTeam(gameObject.layer);
@@ -87,6 +96,24 @@ public class BasicObject : MonoBehaviour
         ProductionTime = obj.ProductionTime;
         MaxHealth = obj.MaxHealth;
         currentHealth = MaxHealth;
+    }
+    public virtual void TakeDamage(float damage, BasicObject attackingObject)
+    {
+        currentHealth -= damage;
+        //Debug.Log(gameObject.ToString() + ": Took damage");
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            if (!HealthBarCanvas.activeInHierarchy)
+            {
+                Debug.Log("Setting canvas to active.");
+                HealthBarCanvas.SetActive(true);
+            }
+            HealthSlider.normalizedValue = currentHealth / MaxHealth;
+        }
     }
 }
 

@@ -7,9 +7,12 @@ public class WorkerUnit : BasicUnit
 {
     //public static new int FoodCost = 50;
     public GameObject currentBuild { get; private set; }
+    public GameObject currentRepairBuild;
     private int buildRange;
     private bool constructingBuild;
+    private bool repairingBuilding;
     private BasicBuilding currentBasicBuilding;
+    private BasicBuilding currentRepairBasicBuilding;
     public GameObject currentResource;
     private BasicResource resourceHandler;
     protected bool harvestingWood;
@@ -22,6 +25,8 @@ public class WorkerUnit : BasicUnit
     private int harvestAmount;
     private float nextWorkerAnimUpdate;
     private bool aiHarvesting;
+    private bool[] priorityList;
+    private System.Type resourcePriority = null;
 
     protected override void Awake()
     {
@@ -38,10 +43,19 @@ public class WorkerUnit : BasicUnit
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         //if (isSpawnedFromInspector)
         LoadFromPreset((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker"));
+        priorityList = new bool[3];
     }
     protected override void Update()
     {
         base.Update();
+        UpdateAnimations();
+        UpdateBuilds();
+        UpdateResources();
+        UpdateResourcePriorities();
+        UpdateRepairs();
+    }
+    public void UpdateAnimations()
+    {
         if (animatorPresent && Time.time > nextWorkerAnimUpdate)
         {
             nextWorkerAnimUpdate = Time.time + 0.083f; // 5/60 -- 5 times a second at 
@@ -49,14 +63,20 @@ public class WorkerUnit : BasicUnit
             animator.SetBool("HarvestingWood", harvestingWood);
             animator.SetBool("HarvestingStone", harvestingStone);
             animator.SetBool("HarvestingBerries", harvestingBerries);
-            animator.SetBool("ConstructingBuild", constructingBuild);
+            if (repairingBuilding)
+                animator.SetBool("ConstructingBuild", repairingBuilding);
+            else
+                animator.SetBool("ConstructingBuild", constructingBuild);
         }
+    }
+    public void UpdateBuilds()
+    {
         if (currentBuild != null)
         {
             if (constructingBuild == false && Vector3.Distance(gameObject.transform.position, currentBuild.transform.position) <= buildRange)
             {
                 // Look at the building we're constructing
-                transform.LookAt(currentBuild.transform, new Vector3 (0, 1, 0));
+                transform.LookAt(currentBuild.transform, new Vector3(0, 1, 0));
                 navAgent.SetDestination(transform.position);
                 constructingBuild = true;
                 equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
@@ -68,6 +88,29 @@ public class WorkerUnit : BasicUnit
                 StopBuilding();
             }
         }
+    }
+    public void UpdateRepairs()
+    {
+        if (currentRepairBuild != null)
+        {
+            if (repairingBuilding == false && Vector3.Distance(gameObject.transform.position, currentRepairBuild.transform.position) <= buildRange)
+            {
+                // Look at the building we're constructing
+                transform.LookAt(currentRepairBuild.transform, new Vector3(0, 1, 0));
+                navAgent.SetDestination(transform.position);
+                repairingBuilding = true;
+                equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
+                currentRepairBasicBuilding.UpdateActiveRepairman(true);
+                Debug.Log("Set " + gameObject.ToString() + " as an active repairman on " + currentRepairBuild.ToString() + " basicBuild? " + currentRepairBasicBuilding.ToString());
+            }
+            if (repairingBuilding && currentRepairBasicBuilding.IsBuildingRepaired())
+            {
+                StopRepairing();
+            }
+        }
+    }
+    public void UpdateResources()
+    {
         if (currentResource != null)
         {
             if (isHarvesting == false && Vector3.Distance(gameObject.transform.position, currentResource.transform.position) <= harvestRange)
@@ -133,7 +176,7 @@ public class WorkerUnit : BasicUnit
                 {
                     if (aiHarvesting)
                     {
-                        if(gameObject.TryGetComponent(out AIWorkerUnit aiWorker))
+                        if (gameObject.TryGetComponent(out AIWorkerUnit aiWorker))
                         {
                             switch (resourceType)
                             {
@@ -153,6 +196,13 @@ public class WorkerUnit : BasicUnit
                     StopHarvesting();
                 }
             }
+        }
+    }
+    public void UpdateResourcePriorities()
+    {
+        if (resourcePriority != null && !IsBusy() && navAgent.destination == transform.position)
+        {
+            FindNearestResource(resourcePriority);
         }
     }
     public void ConstructBuild(GameObject build)
@@ -179,6 +229,17 @@ public class WorkerUnit : BasicUnit
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
     }
+    public void StopRepairing()
+    {
+        if (currentRepairBasicBuilding != null && repairingBuilding)
+            currentRepairBasicBuilding.UpdateActiveRepairman(false);
+        currentRepairBasicBuilding = null;
+        repairingBuilding = false;
+        currentRepairBuild = null;
+        navAgent.SetDestination(transform.position);
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
+        equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
+    }
     public void HarvestResource(GameObject resource)
     {
         if (resource != null)
@@ -194,6 +255,7 @@ public class WorkerUnit : BasicUnit
             navAgent.SetDestination(resource.transform.position);
             currentResource = resource;
             resourceHandler = currentResource.GetComponent<BasicResource>();
+            aiHarvesting = true;
             if (resourceHandler == null)
             {
                 Debug.Log("Resource handler was null for resource " + resource.ToString());
@@ -224,7 +286,10 @@ public class WorkerUnit : BasicUnit
         if (currentBuild != null)
         {
             StopBuilding();
-            equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
+        }
+        if (currentRepairBuild != null)
+        {
+            StopRepairing();
         }
         if (currentResource != null)
         {
@@ -263,21 +328,99 @@ public class WorkerUnit : BasicUnit
             {
                 //Debug.Log("Hit = " + hit.ToString() + "   ---   hit.transform = " + hit.transform.ToString() + "   -----    hit.transform.gameObject = " + hit.transform.gameObject.ToString());
                 HarvestResource(hit.transform.gameObject);
-                aiHarvesting = true;
+            }
+            else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("PlayerBuildingLayer")))
+            {
+                GameObject go = hit.transform.gameObject;
+                for (int i = 0; i < 100 && go.transform.parent != null; i++)
+                {
+                    go = go.transform.parent.gameObject;
+                }
+                FortifyBuilding(go.GetComponent<BasicBuilding>());
             }
         }
     }
+    protected void FortifyBuilding(BasicBuilding building)
+    {
+        currentRepairBasicBuilding = building;
+        currentRepairBuild = building.gameObject;
+    }
     public void SetPrioritization(string resourceType)
     {
+        bool prioriyEnable = true;
         switch (resourceType)
         {
             case "Food":
+                if (priorityList[(int)ResourceType.Food] == true)
+                {
+                    priorityList[(int)ResourceType.Food] = false;
+                    prioriyEnable = false;
+                }
+                else
+                    priorityList[(int)ResourceType.Food] = true;
+                priorityList[(int)ResourceType.Wood] = false;
+                priorityList[(int)ResourceType.Stone] = false;
                 break;
             case "Wood":
+                if (priorityList[(int)ResourceType.Wood] == true)
+                {
+                    priorityList[(int)ResourceType.Wood] = false;
+                    prioriyEnable = false;
+                }
+                else
+                    priorityList[(int)ResourceType.Wood] = true;
+                priorityList[(int)ResourceType.Food] = false;
+                priorityList[(int)ResourceType.Stone] = false;
                 break;
             case "Stone":
+                if (priorityList[(int)ResourceType.Stone] == true)
+                {
+                    priorityList[(int)ResourceType.Stone] = false;
+                    prioriyEnable = false;
+                }
+                else
+                    priorityList[(int)ResourceType.Stone] = true;
+                priorityList[(int)ResourceType.Food] = false;
+                priorityList[(int)ResourceType.Wood] = false;
                 break;
         }
+        if (prioriyEnable)
+        {
+            switch (resourceType)
+            {
+                case "Food":
+                    resourcePriority = typeof(BushResource);
+                    break;
+                case "Wood":
+                    resourcePriority = typeof(TreeResource);
+                    break;
+                case "Stone":
+                    resourcePriority = typeof(StoneResource);
+                    break;
+            }
+        }
+        else
+        {
+            ClearPrioritization();
+        }
+    }
+    public void ClearPrioritization()
+    {
+        priorityList[(int)ResourceType.Food] = false;
+        priorityList[(int)ResourceType.Wood] = false;
+        priorityList[(int)ResourceType.Stone] = false;
+        resourcePriority = null;
+    }
+    public string GetPrioritization()
+    {
+        if (priorityList[(int)ResourceType.Food])
+            return "Food";
+        else if (priorityList[(int)ResourceType.Wood])
+            return "Wood";
+        else if (priorityList[(int)ResourceType.Stone])
+            return "Stone";
+        else
+            return "";
     }
     public bool IsBusy()
     {
