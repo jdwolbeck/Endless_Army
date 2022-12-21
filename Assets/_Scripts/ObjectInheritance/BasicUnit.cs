@@ -98,12 +98,16 @@ public class BasicUnit : BasicObject
         }
         else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
         {
-            navAgent.SetDestination(hit.point);
+            SetMoveLocation(hit.point);
         }
     }
     public void SetAttackTarget(BasicObject target)
     {
         Attack(target);
+    }
+    public void SetMoveLocation(Vector3 moveLocation)
+    {
+        navAgent.SetDestination(moveLocation);
     }
     protected float DistanceToTarget(Transform target)
     {
@@ -132,7 +136,7 @@ public class BasicUnit : BasicObject
                     subscribedToTarget = true;
                 }
                 inCombat = true;
-                navAgent.SetDestination(transform.position);
+                SetMoveLocation(transform.position);
 
                 // Look at our current target
                 Quaternion lookOnLook = Quaternion.LookRotation(currentTarget.transform.position - transform.position);
@@ -147,7 +151,7 @@ public class BasicUnit : BasicObject
             }
             else
             {
-                navAgent.SetDestination(currentTarget.transform.position);
+                SetMoveLocation(currentTarget.transform.position);
             }
         }
     }
@@ -178,6 +182,15 @@ public class BasicUnit : BasicObject
             currentTarget.ObjectDied -= ClearTarget;
         }
         base.Die();
+    }
+    public bool ClearCurrentTarget(bool findNewTarget)
+    {
+        if (currentTarget != null)
+        {
+            ClearTarget(currentTarget.gameObject);
+            return true;
+        }
+        return false;
     }
     protected void ClearTarget(GameObject go)
     {

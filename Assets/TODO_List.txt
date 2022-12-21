@@ -25,6 +25,8 @@ xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific map
 Game name: Hordes of Zombor
 
 Known BugList:
+ - Buliding worker while TC at <25% health causes building to break (prevent them from building at this level)
+ - TownCenter highlighted - it dies - I click elsewhere, error on deselect(unhighlight).
 
 Game concepts:
  - Each round consists of starting out with a worker and TC, little resources. Wood, Food, Stone are all used for in-round upgrades and unit creation and doesnt carry over to next wave.

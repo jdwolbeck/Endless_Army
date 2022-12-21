@@ -29,6 +29,7 @@ public class UIHandler : MonoBehaviour
     public GameObject MapTypeDropdown;
     private bool isDebugMenuSet;
     private bool workerMenuActive;
+    private bool debugBool;
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
@@ -146,13 +147,20 @@ public class UIHandler : MonoBehaviour
     }
     public void OnClickDebugMenuDoDebugTaskButton()
     {
+        debugBool = !debugBool;
         // This function is used for any variety of debug tasks.
         GameObject playerTC = GameHandler.instance.playerBuildings[0];
         foreach (GameObject unit in TeamManager.instance.teamList[1].unitList)
         {
             if (unit.TryGetComponent(out BasicUnit basicUnit))
             {
-                basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>());
+                if (debugBool)
+                    basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>());
+                else
+                {
+                    basicUnit.ClearCurrentTarget();
+                    basicUnit.SetMoveLocation(transform.position - new Vector3(0, 0, -5));
+                }
             }
         }
     }
