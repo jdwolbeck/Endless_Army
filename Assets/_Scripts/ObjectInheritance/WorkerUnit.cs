@@ -77,7 +77,7 @@ public class WorkerUnit : BasicUnit
             {
                 // Look at the building we're constructing
                 transform.LookAt(currentBuild.transform, new Vector3(0, 1, 0));
-                navAgent.SetDestination(transform.position);
+                SetMoveLocation(transform.position);
                 constructingBuild = true;
                 equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
                 currentBasicBuilding.UpdateActiveBuilders(true);
@@ -97,7 +97,7 @@ public class WorkerUnit : BasicUnit
             {
                 // Look at the building we're constructing
                 transform.LookAt(currentRepairBuild.transform, new Vector3(0, 1, 0));
-                navAgent.SetDestination(transform.position);
+                SetMoveLocation(transform.position);
                 repairingBuilding = true;
                 equippedItemManager.Equip((ScriptableItem)ResourceDictionary.instance.GetPreset("Hammer"));
                 currentRepairBasicBuilding.UpdateActiveRepairman(true);
@@ -115,7 +115,7 @@ public class WorkerUnit : BasicUnit
         {
             if (isHarvesting == false && Vector3.Distance(gameObject.transform.position, currentResource.transform.position) <= harvestRange)
             {
-                navAgent.SetDestination(transform.position);
+                SetMoveLocation(transform.position);
                 isHarvesting = true;
                 nextHarvestTime = Time.time + harvestCooldownTime;
 
@@ -209,7 +209,7 @@ public class WorkerUnit : BasicUnit
     {
         if (build != null)
         {
-            navAgent.SetDestination(build.transform.position);
+            SetMoveLocation(build.transform.position);
             currentBuild = build;
             currentBasicBuilding = currentBuild.GetComponent<BasicBuilding>();
         }
@@ -225,7 +225,7 @@ public class WorkerUnit : BasicUnit
         currentBasicBuilding = null;
         constructingBuild = false;
         currentBuild = null;
-        navAgent.SetDestination(transform.position);
+        SetMoveLocation(transform.position);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
     }
@@ -236,7 +236,7 @@ public class WorkerUnit : BasicUnit
         currentRepairBasicBuilding = null;
         repairingBuilding = false;
         currentRepairBuild = null;
-        navAgent.SetDestination(transform.position);
+        SetMoveLocation(transform.position);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.RightWeapon);
         equippedItemManager.EquipDefaultEquipment(EquipmentSlot.LeftWeapon);
     }
@@ -252,7 +252,7 @@ public class WorkerUnit : BasicUnit
                 resource = tempResource;
             }
 
-            navAgent.SetDestination(resource.transform.position);
+            SetMoveLocation(resource.transform.position);
             currentResource = resource;
             resourceHandler = currentResource.GetComponent<BasicResource>();
             aiHarvesting = true;
@@ -313,7 +313,7 @@ public class WorkerUnit : BasicUnit
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
             {
-                navAgent.SetDestination(hit.point);
+                SetMoveLocation(hit.point);
             }
             else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("ConstructionLayer"))
             {

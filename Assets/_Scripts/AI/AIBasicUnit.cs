@@ -88,7 +88,7 @@ public class AIBasicUnit : MonoBehaviour
         {
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("GroundLayer"))
             {
-                navAgent.SetDestination(targetDestination);
+                basicUnit.SetMoveLocation(targetDestination);
                 actionInProgress = true;
                 //Debug.Log("AI setting NavAgent destination to " + targetDestination.ToString() + " distance to dest = " + navAgent.remainingDistance);
             }
@@ -120,7 +120,7 @@ public class AIBasicUnit : MonoBehaviour
                 {
                     if (myTeam != target.Team)
                     {
-                        basicUnit.SetAttackTarget(target);
+                        basicUnit.SetAttackTarget(target, true);
                         actionInProgress = true;
                         return true;
                     }
@@ -172,7 +172,7 @@ public class AIBasicUnit : MonoBehaviour
                 case AIAction.RetailateAgainstEnemy:
                     if (!actionInProgress)
                     {
-                        basicUnit.SetAttackTarget((BasicUnit)basicUnit.attacker);
+                        basicUnit.SetAttackTarget((BasicUnit)basicUnit.attacker, false);
                         actionInProgress = true;
                     }
                     else
@@ -190,7 +190,7 @@ public class AIBasicUnit : MonoBehaviour
                 case AIAction.RandomMovement:
                     if (navAgent.remainingDistance < 0.1f)
                     {
-                        navAgent.SetDestination(transform.position);
+                        basicUnit.SetMoveLocation(transform.position);
                         if (CurrentActionList.Count > 0)
                         {
                             LastAction = CurrentActionList[0];

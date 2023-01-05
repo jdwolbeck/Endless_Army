@@ -85,7 +85,7 @@ public class BasicUnit : BasicObject
         }
         if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")))
         {
-            SetAttackTarget(hit.transform.gameObject.GetComponent<BasicObject>());
+            SetAttackTarget(hit.transform.gameObject.GetComponent<BasicObject>(), true);
         }
         else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyBuildingLayer")))
         {
@@ -94,15 +94,16 @@ public class BasicUnit : BasicObject
             {
                 go = go.transform.parent.gameObject;
             }
-            SetAttackTarget(go.GetComponent<BasicObject>());
+            SetAttackTarget(go.GetComponent<BasicObject>(), true);
         }
         else if (Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
         {
             SetMoveLocation(hit.point);
         }
     }
-    public void SetAttackTarget(BasicObject target)
+    public void SetAttackTarget(BasicObject target, bool findNewTarget)
     {
+        aiAttacking = findNewTarget;
         Attack(target);
     }
     public void SetMoveLocation(Vector3 moveLocation)
@@ -131,7 +132,6 @@ public class BasicUnit : BasicObject
             {
                 if (!subscribedToTarget)
                 {
-                    aiAttacking = true;
                     currentTarget.ObjectDied += ClearTarget;
                     subscribedToTarget = true;
                 }
@@ -183,7 +183,7 @@ public class BasicUnit : BasicObject
         }
         base.Die();
     }
-    public bool ClearCurrentTarget(bool findNewTarget)
+    public bool ClearCurrentTarget()
     {
         if (currentTarget != null)
         {
@@ -203,7 +203,6 @@ public class BasicUnit : BasicObject
         inCombat = false;
         if (aiAttacking)
         {
-            aiAttacking = false;
             if (gameObject.TryGetComponent(out AIBasicUnit aiUnit))
             {
                 aiUnit.AddNewAction(AIAction.AttackNearestEnemy, false);

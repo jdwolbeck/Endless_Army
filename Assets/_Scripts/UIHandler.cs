@@ -155,7 +155,7 @@ public class UIHandler : MonoBehaviour
             if (unit.TryGetComponent(out BasicUnit basicUnit))
             {
                 if (debugBool)
-                    basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>());
+                    basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>(), false);
                 else
                 {
                     basicUnit.ClearCurrentTarget();
