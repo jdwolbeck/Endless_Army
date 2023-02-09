@@ -1,7 +1,7 @@
 isDone	| Issue...
 --------|------------------------------------------------------------------------------------
 xxx	xxx	| Resource requirements for creation of workers and town centers
-		| Warrior implementation
+xxx	xxx	| Warrior implementation
 		| Enemy AI
 		| Additional units
 		| Additional Buildings for Units
@@ -9,17 +9,18 @@ xxx	xxx	| Resource requirements for creation of workers and town centers
 xxx	xxx	| Blueprint improvements to prohibit overlaying existing objects
 xxx	xxx	| Random resource generation
 		| Start screen UI
-		| Harvesting animations/particle system
+xxx		| Harvesting animations/particle system
 		| Worker models for holding resources / animations for collecting resources into backpack and offloading into town center
 xxx	xxx	| Only Show healthBars when damage has been taken
 xxx	xxx	| Create a debuggerMenu on the canvas with specific buttons for testing
 xxx	xxx	| Create a "Generate Map" button along with a Save/Load for specific maps.
-		| Update map generation algorithm to utilize the percentile that is required for trees and bushes and stones
-		| Create a queue for a worker so that multiple bulids can happen in a row
+xxx	xxx	| Update map generation algorithm to utilize the percentile that is required for trees and bushes and stones
+xxx	xxx	| Create a queue for a worker so that multiple bulids can happen in a row
 		| Give workers "vision" to look for builds near them that could be constructed
 		| Give workers "vision" to see how close they are to their destination build and stop right next to it
 		| Give attackers "vision" to see how close they are to the closest gameobject of their target
 		| Implement an archer
+		| Implement a army movement system (Square for now)
 
 
 Game name: Hordes of Zombor

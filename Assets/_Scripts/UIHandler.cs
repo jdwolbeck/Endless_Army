@@ -9,6 +9,7 @@ public class UIHandler : MonoBehaviour
     public static UIHandler instance;
     public GameObject canvas;
     public GameObject workerMenu = null;
+    public GameObject armyMenu = null;
     public GameObject townCenterMenu = null;
     public GameObject barracksMenu = null;
     public GameObject createWorkerPB = null;
@@ -33,12 +34,14 @@ public class UIHandler : MonoBehaviour
     private void OnEnable()
     {
         InputHandler.SelectedUnitsChanged += SetWorkerMenu;
+        InputHandler.SelectedUnitsChanged += SetArmyMenu;
         InputHandler.SelectedBuildingsChanged += SetTownCenterMenu;
         InputHandler.SelectedBuildingsChanged += SetBarracksMenu;
     }
     private void OnDisable()
     {
         InputHandler.SelectedUnitsChanged -= SetWorkerMenu;
+        InputHandler.SelectedUnitsChanged -= SetArmyMenu;
         InputHandler.SelectedBuildingsChanged -= SetTownCenterMenu;
         InputHandler.SelectedBuildingsChanged -= SetBarracksMenu;
     }
@@ -102,6 +105,16 @@ public class UIHandler : MonoBehaviour
     {
         // Tell the first worker to instantiate and setup TC for build.
         InputHandler.instance.selectedUnits[0].GetComponent<ConstructionHandler>().BuildBarracks();
+    }
+    public void OnClickArmyMenuLineButton()
+    {
+        FighterUnit unit;
+        // Set  the formation priority of this army to Line
+        for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+        {
+            unit = InputHandler.instance.selectedUnits[i].GetComponent<FighterUnit>();
+            unit.SetMovementFormation(0, i, InputHandler.instance.selectedUnits.Count);
+        }
     }
     public void OnClickTownCenterMenuBuildWorkerButton()
     {
@@ -189,6 +202,23 @@ public class UIHandler : MonoBehaviour
         }
         workerMenu.SetActive(isActive);
         workerMenuActive = isActive;
+    }
+    public void SetArmyMenu()
+    {
+        bool isActive = false;
+        if (InputHandler.instance.selectedUnits.Count != 0)
+        {
+            isActive = true;
+            foreach (BasicUnit unit in InputHandler.instance.selectedUnits)
+            {
+                if (unit is not FighterUnit)
+                {
+                    isActive = false;
+                    break;
+                }
+            }
+        }
+        armyMenu.SetActive(isActive);
     }
     public void SetTownCenterMenu()
     {

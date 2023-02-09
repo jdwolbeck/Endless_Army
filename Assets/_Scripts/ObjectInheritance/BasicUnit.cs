@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,6 +6,92 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
+public class Formation
+{
+    public int formationType;
+    public int armySize;
+    public int armyPosition;
+    private const float UNIT_WIDTH_ROW = 1.5f;
+    private const float UNIT_WIDTH_COLUMN = 1.5f;
+    private const int LINE_COLUMN_COUNT = 10;
+
+    public Formation()
+    {
+        formationType = -1;
+        armySize = 0;
+        armyPosition = 0;
+    }
+    public Vector3 GetMoveLocation(Vector3 origDestination)
+    {
+        Vector3 destination = origDestination;
+        switch (formationType)
+        {
+            case 0:
+                // Line formation
+                int rows = GetRowCount();
+                int columns = GetColumnCount();
+                Vector2 unitCoords = new Vector2(armyPosition % LINE_COLUMN_COUNT, armyPosition / LINE_COLUMN_COUNT);
+                //Debug.Log("Unit " + armyPosition + " has coordinates of (" + unitCoords.ToString() + ")");
+                if (false && armySize <= LINE_COLUMN_COUNT)
+                {
+                    float centerColumn = (armySize - 1) / 2f;
+                    Debug.Log("Calculated middle unit: " + centerColumn);
+                    if (armySize % 2 == 0)
+                    {
+                        float unitOffset = ((float)armyPosition - centerColumn) * UNIT_WIDTH_COLUMN;
+                        destination.x += unitOffset;
+                        Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: " + unitOffset);
+                    }
+                    else
+                    {
+                        float unitOffset = ((float)armyPosition - centerColumn) * UNIT_WIDTH_COLUMN;
+                        destination.x += unitOffset;
+                        Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: " + unitOffset);
+                    }
+                }
+                else
+                {
+                    // Get the middle row and middle column.
+                    float centerColumn = (GetColumnCount() - 1) / 2f;
+                    float centerRow = (GetRowCount() - 1) / 2f;
+                    float unitColumnOffset = (unitCoords.x - centerColumn) * UNIT_WIDTH_COLUMN;
+                    float unitRowOffset = (unitCoords.y - centerRow) * UNIT_WIDTH_ROW;
+                    Debug.Log("(ColumnOffset, RowOffset) (" + unitColumnOffset + ", " + unitRowOffset + ")");
+                    destination.x += unitColumnOffset;
+                    destination.z += unitRowOffset;
+                    //Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: (column, row) (" + 
+                        //unitColumnOffset + ", " + unitRowOffset + ")");
+                }
+                break;
+        }
+        return destination;
+    }
+    private int GetRowCount()
+    {
+        switch (formationType) 
+        { 
+            case 0:
+                return Mathf.CeilToInt(armySize / 10f);
+            default:
+                Debug.Log("ERROR: GetRowCount() unhandled formationType...");
+                return -1;
+        }
+    }
+    private int GetColumnCount()
+    {
+        switch (formationType)
+        {
+            case 0:
+                if (armySize < 10)
+                    return armySize;
+                else
+                    return LINE_COLUMN_COUNT;
+            default:
+                Debug.Log("ERROR: GetColumnCount() unhandled formationType...");
+                return -1;
+        }
+    }
+}
 public class BasicUnit : BasicObject
 {
     public BasicObject attacker;
@@ -19,6 +106,7 @@ public class BasicUnit : BasicObject
     protected BasicObject currentTarget;
     protected bool subscribedToTarget;
     protected bool inCombat;
+    protected Formation currentFormation;
 
     protected Animator animator;
     protected bool animatorPresent;
@@ -35,6 +123,7 @@ public class BasicUnit : BasicObject
         TryGetComponent<Animator>(out animator);
         if (animator != null)
             animatorPresent = true;
+        currentFormation = new Formation();
     }
     protected override void Start()
     {
@@ -108,7 +197,14 @@ public class BasicUnit : BasicObject
     }
     public void SetMoveLocation(Vector3 moveLocation)
     {
-        navAgent.SetDestination(moveLocation);
+        if (currentFormation.formationType != -1)
+        {
+            navAgent.SetDestination(currentFormation.GetMoveLocation(moveLocation));
+        }
+        else
+        {
+            navAgent.SetDestination(moveLocation);
+        }
     }
     protected float DistanceToTarget(Transform target)
     {
@@ -223,5 +319,12 @@ public class BasicUnit : BasicObject
     public bool HasActiveTarget()
     {
         return currentTarget != null;
+    }
+    public void SetMovementFormation(int formationType, int armyPosition, int armySize)
+    {
+        Debug.Log("Setting formation of unit " + gameObject.ToString() + ": FormationType/Pos/Size: " + formationType + "/" + armyPosition + "/" + armySize);
+        currentFormation.formationType = formationType;
+        currentFormation.armyPosition = armyPosition;
+        currentFormation.armySize = armySize;
     }
 }
