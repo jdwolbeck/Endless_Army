@@ -30,38 +30,22 @@ public class Formation
                 // Line formation
                 int rows = GetRowCount();
                 int columns = GetColumnCount();
+                int myRow = Mathf.CeilToInt(armyPosition / (float)LINE_COLUMN_COUNT);
+                int myColumn = armyPosition % LINE_COLUMN_COUNT;
                 Vector2 unitCoords = new Vector2(armyPosition % LINE_COLUMN_COUNT, armyPosition / LINE_COLUMN_COUNT);
-                //Debug.Log("Unit " + armyPosition + " has coordinates of (" + unitCoords.ToString() + ")");
-                if (false && armySize <= LINE_COLUMN_COUNT)
-                {
-                    float centerColumn = (armySize - 1) / 2f;
-                    Debug.Log("Calculated middle unit: " + centerColumn);
-                    if (armySize % 2 == 0)
-                    {
-                        float unitOffset = ((float)armyPosition - centerColumn) * UNIT_WIDTH_COLUMN;
-                        destination.x += unitOffset;
-                        Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: " + unitOffset);
-                    }
-                    else
-                    {
-                        float unitOffset = ((float)armyPosition - centerColumn) * UNIT_WIDTH_COLUMN;
-                        destination.x += unitOffset;
-                        Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: " + unitOffset);
-                    }
-                }
-                else
-                {
-                    // Get the middle row and middle column.
-                    float centerColumn = (GetColumnCount() - 1) / 2f;
-                    float centerRow = (GetRowCount() - 1) / 2f;
-                    float unitColumnOffset = (unitCoords.x - centerColumn) * UNIT_WIDTH_COLUMN;
-                    float unitRowOffset = (unitCoords.y - centerRow) * UNIT_WIDTH_ROW;
-                    Debug.Log("(ColumnOffset, RowOffset) (" + unitColumnOffset + ", " + unitRowOffset + ")");
-                    destination.x += unitColumnOffset;
-                    destination.z += unitRowOffset;
+                    //Debug.Log("Unit " + armyPosition + " has coordinates of (" + unitCoords.ToString() + ")");
+                // Get the middle row and middle column.
+                float centerColumn = (columns - 1) / 2f;
+                float centerMyColumn = (GetThisUnitsColumnCount() - 1) / 2f;
+                Debug.Log("Unit " + armyPosition + " column(old, new): (" + centerColumn + ", " + centerMyColumn + ")");
+                float centerRow = (rows - 1) / 2f;
+                float unitColumnOffset = (unitCoords.x - centerMyColumn) * UNIT_WIDTH_COLUMN;
+                float unitRowOffset = (unitCoords.y - centerRow) * UNIT_WIDTH_ROW;
+                Debug.Log("(ColumnOffset, RowOffset) (" + unitColumnOffset + ", " + unitRowOffset + ")");
+                destination.x += unitColumnOffset;
+                destination.z += unitRowOffset;
                     //Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: (column, row) (" + 
                         //unitColumnOffset + ", " + unitRowOffset + ")");
-                }
                 break;
         }
         return destination;
@@ -71,7 +55,7 @@ public class Formation
         switch (formationType) 
         { 
             case 0:
-                return Mathf.CeilToInt(armySize / 10f);
+                return Mathf.CeilToInt(armySize / (float)LINE_COLUMN_COUNT);
             default:
                 Debug.Log("ERROR: GetRowCount() unhandled formationType...");
                 return -1;
@@ -82,13 +66,25 @@ public class Formation
         switch (formationType)
         {
             case 0:
-                if (armySize < 10)
+                if (armySize < LINE_COLUMN_COUNT)
                     return armySize;
                 else
                     return LINE_COLUMN_COUNT;
             default:
                 Debug.Log("ERROR: GetColumnCount() unhandled formationType...");
                 return -1;
+        }
+    }
+    private int GetThisUnitsColumnCount()
+    {
+        int thisUnitsRow = armyPosition / LINE_COLUMN_COUNT;
+        if (thisUnitsRow == GetRowCount() - 1)
+        {
+            return armySize - ((GetRowCount() - 1) * LINE_COLUMN_COUNT);
+        }
+        else
+        {
+            return LINE_COLUMN_COUNT;
         }
     }
 }

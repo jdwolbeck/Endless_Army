@@ -20,7 +20,7 @@ xxx	xxx	| Create a queue for a worker so that multiple bulids can happen in a ro
 		| Give workers "vision" to see how close they are to their destination build and stop right next to it
 		| Give attackers "vision" to see how close they are to the closest gameobject of their target
 		| Implement an archer
-		| Implement a army movement system (Square for now)
+		| Implement a army movement system (Line for now)
 
 
 Game name: Hordes of Zombor
@@ -55,5 +55,29 @@ Game concepts:
 	- Redstone-like mechanic that could allow for traps in these rooms
  -  
 
+=============================================
+New Game Ideas
+=============================================
+Hordes of Zombor - Game Concept:
+ Start of game (Individual round idea)
+  - Player starts with a small encampment with minimal technology.
+  - Initial playzone is a single chunk with a small amount of zombies and resources (maybe an AI player)
+  - The player must expand their spawn zone by another chunk to get access to more resources.
+   - When this chunk is expanded a horde of zombies charges at the players main base.
+   - Also could have a concept that each new chunk has a random cave that spawns zombies so as the player keeps expanding their base they get swamped by zombies.
+  - Other AI towns could be placed on different areas of the map and doing the same things that the player is doing (trade, fight, ally with them)
+ 
+ Progression Ideas:
+  - Initial map will have an overall goal of killing a very strong town (AI) where the player should fail to complete with a fresh account.
+   - Defeating this strong town should unlock something big for the player or unlock a new map altogether (big reward)
+  - Fresh accounts can start with some very simple units (Town center, Barracks, resource huts, Workers, Fighter or clubman).
+   - To unlock the next unit (lets say archer) the player must get enough experience with clubman units throughout regular rounds (through killing AI or zombies).
+  - Every kill on zombies or AI units/buildings gives a small amount of Account Experience and Unit Experience.
+   - Account Experience can be used to unlock more units (archer, swordsman, scout, etc)
+   - Unit Experience will be used for upgrades for individual units (Weapon upgrades, Armor upgrades, Abilities?)
 
- - 
+ Brainstorm:
+  - 
+
+Priority TODO List:
+- 
