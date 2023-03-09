@@ -1295,7 +1295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.88
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1303,7 +1303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8136069941947265631, guid: c0391accec3735f4689a20bb5503c4a6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13409,6 +13409,7 @@ MonoBehaviour:
   focusStoneBtn: {fileID: 914990281}
   MapGenerationMenu: {fileID: 274047556}
   MapTypeDropdown: {fileID: 1182027659}
+  DebugTaskBtn: {fileID: 1234522639}
 --- !u!4 &1382815004
 Transform:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
-public class UnitFormation : MonoBehaviour
+public class UnitFormation
 {
     public int formationType;
     public int armySize;
@@ -23,11 +23,12 @@ public class UnitFormation : MonoBehaviour
     }
     public Vector3 GetMoveLocation(Vector3 destinationCoords)
     {
-        Vector3 destination = destinationCoords;
+        //Vector3 destination = destinationCoords;
+        Vector2 destination = new Vector2(destinationCoords.x, destinationCoords.z);
         switch (formationType)
         {
             case 0:
-                if (true)
+                if (false)
                 {
                     // Line formation
                     int rows = GetRowCount();
@@ -43,19 +44,20 @@ public class UnitFormation : MonoBehaviour
                     float unitColumnOffset = (unitCoords.x - centerMyColumn) * UNIT_WIDTH_COLUMN;
                     float unitRowOffset = (unitCoords.y - centerRow) * UNIT_WIDTH_ROW;
                     destination.x += unitColumnOffset;
-                    destination.z += unitRowOffset;
+                    destination.y += unitRowOffset;
                     Debug.Log("Setting dest: " + destination.ToString());
                     //Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: (column, row) (" + 
                     //unitColumnOffset + ", " + unitRowOffset + ")");
                 }
-                else
+                else if (true)
                 {
-                    Debug.Log("Starting position: " + currentArmyCenter.ToString());
+                    Debug.Log("Starting position: " + currentArmyCenter.ToString() + " -> Destination: " + destination.ToString());
                     // Get the line equation of the original vector (original center -> destination center)
                     // Slope of original vector
-                    float origSlope = (destination.z - currentArmyCenter.x) / (destination.x - currentArmyCenter.y);
+                    float origSlope = (destination.y - currentArmyCenter.y) / (destination.x - currentArmyCenter.x);
                     // Intercept of original vector
                     float origIntercept = currentArmyCenter.y - (origSlope * currentArmyCenter.x);
+                    Debug.Log("Original Equation: Y = " + origSlope + "X + " + origIntercept);
                     // Equation of original vector: Y = origSlope (X) + origIntercept
 
                     // Get the line equation of the perpendicular line to the original vector at the point, destination center
@@ -64,6 +66,7 @@ public class UnitFormation : MonoBehaviour
                     // Intercept of the perpendicular line
                     float destIntercept = destination.y - (destSlope * destination.x);
                     // Equation of the perpendicular line: Y = destSlope (X) + destIntercept
+                    Debug.Log("Destination Equation: Y = " + destSlope + "X + " + destIntercept);
 
                     // Equation 1: M*X2 - Y2 = -B + D * sqrt(m^2 + 1)
                     // Equation 2: M*X2 - Y2 = -B - D * sqrt(m^2 + 1)
@@ -85,13 +88,17 @@ public class UnitFormation : MonoBehaviour
                     // Solve equations 2 & 3 for second possible point
                     float unitPointX2 = (destination.x - ((destSlope * UNIT_WIDTH_ROW) * Mathf.Sqrt((destSlope * destSlope) + 1)) + (destSlope * destination.y)) / ((destSlope * destSlope) + 1);
                     float unitPointY2 = ((unitPointX2 - destination.x) / -destSlope) + destination.y;
-                    destination.x = unitPointX;
-                    destination.z = unitPointY;
+                    destination.x = unitPointX2;
+                    destination.y = unitPointY2;
                     Debug.Log("Final destination: " + destination.ToString());
+                }
+                else
+                {
+
                 }
                 break;
         }
-        return destination;
+        return new Vector3(destination.x, 0, destination.y);
     }
     private int GetRowCount()
     {

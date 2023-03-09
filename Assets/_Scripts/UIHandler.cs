@@ -28,6 +28,7 @@ public class UIHandler : MonoBehaviour
     private TMP_Text stoneText;
     public GameObject MapGenerationMenu;
     public GameObject MapTypeDropdown;
+    public GameObject DebugTaskBtn;
     private bool isDebugMenuSet;
     private bool workerMenuActive;
     private bool debugBool;
@@ -160,31 +161,43 @@ public class UIHandler : MonoBehaviour
         if (isDebugMenuSet)
         {
             MapGenerationMenu.SetActive(false);
+            DebugTaskBtn.SetActive(true);
             isDebugMenuSet = false;
         }
         else
         {
             MapGenerationMenu.SetActive(true);
+            DebugTaskBtn.SetActive(false);
             isDebugMenuSet = true;
         }
     }
     public void OnClickDebugMenuDoDebugTaskButton()
     {
-        debugBool = !debugBool;
-        // This function is used for any variety of debug tasks.
-        GameObject playerTC = GameHandler.instance.playerBuildings[0];
-        foreach (GameObject unit in TeamManager.instance.teamList[1].unitList)
+        string currentDebugTask = "DrawCenterLine";
+        //string currentDebugTask = "EnemyAttackTC";
+        if (currentDebugTask.Equals("EnemyAttackTC"))
         {
-            if (unit.TryGetComponent(out BasicUnit basicUnit))
+            debugBool = !debugBool;
+            // This function is used for any variety of debug tasks.
+            GameObject playerTC = GameHandler.instance.playerBuildings[0];
+            foreach (GameObject unit in TeamManager.instance.teamList[1].unitList)
             {
-                if (debugBool)
-                    basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>(), false);
-                else
+                if (unit.TryGetComponent(out BasicUnit basicUnit))
                 {
-                    basicUnit.ClearCurrentTarget();
-                    basicUnit.SetMoveLocation(transform.position - new Vector3(0, 0, -5));
+                    if (debugBool)
+                        basicUnit.SetAttackTarget(playerTC.GetComponent<BasicObject>(), false);
+                    else
+                    {
+                        basicUnit.ClearCurrentTarget();
+                        basicUnit.SetMoveLocation(transform.position - new Vector3(0, 0, -5));
+                    }
                 }
             }
+        }
+        else if (currentDebugTask.Equals("DrawCenterLine"))
+        {
+            Debug.Log("Drawing ray");
+            Debug.DrawRay(new Vector3(6, 0, 5), new Vector3(0, 1, 0), Color.red, 30);
         }
     }
     public void SetWorkerProductionBar(float progress)
