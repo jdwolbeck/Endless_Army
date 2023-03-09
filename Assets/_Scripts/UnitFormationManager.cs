@@ -49,7 +49,7 @@ public class UnitFormation
                     //Debug.Log("From an original destination: " + origDestination.ToString() + "  -- adding on: (column, row) (" + 
                     //unitColumnOffset + ", " + unitRowOffset + ")");
                 }
-                else if (true)
+                else if (false)
                 {
                     Debug.Log("Starting position: " + currentArmyCenter.ToString() + " -> Destination: " + destination.ToString());
                     // Get the line equation of the original vector (original center -> destination center)
@@ -88,13 +88,62 @@ public class UnitFormation
                     // Solve equations 2 & 3 for second possible point
                     float unitPointX2 = (destination.x - ((destSlope * UNIT_WIDTH_ROW) * Mathf.Sqrt((destSlope * destSlope) + 1)) + (destSlope * destination.y)) / ((destSlope * destSlope) + 1);
                     float unitPointY2 = ((unitPointX2 - destination.x) / -destSlope) + destination.y;
-                    destination.x = unitPointX2;
-                    destination.y = unitPointY2;
+                    destination.x = unitPointX;
+                    destination.y = unitPointY;
                     Debug.Log("Final destination: " + destination.ToString());
                 }
                 else
                 {
+                    Debug.Log("Starting position: " + currentArmyCenter.ToString() + " -> Destination: " + destination.ToString());
+                    // Get the line equation of the original vector (original center -> destination center)
+                    // Slope of original vector
+                    float origSlope = (destination.y - currentArmyCenter.y) / (destination.x - currentArmyCenter.x);
+                    // Intercept of original vector
+                    float origIntercept = currentArmyCenter.y - (origSlope * currentArmyCenter.x);
+                    Debug.Log("Original Equation: Y = " + origSlope + "X + " + origIntercept);
+                    // Equation of original vector: Y = origSlope (X) + origIntercept
 
+                    // Get the line equation of the perpendicular line to the original vector at the point, destination center
+                    // Slope of perpendicular line
+                    float destSlope = -1 / origSlope;
+                    // Intercept of the perpendicular line
+                    float destIntercept = destination.y - (destSlope * destination.x);
+                    // Equation of the perpendicular line: Y = destSlope (X) + destIntercept
+                    Debug.Log("Destination Equation: Y = " + destSlope + "X + " + destIntercept);
+
+                    /*
+                     * Now that we have the equation of the line we are going to align our people onto,
+                     * we need to determine any vector along both ways of this line (to and from the destination point).
+                     * Once we have this vector we can normalize it and utilize this equation:
+                     * P1 = P0 +/- du, where d = UNIT_COLUMN_WIDTH * whatever place this unit is and u = the normalized vector..
+                     */
+                    // Positive direction vector; Choose a random x (destination - 1 here) and use y = mx + b to solve for y
+                    Vector2 posDirVec = new Vector2(destination.x + 1, (destSlope * (destination.x + 1)) + destIntercept);
+                    posDirVec.Normalize();
+
+                    // Positive direction vector; Choose a random x (destination - 1 here) and use y = mx + b to solve for y
+                    Vector2 negDirVec = new Vector2(destination.x - 1, (destSlope * (destination.x - 1)) + destIntercept);
+                    negDirVec.Normalize();
+
+                    // Determine how many unit positions left or right this specific unit is
+                    float centerUnit = armySize / 2f;
+                    float unitOffset = (centerUnit - armyPosition) * UNIT_WIDTH_COLUMN;
+
+                    // Utilize the vector equation to get this units position
+                    // destination is already set to destinationCoords
+                    destination += unitOffset * posDirVec;
+                    if (armyPosition == armySize - 1)
+                    {
+                        Debug.DrawRay(new Vector3(currentArmyCenter.x, 0, currentArmyCenter.y), 
+                            new Vector3(currentArmyCenter.x - destinationCoords.x, 0, currentArmyCenter.y - destinationCoords.z), 
+                            Color.blue, 30); // orig line
+                        Debug.DrawRay(destinationCoords, 
+                            4 * posDirVec, 
+                            Color.red, 30); // dest line
+                        Debug.DrawRay(destinationCoords,
+                            -4 * posDirVec,
+                            Color.red, 30); // dest line
+                    }
                 }
                 break;
         }

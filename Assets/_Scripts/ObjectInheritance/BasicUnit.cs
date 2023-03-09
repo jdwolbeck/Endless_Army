@@ -113,6 +113,17 @@ public class BasicUnit : BasicObject
     {
         if (currentFormation.formationType != -1)
         {
+            // Find the center of all units
+            Vector2 armyCenter = Vector2.zero;
+            Vector3 temp = Vector3.zero;
+            for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+            {
+                temp += InputHandler.instance.selectedUnits[i].transform.position;
+            }
+            temp /= InputHandler.instance.selectedUnits.Count;
+            armyCenter.x = temp.x;
+            armyCenter.y = temp.z;
+            currentFormation.currentArmyCenter = armyCenter;
             navAgent.SetDestination(currentFormation.GetMoveLocation(moveLocation));
         }
         else
