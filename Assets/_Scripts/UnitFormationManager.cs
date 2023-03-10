@@ -4,22 +4,30 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
-public class UnitFormation
+public class ArmyInfo
 {
     public int formationType;
     public int armySize;
     public int armyPosition;
     public Vector2 currentArmyCenter;
+    public ArmyInfo()
+    {
+        formationType = -1;
+        armySize = 0;
+        armyPosition = 0;
+        currentArmyCenter = Vector2.zero;
+    }
+}
+public class UnitFormation
+{
+    public List<ArmyInfo> armysList = new List<ArmyInfo>();
     private const float UNIT_WIDTH_ROW = 1.5f;
     private const float UNIT_WIDTH_COLUMN = 1.5f;
     private const int LINE_COLUMN_COUNT = 10;
 
     public UnitFormation()
     {
-        formationType = -1;
-        armySize = 0;
-        armyPosition = 0;
-        currentArmyCenter = Vector2.zero;
+        armysList.Add(new ArmyInfo());
     }
     public Vector3 GetMoveLocation(Vector3 destinationCoords)
     {
@@ -117,32 +125,50 @@ public class UnitFormation
                      * Once we have this vector we can normalize it and utilize this equation:
                      * P1 = P0 +/- du, where d = UNIT_COLUMN_WIDTH * whatever place this unit is and u = the normalized vector..
                      */
-                    // Positive direction vector; Choose a random x (destination - 1 here) and use y = mx + b to solve for y
+                    /* Positive direction vector; Choose a random x (destination + 1 here) and use y = mx + b to solve for y
+                     * This will result in a new point in the positive direction down the Destination Equation. Now, use the two
+                     * points to create a vector.
+                     */
                     Vector2 posDirVec = new Vector2(destination.x + 1, (destSlope * (destination.x + 1)) + destIntercept);
+                    Debug.Log("PosDirVector Point: " + posDirVec.ToString());
+                    if (armyPosition == armySize - 1)
+                    {
+                        Debug.DrawRay(new Vector3(posDirVec.x , 0, posDirVec.y), new Vector3(0, 1, 0), Color.green, 120);
+                    }
+                    Vector2 posPoint = posDirVec;
+                    posDirVec = new Vector2(posPoint.x - destinationCoords.x, posPoint.y - destinationCoords.z);
                     posDirVec.Normalize();
 
                     // Positive direction vector; Choose a random x (destination - 1 here) and use y = mx + b to solve for y
                     Vector2 negDirVec = new Vector2(destination.x - 1, (destSlope * (destination.x - 1)) + destIntercept);
+                    negDirVec = new Vector2(negDirVec.x - destinationCoords.x, negDirVec.y - destinationCoords.z);
                     negDirVec.Normalize();
 
                     // Determine how many unit positions left or right this specific unit is
-                    float centerUnit = armySize / 2f;
+                    float centerUnit = (armySize - 1) / 2f;
                     float unitOffset = (centerUnit - armyPosition) * UNIT_WIDTH_COLUMN;
+                    Debug.Log("Center unit: " + centerUnit + "  -  unitOffset: " + unitOffset + " [armyPosition: " + armyPosition + "]");
 
                     // Utilize the vector equation to get this units position
                     // destination is already set to destinationCoords
                     destination += unitOffset * posDirVec;
                     if (armyPosition == armySize - 1)
                     {
+                        Debug.DrawRay(destinationCoords, new Vector3(0, 1, 0), Color.magenta, 120);
+                        Debug.DrawRay(new Vector3(currentArmyCenter.x, 0, currentArmyCenter.y), new Vector3(0, 1, 0), Color.yellow, 120);
                         Debug.DrawRay(new Vector3(currentArmyCenter.x, 0, currentArmyCenter.y), 
-                            new Vector3(currentArmyCenter.x - destinationCoords.x, 0, currentArmyCenter.y - destinationCoords.z), 
-                            Color.blue, 30); // orig line
-                        Debug.DrawRay(destinationCoords, 
-                            4 * posDirVec, 
-                            Color.red, 30); // dest line
+                            new Vector3(destinationCoords.x - currentArmyCenter.x, 0, destinationCoords.z - currentArmyCenter.y), 
+                            Color.blue, 120); // orig line
                         Debug.DrawRay(destinationCoords,
-                            -4 * posDirVec,
-                            Color.red, 30); // dest line
+                            new Vector3(4 * posDirVec.x, 0, 4 * posDirVec.y),
+                            Color.red, 120); // dest line
+                        Debug.DrawRay(destinationCoords,
+                            new Vector3(-4 * posDirVec.x, 0, -4 * posDirVec.y),
+                            Color.yellow, 120); // dest line
+                        Debug.DrawRay(destinationCoords,
+                            new Vector3(posPoint.x - destinationCoords.x, 0, posPoint.y - destinationCoords.z),
+                            Color.black, 120); // dest line
+
                     }
                 }
                 break;
