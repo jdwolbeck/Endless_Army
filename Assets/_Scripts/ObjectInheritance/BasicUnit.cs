@@ -20,7 +20,8 @@ public class BasicUnit : BasicObject
     protected BasicObject currentTarget;
     protected bool subscribedToTarget;
     protected bool inCombat;
-    protected UnitFormation currentFormation;
+    //TODO protected UnitFormation currentFormation;
+    int armyIndex;
 
     protected Animator animator;
     protected bool animatorPresent;
@@ -37,7 +38,8 @@ public class BasicUnit : BasicObject
         TryGetComponent<Animator>(out animator);
         if (animator != null)
             animatorPresent = true;
-        currentFormation = new UnitFormation();
+        //TODO currentFormation = new UnitFormation();
+        armyIndex = -1;
     }
     protected override void Start()
     {
@@ -111,10 +113,10 @@ public class BasicUnit : BasicObject
     }
     public void SetMoveLocation(Vector3 moveLocation)
     {
-        if (currentFormation.formationType != -1)
+        if (armyIndex != -1)//currentFormation.formationType != -1)
         {
             // Find the center of all units
-            Vector2 armyCenter = Vector2.zero;
+            /*Vector2 armyCenter = Vector2.zero;
             Vector3 temp = Vector3.zero;
             for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
             {
@@ -123,8 +125,8 @@ public class BasicUnit : BasicObject
             temp /= InputHandler.instance.selectedUnits.Count;
             armyCenter.x = temp.x;
             armyCenter.y = temp.z;
-            currentFormation.currentArmyCenter = armyCenter;
-            navAgent.SetDestination(currentFormation.GetMoveLocation(moveLocation));
+            currentFormation.currentArmyCenter = armyCenter;*/
+            ////////navAgent.SetDestination(UnitFormation.GetMoveLocation(armyIndex, moveLocation));
         }
         else
         {
