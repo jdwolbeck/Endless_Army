@@ -143,6 +143,13 @@ public class InputHandler : MonoBehaviour
             mousePos = Input.mousePosition;
             if (selectedUnits.Count > 0)
             {
+                Ray ray = Camera.main.ScreenPointToRay(mousePos);
+                if (!Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")) &&
+                    !Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyBuildingLayer")) &&
+                    Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
+                {
+                    UnitFormationManager.instance.SetArmyMoveLocation(hit.point);
+                }
                 for (int i = 0; i < selectedUnits.Count; i++)
                 {
                     selectedUnits[i].DoAction();
@@ -164,6 +171,8 @@ public class InputHandler : MonoBehaviour
             for (int i = 0; i < selectedUnits.Count; i++)
             {
                 selectedUnits[i].DeselectObject();
+                selectedUnits[i].SetFormation(false);
+                UnitFormationManager.instance.ClearActiveArmy();
                 selectedUnits[i].ObjectDied -= CheckForObjectDeath;
             }
         }

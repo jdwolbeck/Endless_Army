@@ -109,23 +109,28 @@ public class UIHandler : MonoBehaviour
     }
     public void OnClickArmyMenuLineButton()
     {
-        FighterUnit unit;
-        // Find the center of all units
-        Vector2 armyCenter = Vector2.zero;
-        Vector3 temp = Vector3.zero;
-        for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+        if (false)
         {
-            temp += InputHandler.instance.selectedUnits[i].transform.position;
+            FighterUnit unit;
+            // Find the center of all units
+            Vector2 armyCenter = Vector2.zero;
+            Vector3 temp = Vector3.zero;
+            for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+            {
+                temp += InputHandler.instance.selectedUnits[i].transform.position;
+            }
+            temp /= InputHandler.instance.selectedUnits.Count;
+            armyCenter.x = temp.x;
+            armyCenter.y = temp.z;
+            // Set  the formation priority of this army to Line
+            for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+            {
+                unit = InputHandler.instance.selectedUnits[i].GetComponent<FighterUnit>();
+                unit.SetMovementFormation(0, i, InputHandler.instance.selectedUnits.Count, armyCenter);
+            }
         }
-        temp /= InputHandler.instance.selectedUnits.Count;
-        armyCenter.x = temp.x;
-        armyCenter.y = temp.z;
-        // Set  the formation priority of this army to Line
-        for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
-        {
-            unit = InputHandler.instance.selectedUnits[i].GetComponent<FighterUnit>();
-            unit.SetMovementFormation(0, i, InputHandler.instance.selectedUnits.Count, armyCenter);
-        }
+        else
+            UnitFormationManager.instance.SetActiveArmy();
     }
     public void OnClickTownCenterMenuBuildWorkerButton()
     {
@@ -173,8 +178,9 @@ public class UIHandler : MonoBehaviour
     }
     public void OnClickDebugMenuDoDebugTaskButton()
     {
-        string currentDebugTask = "DrawCenterLine";
+        //string currentDebugTask = "DrawCenterLine";
         //string currentDebugTask = "EnemyAttackTC";
+        string currentDebugTask = "AddArmy";
         if (currentDebugTask.Equals("EnemyAttackTC"))
         {
             debugBool = !debugBool;
@@ -198,6 +204,13 @@ public class UIHandler : MonoBehaviour
         {
             Debug.Log("Drawing ray");
             Debug.DrawRay(new Vector3(6, 0, 5), new Vector3(0, 1, 0), Color.red, 30);
+        }
+        else if (currentDebugTask.Equals("AddArmy"))
+        {
+            ArmyInfo armyInfo = new ArmyInfo();
+            armyInfo.formationType = 0;
+            //UnitFormationManager.instance.armyInfo = new ArmyInfo
+            //{ armySize = armyInfo.armySize, armyPosition = armyInfo.armyPosition, currentArmyCenter = armyInfo.currentArmyCenter, formationType = armyInfo.formationType };
         }
     }
     public void SetWorkerProductionBar(float progress)

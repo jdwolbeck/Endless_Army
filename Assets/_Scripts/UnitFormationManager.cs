@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
@@ -18,39 +19,85 @@ public class ArmyInfo
         currentArmyCenter = Vector2.zero;
     }
 }
-public class UnitFormation
+public class UnitFormationManager : MonoBehaviour
 {
-    public UnitFormation instance = null;
-    public List<ArmyInfo> armysList;
+    public static UnitFormationManager instance;
+    //public ArmyInfo armyInfo;
+
+    public List<BasicUnit> armyList;
+    public List<Vector3> armyPositionList;
+    public int formationType;
+    public int armySize;
+    public int armyPosition;
+    public Vector2 currentArmyCenter;
+    public Vector3 currentDestination;
+
     private const float UNIT_WIDTH_ROW = 1.5f;
     private const float UNIT_WIDTH_COLUMN = 1.5f;
     private const int LINE_COLUMN_COUNT = 10;
 
-    public UnitFormation()
+    void Awake()
     {
         if (instance == null)
         {
-            instance = new UnitFormation();
+            instance = this;
         }
-        armysList = new List<ArmyInfo>();
-    }
-    public Vector3 GetMoveLocation(int armyIndex, Vector3 destinationCoords)
-    {
-        // Invalid armyIndex was passed in
-        if (armyIndex >= armysList.Count)
-            return Vector3.zero;
 
+        armyList = new List<BasicUnit>();
+        armyPositionList = new List<Vector3>();
+        ClearActiveArmy();
+    }
+    public void SetActiveArmy()
+    {
+        // TODO logic for handling different formation types
+        formationType = 0;
+        armyList.Clear();
+        armyPositionList.Clear();
+
+        // Find the center of all selected units
+        Vector3 temp = Vector3.zero;
+        BasicUnit bu;
+        for (int i = 0; i < InputHandler.instance.selectedUnits.Count; i++)
+        {
+            bu = InputHandler.instance.selectedUnits[i];
+            temp += bu.transform.position;
+            armyList.Add(bu);
+            bu.SetFormation(true);
+        }
+        temp /= InputHandler.instance.selectedUnits.Count;
+        currentArmyCenter = new Vector2(temp.x, temp.z);
+        armySize = armyList.Count;
+    }
+    public void ClearActiveArmy()
+    {
+        formationType = -1;
+        armyList.Clear();
+        armyPositionList.Clear();
+        formationType = -1;
+        armySize = 0;
+        armyPosition = 0;
+        currentArmyCenter = Vector2.zero;
+        currentDestination = Vector3.zero;
+    }
+    public void SetArmyMoveLocation(Vector3 destinationCoords)
+    {
+        if (destinationCoords == currentDestination)
+            return;
+        else
+            currentDestination = destinationCoords;
+
+        SetActiveArmy();
         Vector2 destination = new Vector2(destinationCoords.x, destinationCoords.z);
-        switch (armysList[armyIndex].formationType)
+        switch (formationType)
         {
             case 0:
-                Debug.Log("Starting position: " + armysList[armyIndex].currentArmyCenter.ToString() + " -> Destination: " + destination.ToString());
+                Debug.Log("Starting position: " + currentArmyCenter.ToString() + " -> Destination: " + destination.ToString());
                 // Get the line equation of the original vector (original center -> destination center)
                 // Slope of original vector
-                float origSlope = (destination.y - armysList[armyIndex].currentArmyCenter.y) / (destination.x - armysList[armyIndex].currentArmyCenter.x);
+                float origSlope = (destination.y - currentArmyCenter.y) / (destination.x - currentArmyCenter.x);
                 // Intercept of original vector
-                float origIntercept = armysList[armyIndex].currentArmyCenter.y - (origSlope * armysList[armyIndex].currentArmyCenter.x);
-                Debug.Log("Original Equation: Y = " + origSlope + "X + " + origIntercept);
+                float origIntercept = currentArmyCenter.y - (origSlope * currentArmyCenter.x);
+                //Debug.Log("Original Equation: Y = " + origSlope + "X + " + origIntercept);
                 // Equation of original vector: Y = origSlope (X) + origIntercept
 
                 // Get the line equation of the perpendicular line to the original vector at the point, destination center
@@ -59,7 +106,7 @@ public class UnitFormation
                 // Intercept of the perpendicular line
                 float destIntercept = destination.y - (destSlope * destination.x);
                 // Equation of the perpendicular line: Y = destSlope (X) + destIntercept
-                Debug.Log("Destination Equation: Y = " + destSlope + "X + " + destIntercept);
+                //Debug.Log("Destination Equation: Y = " + destSlope + "X + " + destIntercept);
 
                 /*
                 * Now that we have the equation of the line we are going to align our people onto,
@@ -72,51 +119,62 @@ public class UnitFormation
                 * points to create a vector.
                 */
                 Vector2 posDirVec = new Vector2(destination.x + 1, (destSlope * (destination.x + 1)) + destIntercept);
-                Debug.Log("PosDirVector Point: " + posDirVec.ToString());
-                if (armysList[armyIndex].armyPosition == armysList[armyIndex].armySize - 1)
-                {
-                    Debug.DrawRay(new Vector3(posDirVec.x , 0, posDirVec.y), new Vector3(0, 1, 0), Color.green, 120);
-                }
+                //Debug.Log("PosDirVector Point: " + posDirVec.ToString());
+                Debug.DrawRay(new Vector3(posDirVec.x , 0, posDirVec.y), new Vector3(0, 1, 0), Color.green, 120);
+                
                 Vector2 posPoint = posDirVec;
-                posDirVec = new Vector2(posPoint.x - destinationCoords.x, posPoint.y - destinationCoords.z);
+                posDirVec = new Vector2(posPoint.x - destination.x, posPoint.y - destination.y);
                 posDirVec.Normalize();
 
                 // Positive direction vector; Choose a random x (destination - 1 here) and use y = mx + b to solve for y
                 Vector2 negDirVec = new Vector2(destination.x - 1, (destSlope * (destination.x - 1)) + destIntercept);
-                negDirVec = new Vector2(negDirVec.x - destinationCoords.x, negDirVec.y - destinationCoords.z);
+                negDirVec = new Vector2(negDirVec.x - destination.x, negDirVec.y - destination.y);
                 negDirVec.Normalize();
 
-                // Determine how many unit positions left or right this specific unit is
-                float centerUnit = (armysList[armyIndex].armySize - 1) / 2f;
-                float unitOffset = (centerUnit - armysList[armyIndex].armyPosition) * UNIT_WIDTH_COLUMN;
-                Debug.Log("Center unit: " + centerUnit + "  -  unitOffset: " + unitOffset + " [armyPosition: " + armysList[armyIndex].armyPosition + "]");
-
-                // Utilize the vector equation to get this units position
-                // destination is already set to destinationCoords
-                destination += unitOffset * posDirVec;
-                if (armysList[armyIndex].armyPosition == armysList[armyIndex].armySize - 1)
+                for (int armyPos = 0; armyPos < armyList.Count; armyPos++)
                 {
-                    Debug.DrawRay(destinationCoords, new Vector3(0, 1, 0), Color.magenta, 120);
-                    Debug.DrawRay(new Vector3(armysList[armyIndex].currentArmyCenter.x, 0, armysList[armyIndex].currentArmyCenter.y), new Vector3(0, 1, 0), Color.yellow, 120);
-                    Debug.DrawRay(new Vector3(armysList[armyIndex].currentArmyCenter.x, 0, armysList[armyIndex].currentArmyCenter.y), 
-                        new Vector3(destinationCoords.x - armysList[armyIndex].currentArmyCenter.x, 0, destinationCoords.z - armysList[armyIndex].currentArmyCenter.y), 
-                        Color.blue, 120); // orig line
-                    Debug.DrawRay(destinationCoords,
-                        new Vector3(4 * posDirVec.x, 0, 4 * posDirVec.y),
-                        Color.red, 120); // dest line
-                    Debug.DrawRay(destinationCoords,
-                        new Vector3(-4 * posDirVec.x, 0, -4 * posDirVec.y),
-                        Color.yellow, 120); // dest line
-                    Debug.DrawRay(destinationCoords,
-                        new Vector3(posPoint.x - destinationCoords.x, 0, posPoint.y - destinationCoords.z),
-                        Color.black, 120); // dest line
+                    destination = new Vector2(destinationCoords.x, destinationCoords.z);
+                    // Determine how many unit positions left or right this specific unit is
+                    float centerUnit = (armySize - 1) / 2f;
+                    float unitOffset = (centerUnit - armyPos) * UNIT_WIDTH_COLUMN;
+                    //Debug.Log("Center unit: " + centerUnit + "  -  unitOffset: " + unitOffset + " [armyPosition: " + armyPos + "]");
 
+                    // Utilize the vector equation to get this units position
+                    // destination is already set to destinationCoords
+                    destination += unitOffset * posDirVec;
+                    if (armyPos == armySize - 1)
+                    {
+                        Debug.DrawRay(destinationCoords, new Vector3(0, 1, 0), Color.magenta, 120);
+                        Debug.DrawRay(new Vector3(currentArmyCenter.x, 0, currentArmyCenter.y), new Vector3(0, 1, 0), Color.yellow, 120);
+                        Debug.DrawRay(new Vector3(currentArmyCenter.x, 0, currentArmyCenter.y),
+                            new Vector3(destinationCoords.x - currentArmyCenter.x, 0, destinationCoords.z - currentArmyCenter.y),
+                            Color.blue, 120); // orig line
+                        Debug.DrawRay(destinationCoords,
+                            new Vector3(4 * posDirVec.x, 0, 4 * posDirVec.y),
+                            Color.red, 120); // dest line
+                        Debug.DrawRay(destinationCoords,
+                            new Vector3(-4 * posDirVec.x, 0, -4 * posDirVec.y),
+                            Color.yellow, 120); // dest line
+                        Debug.DrawRay(destinationCoords,
+                            new Vector3(posPoint.x - destinationCoords.x, 0, posPoint.y - destinationCoords.z),
+                            Color.black, 120); // dest line
+                    }
+                    armyPositionList.Add(new Vector3(destination.x, 0, destination.y));
+                    Debug.Log("Adding vector: " + new Vector3(destination.x, 0, destination.y).ToString() + " listLength = " + armyPositionList.Count);
                 }
                 break;
-            default:
-                destination = Vector2.zero;
-                break;
         }
-        return new Vector3(destination.x, 0, destination.y);
+    }
+    public Vector3 GetUnitMoveLocation(GameObject go)
+    {
+        for(int i = 0; i < armyList.Count; i++)
+        {
+            if (armyList[i].gameObject == go)
+            {
+                Debug.Log("Returning index " + i + " with vector: " + armyPositionList[i].ToString());
+                return armyPositionList[i];
+            }
+        }
+        return Vector3.zero;
     }
 }

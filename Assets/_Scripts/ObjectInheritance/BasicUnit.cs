@@ -20,8 +20,7 @@ public class BasicUnit : BasicObject
     protected BasicObject currentTarget;
     protected bool subscribedToTarget;
     protected bool inCombat;
-    //TODO protected UnitFormation currentFormation;
-    int armyIndex;
+    protected bool inFormation;
 
     protected Animator animator;
     protected bool animatorPresent;
@@ -38,8 +37,7 @@ public class BasicUnit : BasicObject
         TryGetComponent<Animator>(out animator);
         if (animator != null)
             animatorPresent = true;
-        //TODO currentFormation = new UnitFormation();
-        armyIndex = -1;
+        inFormation = false;
     }
     protected override void Start()
     {
@@ -113,8 +111,9 @@ public class BasicUnit : BasicObject
     }
     public void SetMoveLocation(Vector3 moveLocation)
     {
-        if (armyIndex != -1)//currentFormation.formationType != -1)
+        if (inFormation)
         {
+            navAgent.SetDestination(UnitFormationManager.instance.GetUnitMoveLocation(gameObject));
             // Find the center of all units
             /*Vector2 armyCenter = Vector2.zero;
             Vector3 temp = Vector3.zero;
@@ -132,6 +131,10 @@ public class BasicUnit : BasicObject
         {
             navAgent.SetDestination(moveLocation);
         }
+    }
+    public void SetFormation(bool inForm)
+    {
+        inFormation = inForm;
     }
     protected float DistanceToTarget(Transform target)
     {
@@ -250,10 +253,10 @@ public class BasicUnit : BasicObject
     public void SetMovementFormation(int formationType, int armyPosition, int armySize, Vector2 armyCenter)
     {
         //Debug.Log("Setting formation of unit " + gameObject.ToString() + ": FormationType/Pos/Size: " + formationType + "/" + armyPosition + "/" + armySize);
-        currentFormation.formationType = formationType;
-        currentFormation.armyPosition = armyPosition;
-        currentFormation.armySize = armySize;
-        currentFormation.currentArmyCenter = armyCenter;
+        //currentFormation.formationType = formationType;
+        //currentFormation.armyPosition = armyPosition;
+        //currentFormation.armySize = armySize;
+        //currentFormation.currentArmyCenter = armyCenter;
         //Debug.Log("Original Army center at: (" + armyCenter.ToString() + ")");
     }
 }
