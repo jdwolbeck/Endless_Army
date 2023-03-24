@@ -39,11 +39,13 @@ public class BasicObject : MonoBehaviour
     public virtual void DoAction() { }
     public virtual void SelectObject()
     {
-        highlight.SetActive(true);
+        if (highlight != null) 
+            highlight.SetActive(true);
     }
     public virtual void DeselectObject()
     {
-        highlight.SetActive(false);
+        if (highlight != null)
+            highlight.SetActive(false);
     }
     protected virtual void Die()
     {
@@ -109,7 +111,7 @@ public class BasicObject : MonoBehaviour
         {
             if (!HealthBarCanvas.activeInHierarchy)
             {
-                Debug.Log("Setting canvas to active.");
+                //Debug.Log("Setting canvas to active.");
                 HealthBarCanvas.SetActive(true);
             }
             HealthSlider.normalizedValue = currentHealth / MaxHealth;

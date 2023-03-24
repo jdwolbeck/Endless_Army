@@ -11,7 +11,10 @@ public enum AITeamState
 public enum BuildableObjectList
 {
     None,
-    Worker
+    Worker,
+    Fighter,
+    TownCenter,
+    Barracks
 }
 
 public class AITeamController : MonoBehaviour
@@ -29,34 +32,36 @@ public class AITeamController : MonoBehaviour
     private void Start()
     {
         myTeamManager = gameObject.GetComponent<TeamResourceManager>();
-        desiredFoodRatio = 0.80f;
-        desiredWoodRatio = 0.15f;
-        desiredStoneRatio = 0.05f;
+        desiredFoodRatio = 0.50f;
+        desiredWoodRatio = 0.30f;
+        desiredStoneRatio = 0.20f;
         allowedVarience = 0.025f;
         idleWorkers = new List<WorkerUnit>();
     }
     private void Update()
     {
-        DetermineNewState();
-        HandleStateActions();
-        DetermineWhatToBuild();
-        HandleNewBuild();
+        if (count >= 100)
+        {
+            DetermineNewState();
+            HandleStateActions();
+            DetermineWhatToBuild();
+            HandleNewBuild();
+        }
+        else
+            count++;
     }
     private void DetermineNewState()
     {
         float totalResources = myTeamManager.teamCurrentFood + myTeamManager.teamCurrentWood + myTeamManager.teamCurrentStone;
-        if ( (myTeamManager.teamCurrentFood / totalResources) + allowedVarience > desiredFoodRatio ||
-             (myTeamManager.teamCurrentFood / totalResources) - allowedVarience < desiredFoodRatio )
+        if ((myTeamManager.teamCurrentFood / totalResources) - allowedVarience < desiredFoodRatio)
         {
             nextState = AITeamState.FocusFood;
         }
-        else if ( (myTeamManager.teamCurrentWood / totalResources) + allowedVarience > desiredWoodRatio ||
-                  (myTeamManager.teamCurrentWood / totalResources) - allowedVarience < desiredWoodRatio )
+        else if ((myTeamManager.teamCurrentWood / totalResources) - allowedVarience < desiredWoodRatio )
         {
             nextState = AITeamState.FocusWood;
         }
-        else if ( (myTeamManager.teamCurrentStone / totalResources) + allowedVarience > desiredStoneRatio ||
-                  (myTeamManager.teamCurrentStone / totalResources) - allowedVarience < desiredStoneRatio)
+        else// if ((myTeamManager.teamCurrentStone / totalResources) - allowedVarience < desiredStoneRatio)
         {
             nextState = AITeamState.FocusStone;
         }
@@ -163,7 +168,19 @@ public class AITeamController : MonoBehaviour
     }
     private void DetermineWhatToBuild()
     {
-        if (myTeamManager.teamCurrentFood >= ((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker")).FoodCost)
+        if (mainTownCenter == null)
+        {
+            foreach (GameObject go in myTeamManager.buildingList)
+            {
+                if (go != null && go.TryGetComponent(out mainTownCenter))
+                {
+                    Debug.Log("Found a TownCenter");
+                    return;
+                }
+            }
+            nextObjectToMake = BuildableObjectList.TownCenter;
+        }
+        else if (mainTownCenter.productionQueue.Count == 0 && myTeamManager.teamCurrentFood >= ((ScriptableUnit)ResourceDictionary.instance.GetPreset("Worker")).FoodCost)
         {
             nextObjectToMake = BuildableObjectList.Worker;
         }
@@ -179,19 +196,34 @@ public class AITeamController : MonoBehaviour
             case BuildableObjectList.Worker:
                 if (mainTownCenter == null)
                 {
-                    count++;
+                    Debug.Log("Test?");
                     foreach (GameObject go in myTeamManager.buildingList)
                     {
-                        go.TryGetComponent(out mainTownCenter);
+                        if (go != null && go.TryGetComponent(out mainTownCenter))
+                            break;
                     }
-                    if (count != 1 && mainTownCenter == null)
-                        Debug.Log("Main TC is still null, all town centers destroyed?");
+                    if (mainTownCenter == null)
+                        nextObjectToMake = BuildableObjectList.TownCenter;
                 }
                 else
                 {
                     mainTownCenter.AddWorkerToQueue();
                     nextObjectToMake = BuildableObjectList.None;
                 }
+                break;
+            case BuildableObjectList.TownCenter:
+                // Find a worker
+                Debug.Log("We are supposed to build a TownCenter");
+                foreach (GameObject go in myTeamManager.unitList)
+                {
+                    if (go.TryGetComponent(out AIWorkerUnit workerAI))
+                    {
+                        Debug.Log("We found a worker with AI.");
+                        workerAI.BuildBuildingNearby(BuildableObjectList.TownCenter);
+                        break;
+                    }
+                }
+                nextObjectToMake = BuildableObjectList.None;
                 break;
         }
     }

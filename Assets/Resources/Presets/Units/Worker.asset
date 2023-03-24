@@ -19,6 +19,6 @@ MonoBehaviour:
   MaxHealth: 25
   AttackRange: 2
   AttackSpeed: 1
-  Damage: 2
+  Damage: 20
   SightRange: 15
   HearingRange: 5

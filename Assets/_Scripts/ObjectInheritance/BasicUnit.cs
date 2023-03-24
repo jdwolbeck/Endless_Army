@@ -152,7 +152,7 @@ public class BasicUnit : BasicObject
             if (currentTarget != target)
             {// Set the current target if it wasnt previously set
                 currentTarget = target;
-                Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
+                //Debug.Log("Setting current target to target: " + currentTarget.ToString() + " | " + target.ToString());
             }
             if (DistanceToTarget(currentTarget.transform) < AttackRange)
             {

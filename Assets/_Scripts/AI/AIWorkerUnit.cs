@@ -14,6 +14,107 @@ public class AIWorkerUnit : AIBasicUnit
         }
         waitUntil += 0.083f; // 5/60 only call this at a bare minimum of 5 times every second.
     }*/
+    public bool BuildBuildingNearby(BuildableObjectList buildObj)
+    {
+        string prefabStr = string.Empty;
+        ScriptableBuilding scriptableBuilding = (ScriptableBuilding)ResourceDictionary.instance.GetPreset("TownCenter");
+        switch (buildObj)
+        {
+            case (BuildableObjectList.TownCenter):
+                Debug.Log("BuildBuildingNearby(TC)");
+                if (TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood >= scriptableBuilding.FoodCost &&
+                    TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood >= scriptableBuilding.WoodCost &&
+                    TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone >= scriptableBuilding.StoneCost)
+                {
+                    Debug.Log("We have enough resources.");
+                    prefabStr = "TownCenterEGO";
+                }
+                break;
+            case (BuildableObjectList.Barracks):
+                if (TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood >= scriptableBuilding.FoodCost &&
+                    TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood >= scriptableBuilding.WoodCost &&
+                    TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone >= scriptableBuilding.StoneCost)
+                {
+                    prefabStr = "BarracksEGO";
+                }
+                break;
+        }
+        if (prefabStr != string.Empty)
+        {
+            GameObject blueprint = Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(transform.position.x, 0, transform.position.y), Quaternion.identity);
+            BasicBuilding basicBuild = blueprint.GetComponent<BasicBuilding>();
+            blueprint.AddComponent<Rigidbody>().useGravity = false;
+            blueprint.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
+            basicBuild.Team = GetComponent<WorkerUnit>().Team;
+            bool foundBuildLocation = false;
+            //blueprint.SetActive(false);
+
+            Vector2 buildingOffset = Vector2.zero;
+            while (buildingOffset.x < 10f && !foundBuildLocation)
+            { // Try to build off to the right
+                blueprint.transform.position = new Vector3(transform.position.x + buildingOffset.x, transform.position.y, transform.position.z + buildingOffset.y);
+                if (basicBuild.canBuildHere)
+                {
+                    Debug.Log("AI found a build location off to the right (" + buildingOffset.x + ")");
+                    foundBuildLocation = true;
+                    break;
+                }
+                buildingOffset.x += 1f;
+            }
+            buildingOffset = Vector2.zero;
+            while (buildingOffset.x > -10f && !foundBuildLocation)
+            { // Try to build off to the left
+                blueprint.transform.position = new Vector3(transform.position.x + buildingOffset.x, transform.position.y, transform.position.z + buildingOffset.y);
+                if (basicBuild.canBuildHere)
+                {
+                    Debug.Log("AI found a build location off to the left (" + buildingOffset.x + ")");
+                    foundBuildLocation = true;
+                    break;
+                }
+                buildingOffset.x -= 1f;
+            }
+            buildingOffset = Vector2.zero;
+            while (buildingOffset.y < 10f && !foundBuildLocation)
+            { // Try to build upwards
+                blueprint.transform.position = new Vector3(transform.position.x + buildingOffset.x, transform.position.y, transform.position.z + buildingOffset.y);
+                if (basicBuild.canBuildHere)
+                {
+                    Debug.Log("AI found a build location upward (" + buildingOffset.y + ")");
+                    foundBuildLocation = true;
+                    break;
+                }
+                buildingOffset.y += 1f;
+            }
+            buildingOffset = Vector2.zero;
+            while (buildingOffset.y > -10f && !foundBuildLocation)
+            { // Try to build downwards
+                blueprint.transform.position = new Vector3(transform.position.x + buildingOffset.x, transform.position.y, transform.position.z + buildingOffset.y);
+                if (basicBuild.canBuildHere)
+                {
+                    Debug.Log("AI found a build location downward (" + buildingOffset.y + ")");
+                    foundBuildLocation = true;
+                    break;
+                }
+                buildingOffset.y -= 1f;
+            }
+
+            if (foundBuildLocation)
+            {
+                TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentFood -= scriptableBuilding.FoodCost;
+                TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentWood -= scriptableBuilding.WoodCost;
+                TeamManager.instance.teamList[GetComponent<BasicUnit>().Team].teamCurrentStone -= scriptableBuilding.StoneCost;
+                Destroy(blueprint.GetComponent<Rigidbody>()); // So the remaining Town Center does not trigger anymore.
+                //blueprint.SetActive(true);
+                Debug.Log("Starting construction with this worker");
+                GetComponent<ConstructionHandler>().StartConstruction(blueprint);
+            }
+            else
+            {
+                Destroy(blueprint);
+            }
+        }
+        return false;
+    }
     protected override void HandleCurrentAction()
     {
         if (CurrentActionList.Count > 0)

@@ -85,6 +85,7 @@ public class TeamManager : MonoBehaviour
             teamList[i].teamCurrentStone = map.MapScriptable.StartingStoneAmount;
             teamList[i].teamNumber = i;
             teamList[i].teamColor = GenerateTeamColor(i);
+            teamList[i].startingSpawn = map.TeamSpawns[i];
 
             ResourceDictionary.instance.GetMaterial("Team" + i.ToString() + "Mat").color = teamList[i].teamColor;
 
@@ -96,19 +97,39 @@ public class TeamManager : MonoBehaviour
                     // Remove the AI component of the player's Team controller.
                     Destroy(aiTeamController);
                 }
+                // Spawn in the TownCenter at the middle of this players spawn.
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
                 go.GetComponent<BasicObject>().Team = i;
                 go.layer = LayerMask.NameToLayer("PlayerBuildingLayer");
                 GameHandler.instance.playerBuildings.Add(go);
                 go.GetComponent<BasicBuilding>().FinishBuilding();
+
+                // Spawn in three workers below the town center.
+                for (int j = 0; j < 3; j++)
+                {
+                    go = Instantiate(ResourceDictionary.instance.GetPrefab("Blend_WorkerUnit"), new Vector3(gamePosition.x - 3f + (3f * j), 0, gamePosition.y - 7f), Quaternion.identity);
+                    go.GetComponent<BasicObject>().Team = i;
+                    go.layer = LayerMask.NameToLayer("PlayerUnitLayer");
+                    GameHandler.instance.playerUnits.Add(go);
+                }
             }
             else
             {
+                // Spawn in the TownCenter at the middle of this players spawn.
                 GameObject go = GameObject.Instantiate(ResourceDictionary.instance.GetPrefab("TownCenterEGO"), new Vector3(gamePosition.x, 0, gamePosition.y), Quaternion.identity);
                 go.GetComponent<BasicObject>().Team = i;
                 go.layer = LayerMask.NameToLayer("EnemyBuildingLayer");
                 GameHandler.instance.enemyBuildings.Add(go);
                 go.GetComponent<BasicBuilding>().FinishBuilding();
+
+                // Spawn in three workers below the town center.
+                for (int j = 0; j < 3; j++)
+                {
+                    go = Instantiate(ResourceDictionary.instance.GetPrefab("Blend_WorkerUnit"), new Vector3(gamePosition.x - 3f + (3f * j), 0, gamePosition.y - 7f), Quaternion.identity);
+                    go.GetComponent<BasicObject>().Team = i;
+                    go.layer = LayerMask.NameToLayer("EnemyUnitLayer");
+                    GameHandler.instance.enemyUnits.Add(go);
+                }
             }
         }
     }

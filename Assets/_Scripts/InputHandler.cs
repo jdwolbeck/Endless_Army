@@ -13,6 +13,7 @@ public class InputHandler : MonoBehaviour
     private bool isDragging = false;
     private RaycastHit hit;
     private Vector3 mousePos;
+    private bool isValidArmy;
 
     public delegate void SelectionChanged();
     public static event SelectionChanged SelectedUnitsChanged;
@@ -25,6 +26,15 @@ public class InputHandler : MonoBehaviour
             instance = this;
         }
     }
+    private void OnEnable()
+    {
+        SelectedUnitsChanged += HandleSelectionChange;
+    }
+    private void OnDisable()
+    {
+        SelectedUnitsChanged -= HandleSelectionChange;
+    }
+
     private void OnGUI()
     {
         if (isDragging)
@@ -144,7 +154,8 @@ public class InputHandler : MonoBehaviour
             if (selectedUnits.Count > 0)
             {
                 Ray ray = Camera.main.ScreenPointToRay(mousePos);
-                if (!Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")) &&
+                if (isValidArmy &&
+                    !Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyUnitLayer")) &&
                     !Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("EnemyBuildingLayer")) &&
                     Physics.Raycast(ray, out hit, 10000, LayerMask.GetMask("GroundLayer")))
                 {
@@ -161,6 +172,19 @@ public class InputHandler : MonoBehaviour
                 {
                     selectedBuildings[i].DoAction();
                 }
+            }
+        }
+    }
+    private void HandleSelectionChange()
+    {
+        isValidArmy = false;
+        foreach(BasicUnit unit in selectedUnits) 
+        {
+            isValidArmy = true;
+            if (unit is WorkerUnit)
+            {
+                isValidArmy = false;
+                break;
             }
         }
     }

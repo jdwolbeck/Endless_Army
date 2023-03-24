@@ -11,6 +11,7 @@ public class TeamResourceManager : MonoBehaviour
     public Color teamColor;
     public List<GameObject> unitList;
     public List<GameObject> buildingList;
+    public Vector2 startingSpawn;
 
     private void Awake()
     {

@@ -171,7 +171,6 @@ public class UnitFormationManager : MonoBehaviour
         {
             if (armyList[i].gameObject == go)
             {
-                Debug.Log("Returning index " + i + " with vector: " + armyPositionList[i].ToString());
                 return armyPositionList[i];
             }
         }
